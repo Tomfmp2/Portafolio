@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   keywords: ['Desarrollador Backend', '.NET', 'C#', 'SQL', 'Node.js', 'Docker', 'n8n', 'API', 'Colombia'],
   authors: [{ name: 'Tomas Felipe Medina Prada' }],
   creator: 'Tomas Felipe Medina Prada',
+  icons: {
+    icon: '/availability-svgrepo-com.svg',
+  },
 }
 
 export default function RootLayout({
