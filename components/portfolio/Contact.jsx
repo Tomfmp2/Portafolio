@@ -100,18 +100,35 @@ export default function Contact() {
 
     setIsSubmitting(true);
 
-    // Simulate form submission
-    console.log("Form submitted:", formData);
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/tom.pradamd@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          _subject: "Nuevo mensaje de contacto desde tu Portafolio",
+          _template: "table"
+        }),
+      });
 
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    setIsSubmitting(false);
-    setSubmitSuccess(true);
-    setFormData({ name: "", email: "", message: "" });
-
-    // Reset success message after 5 seconds
-    setTimeout(() => setSubmitSuccess(false), 5000);
+      if (response.ok) {
+        setSubmitSuccess(true);
+        setFormData({ name: "", email: "", message: "" });
+        setTimeout(() => setSubmitSuccess(false), 5000);
+      } else {
+        alert("Hubo un error al enviar el mensaje. Intenta nuevamente.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("Hubo un error al enviar el mensaje. Revisa tu conexión a internet.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
