@@ -96,7 +96,7 @@ export default function Footer() {
               ))}
             </div>
             <p className="text-sm text-muted-foreground mt-4">
-              Girón, Santander, Colombia
+              Bucaramanga, Santander, Colombia
             </p>
           </div>
         </div>
