@@ -247,18 +247,32 @@ export default function Contact() {
 
             {/* Availability card */}
             <div className="glass rounded-2xl border border-[#10B981]/30 p-6 bg-[#10B981]/5">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-[#10B981]/20 flex items-center justify-center flex-shrink-0">
-                  <span className="w-3 h-3 rounded-full bg-[#10B981] animate-pulse" />
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-[#10B981]/20 flex items-center justify-center flex-shrink-0">
+                    <span className="w-3 h-3 rounded-full bg-[#10B981] animate-pulse" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-foreground mb-1">
+                      Disponible para trabajar
+                    </h4>
+                    <p className="text-sm text-muted-foreground">
+                      Actualmente estoy abierto a nuevas vacantes, retos técnicos o colaboraciones. ¡Hablemos!
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-foreground mb-1">
-                    Disponible para trabajar
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    Actualmente busco oportunidades remotas o en Colombia. Tiempo de respuesta: 48-72 horas.
-                  </p>
-                </div>
+                <a
+                  href="https://1drv.ms/b/c/a7e9bce9bc70cf88/IQAxwv0ZZ8y_RKQ2ASrz1DHxAV-GfVnS-_qo-Iwd_Z37hLQ?e=7QjXyh"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#10B981] hover:bg-[#10B981]/90 text-white font-medium rounded-xl transition-all duration-200 shadow-lg shadow-[#10B981]/20 flex-shrink-0"
+                  aria-label="Descargar currículum"
+                >
+                  <span>Descargar CV</span>
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                </a>
               </div>
             </div>
           </div>

@@ -7,6 +7,7 @@ const projects = [
       "Simulador de la Liga BetPlay desarrollado en C# (.NET 8) como aplicación de consola, que gestiona equipos, calendario “todos contra todos”, simulación de partidos y actualización de tabla de posiciones en tiempo real, en un entorno modular y mantenible.",
     problem: "Simular y gestionar un torneo tipo Liga BetPlay con reglas claras y estadísticas completas.",
     solution: "App de consola en C# que genera el fixture, simula partidos y actualiza la tabla de posiciones.",
+    learning: "A estructurar mejor el código en C#, separar responsabilidades UI/Lógica y manejar datos dinámicos en memoria.",
     stack: [".NET 8", "C#"],
     image: "ligabetplay",
     github: "https://github.com/melokaso1/ligaBetplay_C-",
@@ -18,6 +19,7 @@ const projects = [
       "Modelo de base de datos en MySQL para una empresa distribuidora de tecnología con reglas de negocio, SPs, vistas, triggers y reportes gerenciales.",
     problem: "La empresa ficticia manejaba inventario, facturación y comisiones con hojas de cálculo y procesos manuales.",
     solution: "Modelo de base de datos relacional con SPs, triggers, vistas y reportes para gestionar inventario, ventas, clientes y comisiones.",
+    learning: "Cómo usar procedimientos almacenados y triggers para llevar la lógica directamente a la base de datos de manera segura.",
     stack: ["MySQL", "SQL", "Stored Procedures", "Triggers"],
     image: "techdistrib",
     github: "https://github.com/Tomfmp2/MySQL-2-final-project",
@@ -29,6 +31,7 @@ const projects = [
       "Sistema LMS para gestión de cursos, estudiantes y docentes, orientado a centralizar contenidos y seguimiento académico.",
     problem: "Instituciones pequeñas carecían de una plataforma centralizada para administrar cursos y progreso de estudiantes.",
     solution: "Diseño de un sistema LMS modular que organiza usuarios, cursos, matrículas y reportes de avance.",
+    learning: "A diseñar diagramas entidad-relación (ERD) sólidos, pensando en cómo podría crecer el sistema a futuro.",
     stack: ["SQL", "LMS Conceptual"],
     image: "LMS",
     github: "https://github.com/Tomfmp2/LMS-educational-system",
@@ -40,6 +43,7 @@ const projects = [
       "Aplicación de terminal en Python que simula operaciones bancarias básicas como creación de cuentas, depósitos y retiros.",
     problem: "Se necesitaba practicar modelado de lógica financiera y flujos transaccionales en un entorno controlado.",
     solution: "Sistema en Python con menús por consola que gestiona usuarios, cuentas y movimientos con validaciones básicas.",
+    learning: "A manejar validaciones, flujos paso a paso y control de errores en una aplicación de consola estructurada.",
     stack: ["Python"],
     image: "banking",
     github: "https://github.com/Tomfmp2/banking-system-Python",
@@ -51,6 +55,7 @@ const projects = [
       "Sitio de portafolio desarrollado con Next.js y TypeScript, orientado a presentar proyectos, skills y experiencia de forma profesional.",
     problem: "Necesitaba una plataforma propia para mostrar mis proyectos y perfil profesional.",
     solution: "Aplicación web moderna con routing, componentes reutilizables y despliegue continuo en Vercel.",
+    learning: "Conceptos clave de React, diseño funcional y despliegue para tener mi primera web en producción.",
     stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
     image: "portfolio",
     github: "https://github.com/Tomfmp2/Portafolio",
@@ -62,6 +67,7 @@ const projects = [
       "Servicio de autenticación SSO para múltiples aplicaciones con OAuth2, JWT y gestión de roles y permisos granulares.",
     problem: "Múltiples sistemas con autenticación independiente generaban inconsistencias.",
     solution: "Sistema centralizado con tokens seguros y auditoría de accesos.",
+    learning: "Los conceptos básicos de diseño de APIs, seguridad con JWT y protección de rutas según el rol de usuario.",
     stack: [".NET", "C#", "SQL Server", "Redis"],
     image: "auth",
     github: "#",
@@ -205,6 +211,18 @@ export default function Projects() {
                 <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
                   {project.description}
                 </p>
+
+                {project.learning && (
+                  <div className="mb-4 bg-[#3B82F6]/5 rounded-lg border border-[#3B82F6]/10 p-3">
+                    <p className="text-[#3B82F6] text-xs font-semibold mb-1 flex items-center gap-1.5">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+                      Lo que aprendí:
+                    </p>
+                    <p className="text-muted-foreground text-xs leading-relaxed">
+                      {project.learning}
+                    </p>
+                  </div>
+                )}
 
                 {/* Stack badges */}
                 <div className="flex flex-wrap gap-2 mb-6">

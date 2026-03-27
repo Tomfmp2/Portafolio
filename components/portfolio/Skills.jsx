@@ -38,6 +38,24 @@ const skillCategories = [
       { name: "Telegram Bots", level: 80 },
     ],
   },
+  {
+    title: "Habilidades Blandas",
+    color: "#3B82F6",
+    skills: [
+      { name: "Resolución de problemas", level: 95 },
+      { name: "Trabajo en equipo", level: 90 },
+      { name: "Adaptabilidad", level: 90 },
+      { name: "Inglés Técnico", level: 85 },
+    ],
+  },
+];
+
+const learningBadges = [
+  "Testing Unitario (xUnit)",
+  "Clean Architecture",
+  "Principios SOLID",
+  "Microservicios (Básico)",
+  "Patrones de Diseño",
 ];
 
 const techBadges = [
@@ -155,24 +173,18 @@ export default function Skills() {
         {/* Additional info */}
         <div className="mt-16 text-center">
           <div className="inline-flex flex-wrap justify-center gap-6 sm:gap-12 glass rounded-2xl border border-white/10 p-6 sm:p-8">
-            <div className="text-center">
-              <p className="text-3xl font-bold text-[#3B82F6] mb-1">3+</p>
-              <p className="text-sm text-muted-foreground">Lenguajes</p>
-            </div>
-            <div className="hidden sm:block w-px bg-border" />
-            <div className="text-center">
-              <p className="text-3xl font-bold text-[#10B981] mb-1">3+</p>
-              <p className="text-sm text-muted-foreground">Frameworks</p>
-            </div>
-            <div className="hidden sm:block w-px bg-border" />
-            <div className="text-center">
-              <p className="text-3xl font-bold text-[#3B82F6] mb-1">4+</p>
-              <p className="text-sm text-muted-foreground">Bases de Datos</p>
-            </div>
-            <div className="hidden sm:block w-px bg-border" />
-            <div className="text-center">
-              <p className="text-3xl font-bold text-[#10B981] mb-1">5+</p>
-              <p className="text-sm text-muted-foreground">Herramientas DevOps</p>
+            <div className="text-center w-full sm:w-auto mb-4 sm:mb-0">
+              <p className="text-xl font-bold text-[#10B981] mb-2">Actualmente Aprendiendo</p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {learningBadges.map((badge, idx) => (
+                  <span
+                    key={idx}
+                    className="px-3 py-1 rounded-full text-xs font-medium bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/20"
+                  >
+                    {badge}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>

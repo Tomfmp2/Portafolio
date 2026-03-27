@@ -137,37 +137,27 @@ export default function About() {
 
             <div className="space-y-4 text-muted-foreground leading-relaxed">
               <p>
-                Soy un desarrollador backend con sede en{" "}
+                Soy un{" "}
                 <span className="text-foreground font-medium">
-                  Bucaramanga, Santander, Colombia
+                  Desarrollador enfocado en el Backend
                 </span>
-                . Mi enfoque principal está en el desarrollo de{" "}
-                <span className="text-[#3B82F6] font-medium">
-                  Gestion de proyectos robustos utilizando C# y .NET
-                </span>{" "}
-                y{" "}
-                <span className="text-[#3B82F6] font-medium">
-                  sistemas de bases de datos
-                </span>{" "}
-                eficientes.
-              </p>
-              <p>
-                Cuento con experiencia sólida en{" "}
+                , trabajando principalmente con{" "}
                 <span className="text-[#10B981] font-medium">.NET</span>,{" "}
-                <span className="text-[#10B981] font-medium">C#</span>,{" "} y {" "}
-                <span className="text-[#10B981] font-medium">SQL</span>
-                creando soluciones que resuelven problemas reales de negocio.
+                <span className="text-[#10B981] font-medium">C#</span> y bases de datos relacionales como{" "}
+                <span className="text-[#10B981] font-medium">MySQL</span> o SQL Server.
               </p>
               <p>
-                Me especializo en la{" "}
-                <span className="text-foreground font-medium">
-                  automatización de procesos
-                </span>{" "}
-                utilizando herramientas como{" "}
-                <span className="text-[#3B82F6] font-medium">Docker</span> para
-                contenedores y{" "}
-                <span className="text-[#3B82F6] font-medium">n8n</span> para
-                workflows, optimizando flujos de trabajo empresariales.
+                Me gusta dedicar tiempo a{" "}
+                <span className="text-[#3B82F6] font-medium">
+                  pensar bien la estructura antes de programar
+                </span>
+                . Mi objetivo es escribir código que otros programadores puedan entender y mantener fácilmente, aplicando buenas prácticas de manera práctica y sin sobrecomplicar las cosas.
+              </p>
+              <p>
+                Disfruto trabajar en equipo y resolver problemas de lógica. Actualmente estoy abierto a nuevas vacantes y proyectos donde pueda aportar valor técnico, mientras sigo profundizando en{" "}
+                <span className="text-[#3B82F6] font-medium">
+                  arquitecturas limpias y desarrollo escalable
+                </span>.
               </p>
             </div>
 
