@@ -2,59 +2,59 @@
 
 const projects = [
   {
-    title: "Sistema de Gestión de Inventarios",
+    title: "Simulador Liga Betplay",
     description:
-      "API REST completa para gestión de inventarios empresariales con autenticación JWT, control de stock en tiempo real y reportes automatizados.",
-    problem: "Empresas con control manual de inventario perdían eficiencia y cometían errores.",
-    solution: "Sistema centralizado con APIs escalables y notificaciones automáticas.",
-    stack: [".NET", "C#", "SQL Server", "Docker"],
-    image: "inventory",
-    github: "#",
-    demo: "#",
+      "Simulador de la Liga BetPlay desarrollado en C# (.NET 8) como aplicación de consola, que gestiona equipos, calendario “todos contra todos”, simulación de partidos y actualización de tabla de posiciones en tiempo real, en un entorno modular y mantenible.",
+    problem: "Simular y gestionar un torneo tipo Liga BetPlay con reglas claras y estadísticas completas.",
+    solution: "App de consola en C# que genera el fixture, simula partidos y actualiza la tabla de posiciones.",
+    stack: [".NET 8", "C#"],
+    image: "ligabetplay",
+    github: "https://github.com/melokaso1/ligaBetplay_C-",
+    demo: "https://github.com/melokaso1/ligaBetplay_C-",
   },
   {
-    title: "Bot de Telegram para CRM",
+    title: "TechDistrib ERP — Base de Datos Comercial",
     description:
-      "Bot automatizado para gestión de clientes y leads, integrado con bases de datos MySQL y workflows de n8n para seguimiento automático.",
-    problem: "Equipos de ventas perdían seguimiento de leads por falta de centralización.",
-    solution: "Bot conversacional con recordatorios y pipeline de ventas automatizado.",
-    stack: ["Node.js", "MySQL", "n8n", "Telegram API"],
-    image: "bot",
-    github: "#",
-    demo: "#",
+      "Modelo de base de datos en MySQL para una empresa distribuidora de tecnología con reglas de negocio, SPs, vistas, triggers y reportes gerenciales.",
+    problem: "La empresa ficticia manejaba inventario, facturación y comisiones con hojas de cálculo y procesos manuales.",
+    solution: "Modelo de base de datos relacional con SPs, triggers, vistas y reportes para gestionar inventario, ventas, clientes y comisiones.",
+    stack: ["MySQL", "SQL", "Stored Procedures", "Triggers"],
+    image: "techdistrib",
+    github: "https://github.com/Tomfmp2/MySQL-2-final-project",
+    demo: "https://github.com/Tomfmp2/MySQL-2-final-project",
   },
   {
-    title: "Microservicios de Facturación",
+    title: "LMS Educational System",
     description:
-      "Arquitectura de microservicios para sistema de facturación electrónica con integración a servicios tributarios y generación de reportes.",
-    problem: "Procesos de facturación lentos y propensos a errores humanos.",
-    solution: "Microservicios independientes con colas de mensajes y validación automática.",
-    stack: [".NET", "Docker", "PostgreSQL", "RabbitMQ"],
-    image: "billing",
-    github: "#",
-    demo: "#",
+      "Sistema LMS para gestión de cursos, estudiantes y docentes, orientado a centralizar contenidos y seguimiento académico.",
+    problem: "Instituciones pequeñas carecían de una plataforma centralizada para administrar cursos y progreso de estudiantes.",
+    solution: "Diseño de un sistema LMS modular que organiza usuarios, cursos, matrículas y reportes de avance.",
+    stack: ["SQL", "LMS Conceptual"],
+    image: "LMS",
+    github: "https://github.com/Tomfmp2/LMS-educational-system",
+    demo: "https://github.com/Tomfmp2/LMS-educational-system",
   },
   {
-    title: "API de Analytics en Tiempo Real",
+    title: "Sistema Bancario en Consola",
     description:
-      "Sistema de analíticas para dashboard empresarial con procesamiento de datos en tiempo real y visualizaciones interactivas.",
-    problem: "Datos dispersos dificultaban la toma de decisiones rápidas.",
-    solution: "Pipeline de datos con agregaciones en tiempo real y webhooks.",
-    stack: ["Node.js", "Express", "PostgreSQL", "WebSockets"],
-    image: "analytics",
-    github: "#",
-    demo: "#",
+      "Aplicación de terminal en Python que simula operaciones bancarias básicas como creación de cuentas, depósitos y retiros.",
+    problem: "Se necesitaba practicar modelado de lógica financiera y flujos transaccionales en un entorno controlado.",
+    solution: "Sistema en Python con menús por consola que gestiona usuarios, cuentas y movimientos con validaciones básicas.",
+    stack: ["Python"],
+    image: "banking",
+    github: "https://github.com/Tomfmp2/banking-system-Python",
+    demo: "https://github.com/Tomfmp2/banking-system-Python",
   },
   {
-    title: "Sistema de Automatización de Procesos",
+    title: "Portafolio Web Personal",
     description:
-      "Plataforma de automatización empresarial usando n8n para conectar múltiples servicios y eliminar tareas repetitivas.",
-    problem: "Tareas manuales repetitivas consumían tiempo valioso del equipo.",
-    solution: "Workflows automatizados con triggers y acciones programables.",
-    stack: ["n8n", "Node.js", "Docker", "MySQL"],
-    image: "automation",
-    github: "#",
-    demo: "#",
+      "Sitio de portafolio desarrollado con Next.js y TypeScript, orientado a presentar proyectos, skills y experiencia de forma profesional.",
+    problem: "Necesitaba una plataforma propia para mostrar mis proyectos y perfil profesional.",
+    solution: "Aplicación web moderna con routing, componentes reutilizables y despliegue continuo en Vercel.",
+    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+    image: "portfolio",
+    github: "https://github.com/Tomfmp2/Portafolio",
+    demo: "https://portafolio-alpha-nine-96.vercel.app/#proyectos",
   },
   {
     title: "API de Autenticación Centralizada",
@@ -70,93 +70,75 @@ const projects = [
 ];
 
 const projectImages = {
-  inventory: (
+  ligabetplay: (
     <div className="w-full h-48 bg-gradient-to-br from-[#3B82F6]/20 to-[#10B981]/20 flex items-center justify-center">
-      <div className="glass rounded-lg p-4 border border-white/10">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="w-2 h-2 rounded-full bg-[#10B981]" />
-          <span className="text-xs text-muted-foreground font-mono">inventory.db</span>
-        </div>
-        <div className="grid grid-cols-3 gap-2">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="w-8 h-6 rounded bg-[#3B82F6]/30" />
-          ))}
+      <div className="glass rounded-lg p-4 border border-white/10 flex flex-col items-center">
+        <svg className="w-12 h-12 text-[#3B82F6] mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+        </svg>
+        <div className="text-xs font-mono text-muted-foreground">LigaBetplay.exe</div>
+        <div className="mt-2 text-[10px] text-[#10B981]">Simulando jornada...</div>
+      </div>
+    </div>
+  ),
+  techdistrib: (
+    <div className="w-full h-48 bg-gradient-to-br from-[#10B981]/20 to-[#3B82F6]/20 flex items-center justify-center">
+      <div className="glass rounded-lg p-4 border border-white/10 flex flex-col items-center">
+        <svg className="w-12 h-12 text-[#10B981] mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+        </svg>
+        <div className="text-xs font-mono text-foreground">TechDistrib_DB</div>
+        <div className="flex gap-1 mt-2">
+          <div className="h-1 w-6 bg-[#3B82F6]/50 rounded" />
+          <div className="h-1 w-6 bg-[#10B981]/50 rounded" />
+          <div className="h-1 w-6 bg-[#3B82F6]/50 rounded" />
         </div>
       </div>
     </div>
   ),
-  bot: (
+  LMS: (
+    <div className="w-full h-48 bg-gradient-to-br from-[#3B82F6]/20 to-[#10B981]/20 flex items-center justify-center">
+      <div className="glass rounded-lg p-5 border border-white/10 flex flex-col items-center">
+        <svg className="w-12 h-12 text-[#3B82F6] mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l9-5-9-5-9 5 9 5z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14v7" />
+        </svg>
+        <div className="text-xs font-mono text-muted-foreground">LMS System</div>
+      </div>
+    </div>
+  ),
+  banking: (
     <div className="w-full h-48 bg-gradient-to-br from-[#10B981]/20 to-[#3B82F6]/20 flex items-center justify-center">
-      <div className="glass rounded-lg p-4 border border-white/10 max-w-xs">
+      <div className="glass rounded-lg p-4 border border-white/10 flex flex-col items-center w-40">
+        <div className="flex w-full justify-between items-center border-b border-white/10 pb-2 mb-2">
+           <svg className="w-6 h-6 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+           </svg>
+           <div className="text-xs font-mono text-muted-foreground">py_bank</div>
+        </div>
+        <div className="text-left w-full space-y-1">
+           <div className="text-[10px] text-muted-foreground">&gt; deposito 500</div>
+           <div className="text-[10px] text-[#10B981]">Transacción exitosa</div>
+           <div className="text-[10px] text-muted-foreground">&gt; saldo</div>
+        </div>
+      </div>
+    </div>
+  ),
+  portfolio: (
+    <div className="w-full h-48 bg-gradient-to-br from-[#3B82F6]/20 to-[#10B981]/20 flex items-center justify-center">
+      <div className="glass rounded-lg p-4 border border-white/10 w-44">
+        <div className="flex gap-1.5 mb-3">
+          <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
+          <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+          <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+        </div>
         <div className="flex flex-col gap-2">
-          <div className="self-start bg-muted rounded-lg px-3 py-2 text-xs">Hola, necesito info</div>
-          <div className="self-end bg-[#3B82F6] text-white rounded-lg px-3 py-2 text-xs">Claro, te ayudo</div>
-          <div className="self-start bg-muted rounded-lg px-3 py-2 text-xs">Gracias!</div>
-        </div>
-      </div>
-    </div>
-  ),
-  billing: (
-    <div className="w-full h-48 bg-gradient-to-br from-[#3B82F6]/20 to-[#10B981]/20 flex items-center justify-center">
-      <div className="glass rounded-lg p-4 border border-white/10">
-        <div className="text-xs font-mono text-muted-foreground mb-2">FACTURA #001</div>
-        <div className="space-y-1">
-          <div className="h-2 w-32 bg-foreground/20 rounded" />
-          <div className="h-2 w-24 bg-foreground/20 rounded" />
-          <div className="h-2 w-28 bg-[#10B981]/50 rounded" />
-        </div>
-        <div className="mt-3 pt-2 border-t border-white/10 flex justify-between">
-          <span className="text-xs text-muted-foreground">Total:</span>
-          <span className="text-xs text-[#10B981] font-bold">$1,250.00</span>
-        </div>
-      </div>
-    </div>
-  ),
-  analytics: (
-    <div className="w-full h-48 bg-gradient-to-br from-[#10B981]/20 to-[#3B82F6]/20 flex items-center justify-center">
-      <div className="glass rounded-lg p-4 border border-white/10">
-        <div className="flex items-end gap-1 h-16">
-          {[40, 65, 45, 80, 55, 90, 70].map((h, i) => (
-            <div
-              key={i}
-              className="w-4 rounded-t transition-all"
-              style={{
-                height: `${h}%`,
-                background: i % 2 === 0 ? "#3B82F6" : "#10B981",
-              }}
-            />
-          ))}
-        </div>
-        <div className="mt-2 flex justify-between text-xs text-muted-foreground">
-          <span>Lun</span>
-          <span>Dom</span>
-        </div>
-      </div>
-    </div>
-  ),
-  automation: (
-    <div className="w-full h-48 bg-gradient-to-br from-[#3B82F6]/20 to-[#10B981]/20 flex items-center justify-center">
-      <div className="flex items-center gap-2">
-        <div className="w-10 h-10 rounded-lg bg-[#3B82F6]/30 flex items-center justify-center">
-          <svg className="w-5 h-5 text-[#3B82F6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-          </svg>
-        </div>
-        <svg className="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-        <div className="w-10 h-10 rounded-lg bg-[#10B981]/30 flex items-center justify-center">
-          <svg className="w-5 h-5 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-        <svg className="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-        <div className="w-10 h-10 rounded-lg bg-[#3B82F6]/30 flex items-center justify-center">
-          <svg className="w-5 h-5 text-[#3B82F6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8" />
-          </svg>
+           <div className="w-full h-12 bg-[#3B82F6]/20 rounded" />
+           <div className="flex gap-2">
+             <div className="w-1/2 h-8 bg-[#10B981]/20 rounded" />
+             <div className="w-1/2 h-8 bg-white/5 rounded" />
+           </div>
         </div>
       </div>
     </div>
@@ -229,11 +211,10 @@ export default function Projects() {
                   {project.stack.map((tech, techIndex) => (
                     <span
                       key={techIndex}
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        techIndex % 2 === 0
-                          ? "bg-[#3B82F6]/10 text-[#3B82F6]"
-                          : "bg-[#10B981]/10 text-[#10B981]"
-                      }`}
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${techIndex % 2 === 0
+                        ? "bg-[#3B82F6]/10 text-[#3B82F6]"
+                        : "bg-[#10B981]/10 text-[#10B981]"
+                        }`}
                     >
                       {tech}
                     </span>

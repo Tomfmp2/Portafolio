@@ -5,9 +5,9 @@ const skillCategories = [
     title: "Lenguajes",
     color: "#3B82F6",
     skills: [
-      { name: "C#", level: 90 },
+      { name: "C#", level: 95 },
       { name: "JavaScript", level: 85 },
-      { name: "Python", level: 80 },
+      { name: "Python", level: 90 },
       { name: "SQL", level: 90 },
     ],
   },
@@ -17,14 +17,14 @@ const skillCategories = [
     skills: [
       { name: ".NET", level: 90 },
       { name: "Vite", level: 85 },
-      { name: "ASP.NET Core", level: 88 },
+      { name: "ASP.NET Core", level: 85 },
     ],
   },
   {
     title: "Bases de Datos",
     color: "#3B82F6",
     skills: [
-      { name: "MySQL", level: 88 },
+      { name: "MySQL", level: 90 },
       { name: "SQL Server", level: 90 },
     ],
   },
@@ -33,8 +33,8 @@ const skillCategories = [
     color: "#10B981",
     skills: [
       { name: "Docker", level: 85 },
-      { name: "n8n", level: 90 },
-      { name: "Git/GitHub", level: 92 },
+      { name: "n8n", level: 80 },
+      { name: "Git/GitHub", level: 95 },
       { name: "Telegram Bots", level: 80 },
     ],
   },
