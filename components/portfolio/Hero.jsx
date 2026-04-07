@@ -1,6 +1,11 @@
 "use client";
 
+import { useLanguage } from "@/hooks/use-language";
+
 export default function Hero() {
+  const { t } = useLanguage();
+  const h = t.hero;
+
   return (
     <section
       id="inicio"
@@ -19,9 +24,7 @@ export default function Hero() {
           <div className="text-center lg:text-left order-2 lg:order-1">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#3B82F6]/10 border border-[#3B82F6]/20 mb-6">
               <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
-              <span className="text-sm text-muted-foreground">
-                Disponible para nuevos proyectos
-              </span>
+              <span className="text-sm text-muted-foreground">{h.available}</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-balance">
@@ -34,18 +37,11 @@ export default function Hero() {
             </h1>
 
             <p className="text-xl sm:text-2xl text-[#3B82F6] font-semibold mb-4">
-              Desarrollador Backend
+              {h.role}
             </p>
 
             <p className="text-muted-foreground text-lg leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0 text-pretty">
-              Especializado en crear soluciones robustas con{" "}
-              <span className="text-[#3B82F6] font-medium">.NET</span>,{" "}
-              <span className="text-[#3B82F6] font-medium">C#</span>,{" "} y{" "}
-              <span className="text-[#3B82F6] font-medium">SQL</span>.
-              Automatizo procesos con{" "}
-              <span className="text-[#10B981] font-medium">Docker</span> y{" "}
-              <span className="text-[#10B981] font-medium">n8n</span> para
-              impulsar la eficiencia de tu negocio.
+              {h.description}
             </p>
 
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center lg:justify-start">
@@ -54,7 +50,7 @@ export default function Hero() {
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#3B82F6] hover:bg-[#3B82F6]/90 text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-[#3B82F6]/25 hover:-translate-y-0.5"
                 aria-label="Ver mis proyectos"
               >
-                <span>Ver proyectos</span>
+                <span>{h.viewProjects}</span>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
@@ -66,7 +62,7 @@ export default function Hero() {
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-foreground text-sm font-semibold rounded-xl transition-all duration-200 hover:-translate-y-0.5"
                 aria-label="Descargar currículum"
               >
-                <span>Descargar CV</span>
+                <span>{h.downloadCV}</span>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
@@ -76,7 +72,7 @@ export default function Hero() {
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 border-2 border-[#10B981] text-[#10B981] hover:bg-[#10B981] hover:text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:-translate-y-0.5"
                 aria-label="Contactar conmigo"
               >
-                <span>Contactar</span>
+                <span>{h.contact}</span>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
@@ -86,26 +82,16 @@ export default function Hero() {
             {/* Quick stats */}
             <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-border">
               <div className="text-center lg:text-left">
-                <p className="text-2xl sm:text-3xl font-bold text-[#3B82F6]">
-                  1+
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Años de experiencia
-                </p>
+                <p className="text-2xl sm:text-3xl font-bold text-[#3B82F6]">1+</p>
+                <p className="text-sm text-muted-foreground">{h.yearsExp}</p>
               </div>
               <div className="text-center lg:text-left">
-                <p className="text-2xl sm:text-3xl font-bold text-[#10B981]">
-                  15+
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Proyectos completados
-                </p>
+                <p className="text-2xl sm:text-3xl font-bold text-[#10B981]">15+</p>
+                <p className="text-sm text-muted-foreground">{h.projects}</p>
               </div>
               <div className="text-center lg:text-left">
-                <p className="text-2xl sm:text-3xl font-bold text-[#3B82F6]">
-                  100%
-                </p>
-                <p className="text-sm text-muted-foreground">Compromiso</p>
+                <p className="text-2xl sm:text-3xl font-bold text-[#3B82F6]">100%</p>
+                <p className="text-sm text-muted-foreground">{h.commitment}</p>
               </div>
             </div>
           </div>
@@ -120,9 +106,7 @@ export default function Hero() {
                   <div className="w-3 h-3 rounded-full bg-red-500" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500" />
                   <div className="w-3 h-3 rounded-full bg-green-500" />
-                  <span className="ml-4 text-sm text-muted-foreground font-mono">
-                    backend.cs
-                  </span>
+                  <span className="ml-4 text-sm text-muted-foreground font-mono">backend.cs</span>
                 </div>
 
                 {/* Code snippet */}
@@ -148,9 +132,7 @@ export default function Hero() {
                     {"  {"}
                     {"\n"}
                     {"    "}
-                    <span className="text-muted-foreground">
-                      {"// Validación y procesamiento"}
-                    </span>
+                    <span className="text-muted-foreground">{"// Validación y procesamiento"}</span>
                     {"\n"}
                     {"    "}
                     <span className="text-[#3B82F6]">await</span>{" "}
@@ -171,24 +153,12 @@ export default function Hero() {
               <div className="absolute -top-4 -right-4 glass rounded-xl border border-white/10 p-4 shadow-xl">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-[#3B82F6]/20 flex items-center justify-center">
-                    <svg
-                      className="w-5 h-5 text-[#3B82F6]"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 12h14M12 5l7 7-7 7"
-                      />
+                    <svg className="w-5 h-5 text-[#3B82F6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-foreground">
-                      APIs REST
-                    </p>
+                    <p className="text-sm font-semibold text-foreground">APIs REST</p>
                     <p className="text-xs text-muted-foreground">Escalables</p>
                   </div>
                 </div>
@@ -197,33 +167,13 @@ export default function Hero() {
               <div className="absolute -bottom-4 -left-4 glass rounded-xl border border-white/10 p-4 shadow-xl">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-[#10B981]/20 flex items-center justify-center">
-                    <svg
-                      className="w-5 h-5 text-[#10B981]"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7c-2 0-3 1-3 3z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 22V12h6v10M9 12V8h6v4"
-                      />
+                    <svg className="w-5 h-5 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-foreground">
-                      Docker
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Contenedores
-                    </p>
+                    <p className="text-sm font-semibold text-foreground">Docker</p>
+                    <p className="text-xs text-muted-foreground">Contenedores</p>
                   </div>
                 </div>
               </div>
@@ -237,21 +187,11 @@ export default function Hero() {
         <a
           href="#sobre-mi"
           className="flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          aria-label="Ir a la siguiente sección"
+          aria-label={h.scrollLabel}
         >
           <span className="text-xs">Scroll</span>
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 14l-7 7m0 0l-7-7m7 7V3"
-            />
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
         </a>
       </div>

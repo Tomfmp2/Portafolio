@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { LanguageProvider } from '@/hooks/use-language'
 import './globals.css'
 
 const geistSans = Geist({ 
@@ -14,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Tomas Felipe Medina Prada | Desarrollador Backend',
-  description: 'Portafolio profesional de Tomas Felipe Medina Prada - Desarrollador Backend especializado en .NET, C#, SQL, Node.js, Docker y automatización de procesos.',
-  keywords: ['Desarrollador Backend', '.NET', 'C#', 'SQL', 'Node.js', 'Docker', 'n8n', 'API', 'Colombia'],
+  title: 'Tomas Felipe Medina Prada | Backend Developer',
+  description: 'Professional portfolio of Tomas Felipe Medina Prada - Backend Developer specialized in .NET, C#, SQL, Docker, and process automation.',
+  keywords: ['Backend Developer', '.NET', 'C#', 'SQL', 'Docker', 'n8n', 'API', 'Colombia'],
   authors: [{ name: 'Tomas Felipe Medina Prada' }],
   creator: 'Tomas Felipe Medina Prada',
   icons: {
@@ -32,7 +33,9 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
         <Analytics />
       </body>
     </html>

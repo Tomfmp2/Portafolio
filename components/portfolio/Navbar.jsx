@@ -1,18 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-const navLinks = [
-  { name: "Inicio", href: "#inicio" },
-  { name: "Sobre mí", href: "#sobre-mi" },
-  { name: "Habilidades", href: "#habilidades" },
-  { name: "Proyectos", href: "#proyectos" },
-  { name: "Contacto", href: "#contacto" },
-];
+import { useLanguage } from "@/hooks/use-language";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { lang, toggleLang, t } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,6 +19,14 @@ export default function Navbar() {
   const handleLinkClick = () => {
     setIsOpen(false);
   };
+
+  const navLinks = [
+    { name: t.nav.home, href: "#inicio" },
+    { name: t.nav.about, href: "#sobre-mi" },
+    { name: t.nav.skills, href: "#habilidades" },
+    { name: t.nav.projects, href: "#proyectos" },
+    { name: t.nav.contact, href: "#contacto" },
+  ];
 
   return (
     <nav
@@ -62,38 +64,48 @@ export default function Navbar() {
                 {link.name}
               </a>
             ))}
+
+            {/* Language Toggle */}
+            <button
+              onClick={toggleLang}
+              className="ml-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-sm font-semibold text-muted-foreground hover:text-foreground transition-all duration-200"
+              aria-label={lang === "es" ? "Switch to English" : "Cambiar a Español"}
+            >
+              <span className="text-base leading-none">{lang === "es" ? "🇺🇸" : "🇨🇴"}</span>
+              <span>{lang === "es" ? "EN" : "ES"}</span>
+            </button>
           </div>
 
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
-            aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
-            aria-expanded={isOpen}
-          >
-            <svg
-              className="w-6 h-6 text-foreground"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          {/* Mobile: lang toggle + hamburger */}
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={toggleLang}
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-sm font-semibold text-muted-foreground transition-all duration-200"
+              aria-label={lang === "es" ? "Switch to English" : "Cambiar a Español"}
             >
-              {isOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
+              <span className="text-base leading-none">{lang === "es" ? "🇺🇸" : "🇨🇴"}</span>
+              <span>{lang === "es" ? "EN" : "ES"}</span>
+            </button>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              aria-label={isOpen ? t.nav.closeMenu : t.nav.openMenu}
+              aria-expanded={isOpen}
+            >
+              <svg
+                className="w-6 h-6 text-foreground"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                {isOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
