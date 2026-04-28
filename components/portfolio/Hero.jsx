@@ -54,12 +54,19 @@ export default function Hero() {
             </span>
           </div>
 
-          {/* Headline */}
+          {/* Headline — single line, styled */}
           <h1
-            className={`font-bold text-white tracking-tight leading-[1.02] mb-6 ${anim(180)}`}
-            style={{ fontSize: "clamp(3rem, 8vw, 7rem)" }}
+            className={`font-black tracking-tight leading-none mb-6 whitespace-nowrap text-center ${anim(180)}`}
+            style={{ fontSize: "clamp(2rem, 6vw, 5.5rem)" }}
           >
-            Tomas Medina<span className="text-[#FF4B4B]">.</span>
+            <span className="text-white">Tomas </span>
+            <span style={{
+              background: "linear-gradient(135deg, #ffffff 0%, #a0a0a0 40%, #ffffff 60%, #d0d0d0 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>Medina</span>
+            <span className="text-[#FF4B4B]">.</span>
           </h1>
 
           {/* Description */}
