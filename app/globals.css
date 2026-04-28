@@ -10,42 +10,45 @@
   --card-foreground: #0f172a;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-  --primary: #3B82F6;
+  --primary: #FF4B4B;
   --primary-foreground: #ffffff;
-  --secondary: #10B981;
+  --secondary: #cc3333;
   --secondary-foreground: #ffffff;
   --muted: #f1f5f9;
   --muted-foreground: #64748b;
-  --accent: #10B981;
+  --accent: #FF4B4B;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: #e2e8f0;
   --input: #e2e8f0;
-  --ring: #3B82F6;
+  --ring: #FF4B4B;
   --radius: 0.75rem;
+  /* Layout tokens */
+  --page-max: 1400px;
+  --page-px: clamp(1.25rem, 5vw, 4rem);
 }
 
 .dark {
-  --background: #0a0f1a;
+  --background: #0B0B0F;
   --foreground: #f1f5f9;
-  --card: #111827;
+  --card: #111114;
   --card-foreground: #f1f5f9;
-  --popover: #111827;
+  --popover: #111114;
   --popover-foreground: #f1f5f9;
-  --primary: #3B82F6;
+  --primary: #FF4B4B;
   --primary-foreground: #ffffff;
-  --secondary: #10B981;
+  --secondary: #cc3333;
   --secondary-foreground: #ffffff;
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8;
-  --accent: #10B981;
+  --muted: #1a1a1e;
+  --muted-foreground: #71717A;
+  --accent: #FF4B4B;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #1e293b;
-  --input: #1e293b;
-  --ring: #3B82F6;
+  --border: rgba(255, 255, 255, 0.05);
+  --input: #1a1a1e;
+  --ring: #FF4B4B;
 }
 
 @theme inline {
@@ -70,44 +73,152 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --animate-marquee: marquee 40s linear infinite;
-  --animate-marquee-reverse: marquee-reverse 35s linear infinite;
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 10px);
+  --animate-marquee: marquee 55s linear infinite;
+  --animate-marquee-reverse: marquee-reverse 45s linear infinite;
 }
 
+/* ── Keyframes ─────────────────────────────────────────────── */
 @keyframes marquee {
-  0% { transform: translateX(0%); }
+  0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 @keyframes marquee-reverse {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0%); }
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes red-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,75,75,0); }
+  50%       { box-shadow: 0 0 24px 4px rgba(255,75,75,0.25); }
 }
 
+.animate-fade-up   { animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-red-pulse { animation: red-pulse 3s ease-in-out infinite; }
+
+/* ── Base ──────────────────────────────────────────────────── */
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
+  * { @apply border-border outline-ring/50; }
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
   }
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 }
 
-/* Glassmorphism utilities */
-.glass {
-  background: rgba(17, 24, 39, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+/* ── Page layout helpers ───────────────────────────────────── */
+.page-container {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-px);
 }
 
-.glass-light {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+/* ── Section spacing ───────────────────────────────────────── */
+.section { padding-block: clamp(4rem, 8vw, 7rem); }
+
+/* ── Platinum card ─────────────────────────────────────────── */
+.glass {
+  background: linear-gradient(
+    160deg,
+    rgba(255,255,255,0.12) 0%,
+    rgba(255,255,255,0.07) 15%,
+    rgba(255,255,255,0.04) 35%,
+    rgba(20,20,26,0.95) 70%,
+    rgba(14,14,18,1) 100%
+  );
+  border: 1px solid rgba(255,255,255,0.12);
+  border-top-color: rgba(255,255,255,0.2);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 8px 24px rgba(0,0,0,0.25),
+    0 24px 48px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    inset 0 -1px 0 rgba(0,0,0,0.15);
+  position: relative;
+  overflow: hidden;
+}
+/* Top-edge reflective shine */
+.glass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 3%;
+  right: 3%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.18) 15%,
+    rgba(255,255,255,0.45) 50%,
+    rgba(255,255,255,0.18) 85%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+/* Diagonal metallic sheen */
+.glass::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  background: linear-gradient(
+    140deg,
+    rgba(255,255,255,0.06) 0%,
+    rgba(255,255,255,0.02) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Card hover ────────────────────────────────────────────── */
+.card-hover {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.35s ease,
+              border-color 0.35s ease,
+              background 0.35s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 32px 70px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    0 0 0 1px rgba(255,75,75,0.05);
+}
+
+/* ── Thin rule ─────────────────────────────────────────────── */
+.rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+}
+
+/* ── Label above headings ──────────────────────────────────── */
+.section-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+.section-label .label-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #FF4B4B;
+  flex-shrink: 0;
 }
