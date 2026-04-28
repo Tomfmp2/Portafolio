@@ -73,7 +73,7 @@ function CircleRing({ percent, size = 100, stroke = 6, label, sublabel }) {
           />
           <defs>
             <linearGradient id="redGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#FF4B4B" />
+              <stop offset="0%" stopColor="#FF3333" />
               <stop offset="100%" stopColor="#ff6060" />
             </linearGradient>
           </defs>
@@ -112,14 +112,14 @@ function SkillBar({ name, level, maxH = 120 }) {
 
   return (
     <div ref={ref} className="flex flex-col items-center gap-2 group">
-      <span className="text-xs font-bold text-[#FF4B4B] opacity-0 group-hover:opacity-100 transition-opacity duration-300">{level}%</span>
+      <span className="text-xs font-bold text-[#FF3333] opacity-0 group-hover:opacity-100 transition-opacity duration-300">{level}%</span>
       <div className="relative w-7 rounded-full overflow-hidden bg-white/[0.04]" style={{ height: maxH }}>
         <div
           className="absolute bottom-0 w-full rounded-full"
           style={{
             height: h,
             transition: "height 1.2s cubic-bezier(0.22,1,0.36,1)",
-            background: "linear-gradient(to top, #FF4B4B, #ff6060)",
+            background: "linear-gradient(to top, #FF3333, #ff6060)",
           }}
         />
       </div>
@@ -155,7 +155,7 @@ function MiniBar({ name, level }) {
         <span className="text-xs font-bold text-white/90 font-mono">{level}%</span>
       </div>
       <div className="h-1.5 bg-white/[0.04] rounded-full overflow-hidden">
-        <div className="h-full rounded-full" style={{ width: `${w}%`, transition: "width 1.2s cubic-bezier(0.22,1,0.36,1)", background: "linear-gradient(to right, #FF4B4B, #ff6060)" }} />
+        <div className="h-full rounded-full" style={{ width: `${w}%`, transition: "width 1.2s cubic-bezier(0.22,1,0.36,1)", background: "linear-gradient(to right, #FF3333, #ff6060)" }} />
       </div>
     </div>
   );
@@ -190,11 +190,11 @@ export default function Skills() {
           <div className="lg:col-span-5 glass card-hover p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <p className="text-[10px] font-mono text-[#FF4B4B]/70 tracking-widest uppercase mb-1">{s.categories?.[0]?.title}</p>
+                <p className="text-[10px] font-mono text-[#FF3333]/70 tracking-widest uppercase mb-1">{s.categories?.[0]?.title}</p>
                 <h3 className="text-lg font-bold text-white/90">Core Languages</h3>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-[#FF4B4B]" />
+                <div className="w-2 h-2 rounded-full bg-[#FF3333]" />
                 <span className="text-[10px] text-white/40 font-mono">PROFICIENCY</span>
               </div>
             </div>
@@ -209,7 +209,7 @@ export default function Skills() {
 
           {/* Card 2: Frameworks */}
           <div className="lg:col-span-4 glass card-hover p-6">
-            <p className="text-[10px] font-mono text-[#FF4B4B]/70 tracking-widest uppercase mb-1">{s.categories?.[1]?.title}</p>
+            <p className="text-[10px] font-mono text-[#FF3333]/70 tracking-widest uppercase mb-1">{s.categories?.[1]?.title}</p>
             <h3 className="text-lg font-bold text-white/90 mb-6">Stack</h3>
             <div className="flex justify-around gap-2">
               <CircleRing percent={90} size={90} stroke={5} label=".NET" sublabel="Primary" />
@@ -249,7 +249,7 @@ export default function Skills() {
 
           {/* Card 4: Databases */}
           <div className="lg:col-span-4 glass card-hover p-6">
-            <p className="text-[10px] font-mono text-[#FF4B4B]/70 tracking-widest uppercase mb-1">{s.categories?.[2]?.title}</p>
+            <p className="text-[10px] font-mono text-[#FF3333]/70 tracking-widest uppercase mb-1">{s.categories?.[2]?.title}</p>
             <h3 className="text-lg font-bold text-white/90 mb-5">Database Systems</h3>
             <div className="space-y-4">
               <MiniBar name="MySQL" level={90} />
@@ -260,7 +260,7 @@ export default function Skills() {
 
           {/* Card 5: DevOps */}
           <div className="lg:col-span-4 glass card-hover p-6">
-            <p className="text-[10px] font-mono text-[#FF4B4B]/70 tracking-widest uppercase mb-1">{s.categories?.[3]?.title}</p>
+            <p className="text-[10px] font-mono text-[#FF3333]/70 tracking-widest uppercase mb-1">{s.categories?.[3]?.title}</p>
             <h3 className="text-lg font-bold text-white/90 mb-5">DevOps & Tools</h3>
             <div className="space-y-4">
               <MiniBar name="Git / GitHub" level={95} />
@@ -277,7 +277,7 @@ export default function Skills() {
             <div className="space-y-3">
               {softSkills.map((skill, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#FF4B4B]" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#FF3333]" />
                   <span className="text-sm text-white/60">{skill}</span>
                 </div>
               ))}
@@ -289,17 +289,17 @@ export default function Skills() {
         <div className="mt-8 glass card-hover p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
             <div>
-              <p className="text-[10px] font-mono text-[#FF4B4B]/70 tracking-widest uppercase mb-1">IN PROGRESS</p>
+              <p className="text-[10px] font-mono text-[#FF3333]/70 tracking-widest uppercase mb-1">IN PROGRESS</p>
               <h3 className="text-lg font-bold text-white/90">{s.learningTitle}</h3>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-[#FF4B4B] animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-[#FF3333] animate-pulse" />
               <span className="text-[10px] font-mono text-white/40">ACTIVE</span>
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
             {learningBadges.map((badge, idx) => (
-              <span key={idx} className="px-3 py-1.5 rounded-xl text-xs font-medium text-white/70 bg-white/[0.04] hover:bg-[#FF4B4B] hover:text-white transition-all duration-300">
+              <span key={idx} className="px-3 py-1.5 rounded-xl text-xs font-medium text-white/70 bg-white/[0.04] hover:bg-[#FF3333] hover:text-white transition-all duration-300">
                 {badge}
               </span>
             ))}

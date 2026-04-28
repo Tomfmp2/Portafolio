@@ -128,7 +128,7 @@ export default function TechCarousel() {
       {/* Subtle ambient red glow */}
       <div
         className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[160px] rounded-full opacity-[0.05]"
-        style={{ background: "radial-gradient(ellipse, #FF4B4B, transparent 70%)" }}
+        style={{ background: "radial-gradient(ellipse, #FF3333, transparent 70%)" }}
       />
     </section>
   );

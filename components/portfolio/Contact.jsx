@@ -37,7 +37,7 @@ export default function Contact() {
     } catch (err) { alert(c.errorConnection); } finally { setIsSubmitting(false); }
   };
 
-  const inputCls = (field) => `w-full px-4 py-3 rounded-xl bg-white/[0.03] border ${errors[field] ? "border-red-500" : "border-white/[0.08]"} text-white text-sm placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-[#FF4B4B]/50 focus:border-[#FF4B4B] transition-all duration-300`;
+  const inputCls = (field) => `w-full px-4 py-3 rounded-xl bg-white/[0.03] border ${errors[field] ? "border-red-500" : "border-white/[0.08]"} text-white text-sm placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-[#FF3333]/50 focus:border-[#FF3333] transition-all duration-300`;
 
   return (
     <section id="contacto" className="section bg-[#0B0B0F]">
@@ -57,25 +57,25 @@ export default function Contact() {
               <p className="text-white/40 text-sm font-light mb-6 leading-relaxed">{c.connectText}</p>
               <div className="space-y-4 mb-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-[#FF4B4B]/10 flex items-center justify-center"><svg className="w-5 h-5 text-[#FF4B4B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg></div>
+                  <div className="w-11 h-11 rounded-xl bg-[#FF3333]/10 flex items-center justify-center"><svg className="w-5 h-5 text-[#FF3333]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg></div>
                   <div><p className="text-xs text-white/35">{c.location}</p><p className="text-white/80 font-medium text-sm">{c.locationValue}</p></div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-[#FF4B4B]/10 flex items-center justify-center"><svg className="w-5 h-5 text-[#FF4B4B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg></div>
-                  <div><p className="text-xs text-white/35">Email</p><a href="mailto:tom.pradamd@gmail.com" className="text-white/80 font-medium text-sm hover:text-[#FF4B4B] transition-colors">tom.pradamd@gmail.com</a></div>
+                  <div className="w-11 h-11 rounded-xl bg-[#FF3333]/10 flex items-center justify-center"><svg className="w-5 h-5 text-[#FF3333]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg></div>
+                  <div><p className="text-xs text-white/35">Email</p><a href="mailto:tom.pradamd@gmail.com" className="text-white/80 font-medium text-sm hover:text-[#FF3333] transition-colors">tom.pradamd@gmail.com</a></div>
                 </div>
               </div>
               <p className="text-xs text-white/35 mb-3">{c.followMe}</p>
               <div className="flex gap-2">
-                {socialLinks.map((l) => (<a key={l.name} href={l.href} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg bg-white/[0.04] flex items-center justify-center text-white/35 hover:bg-[#FF4B4B]/15 hover:text-[#FF4B4B] transition-all duration-300" aria-label={l.name}>{l.icon}</a>))}
+                {socialLinks.map((l) => (<a key={l.name} href={l.href} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg bg-white/[0.04] flex items-center justify-center text-white/35 hover:bg-[#FF3333]/15 hover:text-[#FF3333] transition-all duration-300" aria-label={l.name}>{l.icon}</a>))}
               </div>
             </div>
             <div className="glass p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <span className="relative flex h-2.5 w-2.5"><span className="animate-ping absolute h-full w-full rounded-full bg-[#FF4B4B] opacity-75" /><span className="relative rounded-full h-2.5 w-2.5 bg-[#FF4B4B]" /></span>
+                <span className="relative flex h-2.5 w-2.5"><span className="animate-ping absolute h-full w-full rounded-full bg-[#FF3333] opacity-75" /><span className="relative rounded-full h-2.5 w-2.5 bg-[#FF3333]" /></span>
                 <div><p className="text-sm font-bold text-white">{c.availableTitle}</p><p className="text-xs text-white/40">{c.availableText}</p></div>
               </div>
-              <a href="https://1drv.ms/b/c/a7e9bce9bc70cf88/IQAxwv0ZZ8y_RKQ2ASrz1DHxAV-GfVnS-_qo-Iwd_Z37hLQ?e=7QjXyh" target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 font-bold rounded-xl text-white bg-[#FF4B4B] hover:bg-[#ff6060] text-sm transition-all">{c.downloadCV}</a>
+              <a href="https://1drv.ms/b/c/a7e9bce9bc70cf88/IQAxwv0ZZ8y_RKQ2ASrz1DHxAV-GfVnS-_qo-Iwd_Z37hLQ?e=7QjXyh" target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 font-bold rounded-xl text-white bg-[#FF3333] hover:bg-[#ff6060] text-sm transition-all">{c.downloadCV}</a>
             </div>
           </div>
           <div className="glass card-hover p-8">
@@ -85,7 +85,7 @@ export default function Contact() {
               <div><label htmlFor="name" className="block text-sm text-white/60 mb-1.5">{c.nameLabel}</label><input type="text" id="name" name="name" value={formData.name} onChange={handleChange} placeholder={c.namePlaceholder} className={inputCls("name")} />{errors.name && <p className="mt-1 text-xs text-red-400">{errors.name}</p>}</div>
               <div><label htmlFor="email" className="block text-sm text-white/60 mb-1.5">{c.emailLabel}</label><input type="email" id="email" name="email" value={formData.email} onChange={handleChange} placeholder={c.emailPlaceholder} className={inputCls("email")} />{errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}</div>
               <div><label htmlFor="message" className="block text-sm text-white/60 mb-1.5">{c.messageLabel}</label><textarea id="message" name="message" value={formData.message} onChange={handleChange} placeholder={c.messagePlaceholder} rows={4} className={`${inputCls("message")} resize-none`} />{errors.message && <p className="mt-1 text-xs text-red-400">{errors.message}</p>}</div>
-              <button type="submit" disabled={isSubmitting} className="w-full py-3.5 font-bold rounded-xl text-white bg-[#FF4B4B] hover:bg-[#ff6060] transition-all disabled:opacity-50 text-sm">{isSubmitting ? c.sending : c.send}</button>
+              <button type="submit" disabled={isSubmitting} className="w-full py-3.5 font-bold rounded-xl text-white bg-[#FF3333] hover:bg-[#ff6060] transition-all disabled:opacity-50 text-sm">{isSubmitting ? c.sending : c.send}</button>
             </form>
           </div>
         </div>

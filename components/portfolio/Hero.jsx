@@ -48,7 +48,7 @@ export default function Hero() {
 
           {/* Eyebrow */}
           <div className={`flex items-center justify-center gap-3 mb-6 ${anim(0)}`}>
-            <div className="w-2 h-2 rounded-full bg-[#FF4B4B]" />
+            <div className="w-2 h-2 rounded-full bg-[#FF3333] red-glow-sm" />
             <span className="text-[11px] font-medium text-white/50 tracking-[0.28em] uppercase">
               {h.role}
             </span>
@@ -66,7 +66,7 @@ export default function Hero() {
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
             }}>Medina</span>
-            <span className="text-[#FF4B4B]">.</span>
+            <span className="text-[#FF3333]" style={{ textShadow: "0 0 20px rgba(255,51,51,0.7)" }}>.</span>
           </h1>
 
           {/* Description */}
@@ -78,8 +78,8 @@ export default function Hero() {
           <div className={`flex flex-col sm:flex-row items-center justify-center gap-5 ${anim(520)}`}>
             <a
               href="#proyectos"
-              className="group inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-[#FF4B4B] text-white font-bold text-sm transition-all duration-300 hover:scale-105"
-              style={{ boxShadow: "0 0 30px rgba(255,75,75,0.3)" }}
+              className="group inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-[#FF3333] text-white font-bold text-sm transition-all duration-300 hover:scale-105 red-glow"
+              style={{ boxShadow: "0 0 24px rgba(255,51,51,0.45), 0 0 60px rgba(255,51,51,0.15)" }}
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
               VER PROYECTOS
@@ -100,7 +100,7 @@ export default function Hero() {
       <div className="hidden lg:flex absolute bottom-10 left-10 z-20 items-center gap-6">
         <a href="https://github.com/Tomfmp2" target="_blank" rel="noopener noreferrer" className="text-[10px] text-white/25 tracking-[0.2em] uppercase hover:text-white transition-colors">Github</a>
         <div className="w-8 h-px bg-white/15" />
-        <a href="https://www.linkedin.com/in/tomasmedinadev/" target="_blank" rel="noopener noreferrer" className="text-[10px] text-white/25 tracking-[0.2em] uppercase hover:text-[#FF4B4B] transition-colors">LinkedIn</a>
+        <a href="https://www.linkedin.com/in/tomasmedinadev/" target="_blank" rel="noopener noreferrer" className="text-[10px] text-white/25 tracking-[0.2em] uppercase hover:text-[#FF3333] transition-colors">LinkedIn</a>
       </div>
 
     </section>

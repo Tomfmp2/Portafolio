@@ -40,7 +40,7 @@ export default function About() {
               </div>
               <div>
                 <h3 className="text-lg font-bold text-white">{a.name}</h3>
-                <p className="text-sm text-[#FF4B4B] font-medium mt-0.5 uppercase tracking-wide">{a.role}</p>
+                <p className="text-sm text-[#FF3333] font-medium mt-0.5 uppercase tracking-wide">{a.role}</p>
               </div>
             </div>
 
@@ -62,7 +62,7 @@ export default function About() {
             </div>
 
             <div className="mt-8 flex items-center gap-3 text-sm text-white/30">
-              <span className="w-2 h-2 rounded-full bg-[#FF4B4B] animate-pulse flex-shrink-0" />
+              <span className="w-2 h-2 rounded-full bg-[#FF3333] animate-pulse flex-shrink-0" />
               {a.location}
             </div>
           </div>
@@ -75,7 +75,7 @@ export default function About() {
             <div className="space-y-6">
               {a.contributions.map((item, i) => (
                 <div key={i} className="group flex gap-5">
-                  <span className="text-[10px] font-mono text-white/20 group-hover:text-[#FF4B4B] transition-colors duration-300 pt-0.5 flex-shrink-0">
+                  <span className="text-[10px] font-mono text-white/20 group-hover:text-[#FF3333] transition-colors duration-300 pt-0.5 flex-shrink-0">
                     0{i + 1}
                   </span>
                   <div>

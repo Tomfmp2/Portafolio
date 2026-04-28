@@ -10,20 +10,65 @@ import Footer from "@/components/portfolio/Footer";
 export default function Home() {
   return (
     <main className="relative min-h-screen bg-[#09090B] overflow-x-hidden">
-      {/* ── Ambient nebula glows ─────────────────────── */}
-      <div className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
-        {/* Top-right — warm coral */}
-        <div className="absolute -top-[200px] -right-[200px] w-[700px] h-[700px] rounded-full opacity-[0.07]"
-          style={{ background: "radial-gradient(circle, #FF4B4B, transparent 70%)" }} />
-        {/* Mid-left — deep orange */}
-        <div className="absolute top-[40%] -left-[150px] w-[500px] h-[600px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(ellipse, #FF6B35, transparent 70%)" }} />
-        {/* Center — subtle red */}
-        <div className="absolute top-[55%] left-[50%] -translate-x-1/2 w-[800px] h-[400px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(ellipse, #FF4B4B, transparent 65%)" }} />
-        {/* Bottom-right — warm amber */}
-        <div className="absolute bottom-[10%] -right-[100px] w-[500px] h-[500px] rounded-full opacity-[0.06]"
-          style={{ background: "radial-gradient(circle, #FF6B35, transparent 70%)" }} />
+      {/* ── Ambient nebula glows — scattered across full page ── */}
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+
+        {/* 1. Hero — top right, bright warm core */}
+        <div style={{
+          position: "absolute", top: "2%", right: "-80px",
+          width: "500px", height: "500px", borderRadius: "50%",
+          background: "radial-gradient(circle at 55% 45%, rgba(255,80,30,0.6) 0%, rgba(255,50,20,0.3) 30%, rgba(200,35,10,0.1) 60%, transparent 80%)",
+          filter: "blur(50px)",
+        }} />
+
+        {/* 2. Carousel — left side, elongated orange */}
+        <div style={{
+          position: "absolute", top: "18%", left: "-100px",
+          width: "380px", height: "480px", borderRadius: "50%",
+          background: "radial-gradient(ellipse at 45% 50%, rgba(255,90,20,0.5) 0%, rgba(220,55,10,0.25) 40%, transparent 75%)",
+          filter: "blur(55px)",
+        }} />
+
+        {/* 3. About — center, wide soft red */}
+        <div style={{
+          position: "absolute", top: "30%", left: "50%", transform: "translateX(-50%)",
+          width: "800px", height: "300px", borderRadius: "50%",
+          background: "radial-gradient(ellipse at center, rgba(255,51,51,0.2) 0%, rgba(200,30,15,0.08) 55%, transparent 80%)",
+          filter: "blur(70px)",
+        }} />
+
+        {/* 4. Skills — right side */}
+        <div style={{
+          position: "absolute", top: "44%", right: "-60px",
+          width: "420px", height: "500px", borderRadius: "50%",
+          background: "radial-gradient(ellipse at 60% 40%, rgba(255,70,25,0.5) 0%, rgba(230,50,15,0.22) 40%, transparent 75%)",
+          filter: "blur(50px)",
+        }} />
+
+        {/* 5. Projects — left side */}
+        <div style={{
+          position: "absolute", top: "60%", left: "-80px",
+          width: "400px", height: "450px", borderRadius: "50%",
+          background: "radial-gradient(ellipse at 40% 55%, rgba(255,85,25,0.48) 0%, rgba(215,50,10,0.2) 45%, transparent 75%)",
+          filter: "blur(52px)",
+        }} />
+
+        {/* 6. Contact — center, subtle wide */}
+        <div style={{
+          position: "absolute", top: "74%", left: "50%", transform: "translateX(-50%)",
+          width: "700px", height: "280px", borderRadius: "50%",
+          background: "radial-gradient(ellipse at center, rgba(255,60,30,0.18) 0%, rgba(200,35,10,0.07) 55%, transparent 80%)",
+          filter: "blur(65px)",
+        }} />
+
+        {/* 7. Footer — right side, warm amber */}
+        <div style={{
+          position: "absolute", top: "88%", right: "-50px",
+          width: "380px", height: "380px", borderRadius: "50%",
+          background: "radial-gradient(circle at 60% 50%, rgba(255,100,30,0.45) 0%, rgba(220,65,15,0.2) 40%, transparent 70%)",
+          filter: "blur(45px)",
+        }} />
+
       </div>
 
       {/* ── Page content ─────────────────────────────── */}

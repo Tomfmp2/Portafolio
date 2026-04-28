@@ -20,7 +20,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
           <div className="space-y-4">
             <a href="#inicio" className="inline-flex items-center gap-1.5">
-              <span className="text-xl font-bold text-white tracking-tighter">t<span className="text-[#FF4B4B]">f</span>m</span>
+              <span className="text-xl font-bold text-white tracking-tighter">t<span className="text-[#FF3333]">f</span>m</span>
             </a>
             <p className="text-white/30 text-sm leading-relaxed max-w-xs">{f.description}</p>
           </div>
@@ -33,17 +33,17 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-bold text-white/50 uppercase tracking-[0.2em] mb-4">{f.connect}</h4>
             <div className="flex gap-2">
-              {footerSocials.map((l) => (<a key={l.name} href={l.href} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center text-white/30 hover:bg-[#FF4B4B]/15 hover:text-[#FF4B4B] transition-all duration-300" aria-label={l.name}>{l.icon}</a>))}
+              {footerSocials.map((l) => (<a key={l.name} href={l.href} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center text-white/30 hover:bg-[#FF3333]/15 hover:text-[#FF3333] transition-all duration-300" aria-label={l.name}>{l.icon}</a>))}
             </div>
             <p className="text-xs text-white/20 mt-4">Bucaramanga, Colombia</p>
           </div>
         </div>
         <div className="border-t border-white/[0.05] mt-10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="text-xs text-white/20">&copy; {yr} Tomas Felipe Medina Prada. {f.rights}</p>
-          <p className="text-xs text-white/20">{f.madeWith} <span className="text-[#FF4B4B]">React</span> + <span className="text-[#FF4B4B]">Tailwind CSS</span></p>
+          <p className="text-xs text-white/20">{f.madeWith} <span className="text-[#FF3333]">React</span> + <span className="text-[#FF3333]">Tailwind CSS</span></p>
         </div>
       </div>
-      <a href="#inicio" className="fixed bottom-6 right-6 w-10 h-10 rounded-full bg-[#FF4B4B] text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(255,75,75,0.4)] z-40" aria-label={f.backToTop}>
+      <a href="#inicio" className="fixed bottom-6 right-6 w-10 h-10 rounded-full bg-[#FF3333] text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(255,75,75,0.4)] z-40" aria-label={f.backToTop}>
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
       </a>
     </footer>

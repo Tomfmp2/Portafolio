@@ -10,19 +10,20 @@
   --card-foreground: #0f172a;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-  --primary: #FF4B4B;
+  --primary: #FF3333;
   --primary-foreground: #ffffff;
-  --secondary: #cc3333;
+  --secondary: #e02020;
+  --red-glow: rgba(255, 51, 51, 0.35);
   --secondary-foreground: #ffffff;
   --muted: #f1f5f9;
   --muted-foreground: #64748b;
-  --accent: #FF4B4B;
+  --accent: #FF3333;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: #e2e8f0;
   --input: #e2e8f0;
-  --ring: #FF4B4B;
+  --ring: #FF3333;
   --radius: 0.75rem;
   /* Layout tokens */
   --page-max: 1400px;
@@ -36,19 +37,19 @@
   --card-foreground: #f1f5f9;
   --popover: #111114;
   --popover-foreground: #f1f5f9;
-  --primary: #FF4B4B;
+  --primary: #FF3333;
   --primary-foreground: #ffffff;
   --secondary: #cc3333;
   --secondary-foreground: #ffffff;
   --muted: #1a1a1e;
   --muted-foreground: #71717A;
-  --accent: #FF4B4B;
+  --accent: #FF3333;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: rgba(255, 255, 255, 0.05);
   --input: #1a1a1e;
-  --ring: #FF4B4B;
+  --ring: #FF3333;
 }
 
 @theme inline {
@@ -95,12 +96,24 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes red-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255,75,75,0); }
-  50%       { box-shadow: 0 0 24px 4px rgba(255,75,75,0.25); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,51,51,0); }
+  50%       { box-shadow: 0 0 28px 6px rgba(255,51,51,0.35); }
 }
 
 .animate-fade-up   { animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .animate-red-pulse { animation: red-pulse 3s ease-in-out infinite; }
+
+/* ── Red glow utility ──────────────────────────────────────── */
+/* Apply to any element that should emit the red aura */
+.red-glow {
+  box-shadow: 0 0 16px 2px rgba(255,51,51,0.4), 0 0 40px 6px rgba(255,51,51,0.15);
+}
+.red-glow-text {
+  text-shadow: 0 0 20px rgba(255,51,51,0.6), 0 0 40px rgba(255,51,51,0.3);
+}
+.red-glow-sm {
+  box-shadow: 0 0 8px 1px rgba(255,51,51,0.35), 0 0 20px 2px rgba(255,51,51,0.12);
+}
 
 /* ── Base ──────────────────────────────────────────────────── */
 @layer base {
@@ -219,6 +232,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #FF4B4B;
+  background: #FF3333;
   flex-shrink: 0;
+  box-shadow: 0 0 8px 2px rgba(255,51,51,0.5), 0 0 20px 4px rgba(255,51,51,0.2);
 }

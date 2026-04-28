@@ -35,7 +35,7 @@ export default function Navbar() {
         {/* Logo */}
         <a href="#inicio" className="flex items-center gap-1 group z-50" aria-label="Ir al inicio">
           <span className="text-2xl font-bold text-white tracking-tighter">
-            t<span className="text-[#FF4B4B]">f</span>m
+            t<span className="text-[#FF3333]">f</span>m
           </span>
         </a>
 
@@ -48,7 +48,7 @@ export default function Navbar() {
               className="relative text-sm font-medium text-white/50 hover:text-white transition-colors duration-300 group"
             >
               {link.name}
-              <span className="absolute -bottom-1 left-0 w-0 h-[1.5px] bg-[#FF4B4B] transition-all duration-300 group-hover:w-full rounded-full" />
+              <span className="absolute -bottom-1 left-0 w-0 h-[1.5px] bg-[#FF3333] transition-all duration-300 group-hover:w-full rounded-full group-hover:[box-shadow:0_0_8px_2px_rgba(255,51,51,0.5)]" />
             </a>
           ))}
         </div>
@@ -65,7 +65,7 @@ export default function Navbar() {
 
           <a
             href="#contacto"
-            className="px-6 py-2 rounded-full border border-white/20 text-sm font-medium text-white hover:border-[#FF4B4B] hover:text-[#FF4B4B] transition-all duration-300"
+            className="px-6 py-2 rounded-full border border-white/20 text-sm font-medium text-white hover:border-[#FF3333] hover:text-[#FF3333] transition-all duration-300"
           >
             {t.nav.contact}
           </a>
@@ -95,7 +95,7 @@ export default function Navbar() {
               {link.name}
             </a>
           ))}
-          <button onClick={() => { toggleLang(); handleLinkClick(); }} className="text-sm font-bold text-[#FF4B4B] uppercase tracking-widest mt-4">
+          <button onClick={() => { toggleLang(); handleLinkClick(); }} className="text-sm font-bold text-[#FF3333] uppercase tracking-widest mt-4">
             {lang === "es" ? "Switch to English" : "Cambiar a Español"}
           </button>
         </div>
