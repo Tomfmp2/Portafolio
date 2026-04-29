@@ -115,17 +115,51 @@
   box-shadow: 0 0 8px 1px rgba(255,51,51,0.35), 0 0 20px 2px rgba(255,51,51,0.12);
 }
 
+/* ── Custom scrollbar ──────────────────────────────────────── */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,51,51,0.25) transparent;
+}
+
+/* Chromium / Safari */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255,51,51,0.2);
+  border-radius: 99px;
+  transition: background 0.3s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,51,51,0.55);
+}
+
+/* Auto-hide scrollbar when not scrolling (Chromium) */
+html {
+  overflow-y: scroll;
+}
+html:not(:hover) ::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
 /* ── Base ──────────────────────────────────────────────────── */
 @layer base {
-  * { @apply border-border outline-ring/50; }
-  body {
-    @apply bg-background text-foreground;
+  * { border-color: var(--border); outline: none; }
+  html, body {
+    background: #09090B;
     overflow-x: hidden;
+  }
+  body {
+    @apply text-foreground;
     -webkit-font-smoothing: antialiased;
   }
   html {
     scroll-behavior: smooth;
-    overflow-x: hidden;
+    overflow-y: scroll;
   }
 }
 
