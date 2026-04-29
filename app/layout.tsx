@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'Tomas Felipe Medina Prada' }],
   creator: 'Tomas Felipe Medina Prada',
   icons: {
-    icon: '/availability-svgrepo-com.svg',
+    icon: '/c-sharp-16-svgrepo-com.svg',
   },
 }
 
