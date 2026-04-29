@@ -15,11 +15,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://portafolio-alpha-nine-96.vercel.app'),
   title: 'Tomas Felipe Medina Prada | Backend Developer',
   description: 'Professional portfolio of Tomas Felipe Medina Prada - Backend Developer specialized in .NET, C#, SQL, Docker, and process automation.',
   keywords: ['Backend Developer', '.NET', 'C#', 'SQL', 'Docker', 'n8n', 'API', 'Colombia'],
   authors: [{ name: 'Tomas Felipe Medina Prada' }],
   creator: 'Tomas Felipe Medina Prada',
+  openGraph: {
+    type: 'website',
+    locale: 'es_CO',
+    url: 'https://portafolio-alpha-nine-96.vercel.app',
+    title: 'Tomas Felipe Medina Prada | Backend Developer',
+    description: 'Professional portfolio of Tomas Felipe Medina Prada - Backend Developer specialized in .NET, C#, SQL, Docker, and process automation.',
+    siteName: 'Tomas Felipe Medina Prada Portfolio',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tomas Felipe Medina Prada | Backend Developer',
+    description: 'Professional portfolio of Tomas Felipe Medina Prada - Backend Developer specialized in .NET, C#, SQL, Docker, and process automation.',
+  },
   icons: {
     icon: '/c-sharp-16-svgrepo-com.svg',
   },
