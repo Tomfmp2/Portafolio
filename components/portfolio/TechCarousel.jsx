@@ -98,7 +98,7 @@ export default function TechCarousel() {
 
   return (
     <section
-      className="py-20 overflow-hidden bg-[#0B0B0F] relative"
+      className="py-20 overflow-hidden bg-transparent relative"
       aria-label="Tecnologías"
     >
       {/* Header */}
