@@ -1,0 +1,65 @@
+/* ─────────────────────────────────────────────────────────────
+   AmbientGlow.css  —  Cinematic static side-glow effect
+   
+   ARCHITECTURE:
+   - Glows are ABSOLUTE with z-index: 1 (scrolls with the page)
+   - Positioned to appear only below the carousel (~25% downwards)
+   - Different shapes, sizes, and positions to look organic
+───────────────────────────────────────────────────────────── */
+
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+.glow-orb {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  animation: glow-breathe 10s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* 1. Right side, About section (~25%) - Wide and soft */
+.glow-1 {
+  top: 25%;
+  right: -80px;
+  width: 550px;
+  height: 700px;
+  background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(255, 90, 20, 0.85) 0%, rgba(200, 40, 5, 0.45) 35%, rgba(100, 10, 0, 0.15) 65%, transparent 90%);
+  filter: blur(90px);
+  animation-delay: 0s;
+}
+
+/* 2. Left side, Skills section (~45%) - Taller and deeper red */
+.glow-2 {
+  top: 45%;
+  left: -120px;
+  width: 500px;
+  height: 900px;
+  background: radial-gradient(ellipse 50% 60% at 30% 50%, rgba(255, 60, 10, 0.8) 0%, rgba(180, 20, 0, 0.4) 40%, rgba(80, 0, 0, 0.1) 70%, transparent 90%);
+  filter: blur(100px);
+  animation-delay: -3s;
+}
+
+/* 3. Right side, Projects section (~65%) - Rounder and brighter */
+.glow-3 {
+  top: 65%;
+  right: -50px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(ellipse 55% 55% at 80% 50%, rgba(255, 110, 25, 0.9) 0%, rgba(220, 50, 5, 0.55) 30%, rgba(120, 15, 0, 0.2) 65%, transparent 90%);
+  filter: blur(80px);
+  animation-delay: -6s;
+}
+
+/* 4. Left side, Contact section (~85%) - Elongated and subtle */
+.glow-4 {
+  top: 85%;
+  left: -90px;
+  width: 550px;
+  height: 800px;
+  background: radial-gradient(ellipse 45% 65% at 20% 50%, rgba(255, 80, 15, 0.75) 0%, rgba(190, 30, 0, 0.35) 40%, rgba(90, 5, 0, 0.1) 65%, transparent 85%);
+  filter: blur(95px);
+  animation-delay: -2s;
+}
