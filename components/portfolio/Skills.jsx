@@ -187,7 +187,7 @@ function MiniBar({ name, level }) {
 
 /* ── Main Skills Section ────────────────────────────────── */
 export default function Skills() {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const s = t.skills;
 
   const softSkills = s.softSkills || [];
@@ -196,7 +196,7 @@ export default function Skills() {
   return (
     <section id="habilidades" className="section">
       <div className="page-container">
-        
+
         {/* Header */}
         <div className="text-center mb-14">
           <div className="section-label mb-4">
@@ -215,11 +215,11 @@ export default function Skills() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <p className="text-[10px] font-mono text-[#FF3333]/70 tracking-widest uppercase mb-1">{s.categories?.[0]?.title}</p>
-                <h3 className="text-lg font-bold text-white/90">Core Languages</h3>
+                <h3 className="text-lg font-bold text-white/90">{lang === 'es' ? 'Lenguajes Principales' : 'Core Languages'}</h3>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-full bg-[#FF3333]" />
-                <span className="text-[10px] text-white/40 font-mono">PROFICIENCY</span>
+                <span className="text-[10px] text-white/40 font-mono">{lang === 'es' ? 'NIVEL' : 'PROFICIENCY'}</span>
               </div>
             </div>
             <div className="flex items-end justify-around gap-3 pt-4">
@@ -234,12 +234,12 @@ export default function Skills() {
           {/* Card 2: Frameworks */}
           <div className="lg:col-span-4 glass card-hover p-6">
             <p className="text-[10px] font-mono text-[#FF3333]/70 tracking-widest uppercase mb-1">{s.categories?.[1]?.title}</p>
-            <h3 className="text-lg font-bold text-white/90 mb-6">Stack</h3>
+            <h3 className="text-lg font-bold text-white/90 mb-6">{lang === 'es' ? 'Tecnologías' : 'Stack'}</h3>
             <div className="flex flex-wrap justify-center gap-4">
-              <CircleRing percent={95} size={90} stroke={5} label=".NET" sublabel="Primary" />
-              <CircleRing percent={85} size={90} stroke={5} label="ASP.NET" sublabel="Web APIs" />
+              <CircleRing percent={95} size={90} stroke={5} label=".NET" sublabel={lang === 'es' ? 'Principal' : 'Primary'} />
+              <CircleRing percent={85} size={90} stroke={5} label="ASP.NET" sublabel={lang === 'es' ? 'APIs Web' : 'Web APIs'} />
               <CircleRing percent={90} size={90} stroke={5} label="Entity Framework" sublabel="ORM" />
-              <CircleRing percent={90} size={90} stroke={5} label="Next.js" sublabel="React Framework" />
+              <CircleRing percent={90} size={90} stroke={5} label="Next.js" sublabel={lang === 'es' ? 'Framework React' : 'React Framework'} />
               <CircleRing percent={85} size={90} stroke={5} label="Vite" sublabel="Frontend" />
             </div>
           </div>
@@ -247,11 +247,11 @@ export default function Skills() {
           {/* Card 3: Big stat */}
           <div className="lg:col-span-3 glass card-hover p-6 flex flex-col justify-between">
             <div>
-              <p className="text-[10px] font-mono text-white/40 tracking-widest uppercase mb-1">OVERVIEW</p>
+              <p className="text-[10px] font-mono text-white/40 tracking-widest uppercase mb-1">{lang === 'es' ? 'RESUMEN' : 'OVERVIEW'}</p>
               <p className="text-5xl font-black text-white/90 leading-none mt-2">
-                <AnimNum target={14} suffix="" />
+                <AnimNum target={16} suffix="" />
               </p>
-              <p className="text-sm text-white/40 mt-1">Technologies</p>
+              <p className="text-sm text-white/40 mt-1">{lang === 'es' ? 'Tecnologías' : 'Technologies'}</p>
             </div>
             <div className="mt-6 space-y-2">
               <div className="flex items-center justify-between text-xs">
@@ -264,11 +264,11 @@ export default function Skills() {
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-white/50">Frontend</span>
-                <span className="text-white font-bold">3</span>
+                <span className="text-white font-bold">4</span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-white/50">Database</span>
-                <span className="text-white font-bold">2</span>
+                <span className="text-white/50">{lang === 'es' ? 'Base de Datos' : 'Database'}</span>
+                <span className="text-white font-bold">3</span>
               </div>
             </div>
           </div>
@@ -276,7 +276,7 @@ export default function Skills() {
           {/* Card 4: Databases */}
           <div className="lg:col-span-4 glass card-hover p-6">
             <p className="text-[10px] font-mono text-[#FF3333]/70 tracking-widest uppercase mb-1">{s.categories?.[2]?.title}</p>
-            <h3 className="text-lg font-bold text-white/90 mb-5">Database Systems</h3>
+            <h3 className="text-lg font-bold text-white/90 mb-5">{lang === 'es' ? 'Sistemas de BD' : 'Database Systems'}</h3>
             <div className="space-y-4">
               <MiniBar name="MySQL" level={90} />
               <MiniBar name="SQL Server" level={90} />
@@ -287,7 +287,7 @@ export default function Skills() {
           {/* Card 5: DevOps */}
           <div className="lg:col-span-4 glass card-hover p-6">
             <p className="text-[10px] font-mono text-[#FF3333]/70 tracking-widest uppercase mb-1">{s.categories?.[3]?.title}</p>
-            <h3 className="text-lg font-bold text-white/90 mb-5">DevOps & Tools</h3>
+            <h3 className="text-lg font-bold text-white/90 mb-5">{lang === 'es' ? 'DevOps & Herramientas' : 'DevOps & Tools'}</h3>
             <div className="space-y-4">
               <MiniBar name="Git / GitHub" level={95} />
               <MiniBar name="Docker" level={85} />
@@ -298,7 +298,7 @@ export default function Skills() {
 
           {/* Card 6: Soft Skills */}
           <div className="lg:col-span-4 glass card-hover p-6">
-            <p className="text-[10px] font-mono text-white/40 tracking-widest uppercase mb-1">SOFT SKILLS</p>
+            <p className="text-[10px] font-mono text-white/40 tracking-widest uppercase mb-1">{lang === 'es' ? 'HABILIDADES BLANDAS' : 'SOFT SKILLS'}</p>
             <h3 className="text-lg font-bold text-white/90 mb-5">{s.categories?.[4]?.title}</h3>
             <div className="space-y-3">
               {softSkills.map((skill, i) => (
@@ -315,12 +315,12 @@ export default function Skills() {
         <div className="mt-8 glass card-hover p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
             <div>
-              <p className="text-[10px] font-mono text-[#FF3333]/70 tracking-widest uppercase mb-1">IN PROGRESS</p>
+              <p className="text-[10px] font-mono text-[#FF3333]/70 tracking-widest uppercase mb-1">{lang === 'es' ? 'EN PROGRESO' : 'IN PROGRESS'}</p>
               <h3 className="text-lg font-bold text-white/90">{s.learningTitle}</h3>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#FF3333] animate-pulse" />
-              <span className="text-[10px] font-mono text-white/40">ACTIVE</span>
+              <span className="text-[10px] font-mono text-white/40">{lang === 'es' ? 'ACTIVO' : 'ACTIVE'}</span>
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
