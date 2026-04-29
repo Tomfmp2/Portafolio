@@ -40,7 +40,7 @@ export default function Contact() {
   const inputCls = (field) => `w-full px-4 py-3 rounded-xl bg-white/[0.03] border ${errors[field] ? "border-red-500" : "border-white/[0.08]"} text-white text-sm placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-[#FF3333]/50 focus:border-[#FF3333] transition-all duration-300`;
 
   return (
-    <section id="contacto" className="section bg-[#0B0B0F]">
+    <section id="contacto" className="section">
       <div className="page-container">
         <div className="text-center mb-14">
           <div className="section-label mb-4">

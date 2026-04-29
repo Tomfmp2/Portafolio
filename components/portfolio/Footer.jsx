@@ -14,7 +14,7 @@ export default function Footer() {
   const yr = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#09090B]">
+    <footer className="bg-transparent">
       <div className="rule" />
       <div className="page-container py-12">
         <div className="grid md:grid-cols-3 gap-8 lg:gap-12">

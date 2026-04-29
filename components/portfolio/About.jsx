@@ -7,7 +7,7 @@ export default function About() {
   const a = t.about;
 
   return (
-    <section id="sobre-mi" className="section bg-[#0B0B0F]">
+    <section id="sobre-mi" className="section">
       <div className="page-container">
 
         {/* Section label */}

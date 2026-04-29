@@ -8,7 +8,7 @@ const projectMeta = [
   { stack: ["SQL"], github: "https://github.com/Tomfmp2/LMS-educational-system", demo: "https://github.com/Tomfmp2/LMS-educational-system", type: "Architecture" },
   { stack: ["Python"], github: "https://github.com/Tomfmp2/banking-system-Python", demo: "https://github.com/Tomfmp2/banking-system-Python", type: "Terminal CLI" },
   { stack: ["Next.js", "React"], github: "https://github.com/Tomfmp2/Portafolio", demo: "https://portafolio-alpha-nine-96.vercel.app/#proyectos", type: "Web App" },
-  { stack: [".NET", "Redis"], github: "#", demo: "#", type: "Microservice" },
+  { stack: ["C#", ".NET", "Console"], github: "https://github.com/Tomfmp2/Sistema-de-Gesti-n-de-Tiquetes-A-reos", demo: "https://github.com/Tomfmp2/Sistema-de-Gesti-n-de-Tiquetes-A-reos", type: "Console App" },
 ];
 
 export default function Projects() {
@@ -16,7 +16,7 @@ export default function Projects() {
   const p = t.projects;
 
   return (
-    <section id="proyectos" className="section bg-[#0B0B0F]">
+    <section id="proyectos" className="section">
       <div className="page-container">
         
         {/* Header */}
