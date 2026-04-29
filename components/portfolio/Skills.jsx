@@ -32,14 +32,19 @@ function AnimNum({ target, suffix = "", delay = 0 }) {
     return () => observer.disconnect();
   }, [target, delay]);
 
+  useEffect(() => {
+    if (started.current) {
+      setVal(target);
+    }
+  }, [target]);
+
   return <span ref={ref} className="tabular-nums">{val}{suffix}</span>;
 }
 
 /* ── Circular ring (SVG) ────────────────────────────────── */
 function CircleRing({ percent, size = 100, stroke = 6, label, sublabel }) {
   const r = (size - stroke) / 2;
-  const circ = 2 * Math.PI * r;
-  const [offset, setOffset] = useState(circ);
+  const [offset, setOffset] = useState(100);
 
   const ref = useRef(null);
   const started = useRef(false);
@@ -49,14 +54,20 @@ function CircleRing({ percent, size = 100, stroke = 6, label, sublabel }) {
       ([e]) => {
         if (e.isIntersecting && !started.current) {
           started.current = true;
-          setTimeout(() => setOffset(circ - (percent / 100) * circ), 200);
+          setTimeout(() => setOffset(100 - percent), 200);
         }
       },
       { threshold: 0.3 }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [percent, circ]);
+  }, [percent]);
+
+  useEffect(() => {
+    if (started.current) {
+      setOffset(100 - percent);
+    }
+  }, [percent]);
 
   return (
     <div ref={ref} className="flex flex-col items-center gap-2">
@@ -67,7 +78,8 @@ function CircleRing({ percent, size = 100, stroke = 6, label, sublabel }) {
             cx={size / 2} cy={size / 2} r={r} fill="none"
             stroke="url(#redGrad)" strokeWidth={stroke}
             strokeLinecap="round"
-            strokeDasharray={circ}
+            pathLength="100"
+            strokeDasharray="100"
             strokeDashoffset={offset}
             style={{ transition: "stroke-dashoffset 1.4s cubic-bezier(0.22,1,0.36,1)" }}
           />
@@ -110,6 +122,12 @@ function SkillBar({ name, level, maxH = 120 }) {
     return () => observer.disconnect();
   }, [level, maxH]);
 
+  useEffect(() => {
+    if (started.current) {
+      setH((level / 100) * maxH);
+    }
+  }, [level, maxH]);
+
   return (
     <div ref={ref} className="flex flex-col items-center gap-2 group">
       <span className="text-xs font-bold text-[#FF3333] opacity-0 group-hover:opacity-100 transition-opacity duration-300">{level}%</span>
@@ -148,6 +166,12 @@ function MiniBar({ name, level }) {
     return () => observer.disconnect();
   }, [level]);
 
+  useEffect(() => {
+    if (started.current) {
+      setW(level);
+    }
+  }, [level]);
+
   return (
     <div ref={ref} className="space-y-1.5">
       <div className="flex justify-between items-center">
@@ -170,7 +194,7 @@ export default function Skills() {
   const learningBadges = s.learning || [];
 
   return (
-    <section id="habilidades" className="section bg-[#0B0B0F]">
+    <section id="habilidades" className="section">
       <div className="page-container">
         
         {/* Header */}
@@ -211,10 +235,12 @@ export default function Skills() {
           <div className="lg:col-span-4 glass card-hover p-6">
             <p className="text-[10px] font-mono text-[#FF3333]/70 tracking-widest uppercase mb-1">{s.categories?.[1]?.title}</p>
             <h3 className="text-lg font-bold text-white/90 mb-6">Stack</h3>
-            <div className="flex justify-around gap-2">
-              <CircleRing percent={90} size={90} stroke={5} label=".NET" sublabel="Primary" />
+            <div className="flex flex-wrap justify-center gap-4">
+              <CircleRing percent={95} size={90} stroke={5} label=".NET" sublabel="Primary" />
               <CircleRing percent={85} size={90} stroke={5} label="ASP.NET" sublabel="Web APIs" />
-              <CircleRing percent={80} size={90} stroke={5} label="Vite" sublabel="Frontend" />
+              <CircleRing percent={90} size={90} stroke={5} label="Entity Framework" sublabel="ORM" />
+              <CircleRing percent={90} size={90} stroke={5} label="Next.js" sublabel="React Framework" />
+              <CircleRing percent={85} size={90} stroke={5} label="Vite" sublabel="Frontend" />
             </div>
           </div>
 
