@@ -85,7 +85,8 @@ export default function Hero() {
               VER PROYECTOS
             </a>
             <a
-              href="https://1drv.ms/b/c/a7e9bce9bc70cf88/IQAomZHvzj3pSof5CEbdf-ZwAQXsisfe-9SP0lR-HlE6Cts?e=xOC6JA"
+              href="/CV/Tomas_Medina_CV.pdf"
+              download="Tomas_Medina_CV.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-3.5 rounded-full border border-white/15 text-white/60 font-medium text-sm hover:border-white/40 hover:text-white transition-all duration-300"

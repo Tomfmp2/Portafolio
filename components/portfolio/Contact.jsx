@@ -75,7 +75,7 @@ export default function Contact() {
                 <span className="relative flex h-2.5 w-2.5"><span className="animate-ping absolute h-full w-full rounded-full bg-[#FF3333] opacity-75" /><span className="relative rounded-full h-2.5 w-2.5 bg-[#FF3333]" /></span>
                 <div><p className="text-sm font-bold text-white">{c.availableTitle}</p><p className="text-xs text-white/40">{c.availableText}</p></div>
               </div>
-              <a href="https://1drv.ms/b/c/a7e9bce9bc70cf88/IQAomZHvzj3pSof5CEbdf-ZwAQXsisfe-9SP0lR-HlE6Cts?e=xOC6JA" target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 font-bold rounded-xl text-white bg-[#FF3333] hover:bg-[#ff6060] text-sm transition-all">{c.downloadCV}</a>
+              <a href="/CV/Tomas_Medina_CV.pdf" download="Tomas_Medina_CV.pdf" target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 font-bold rounded-xl text-white bg-[#FF3333] hover:bg-[#ff6060] text-sm transition-all">{c.downloadCV}</a>
             </div>
           </div>
           <div className="glass card-hover p-8">
