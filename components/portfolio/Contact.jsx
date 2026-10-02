@@ -1,7 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
+import { useGSAP } from "@/hooks/use-gsap";
+import { gsap } from "@/lib/gsap";
+import { MotionCard, MotionButton } from "@/components/ui/motion";
 
 const socialLinks = [
   { name: "GitHub", href: "https://github.com/Tomfmp2", icon: (<svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>) },
@@ -13,10 +16,53 @@ const socialLinks = [
 export default function Contact() {
   const { t } = useLanguage();
   const c = t.contact;
+  const sectionRef = useRef(null);
+
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  useGSAP(() => {
+    const cards = sectionRef.current?.querySelectorAll(".gsap-contact-card");
+    const header = sectionRef.current?.querySelector(".gsap-contact-header");
+
+    if (header) {
+      gsap.fromTo(
+        header,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          scrollTrigger: {
+            trigger: header,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }
+
+    if (cards && cards.length > 0) {
+      gsap.fromTo(
+        cards,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          stagger: 0.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: cards[0],
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }
+  }, { scope: sectionRef });
 
   const validateForm = () => {
     const n = {};
@@ -28,21 +74,46 @@ export default function Contact() {
     setErrors(n);
     return Object.keys(n).length === 0;
   };
-  const handleChange = (e) => { setFormData(p => ({...p, [e.target.name]: e.target.value})); if (errors[e.target.name]) setErrors(p => ({...p, [e.target.name]: ""})); };
+
+  const handleChange = (e) => {
+    setFormData(p => ({...p, [e.target.name]: e.target.value}));
+    if (errors[e.target.name]) setErrors(p => ({...p, [e.target.name]: ""}));
+  };
+
   const handleSubmit = async (e) => {
-    e.preventDefault(); if (!validateForm()) return; setIsSubmitting(true);
+    e.preventDefault();
+    if (!validateForm()) return;
+    setIsSubmitting(true);
     try {
-      const r = await fetch("https://formsubmit.co/ajax/tom.pradamd@gmail.com", { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ name: formData.name, email: formData.email, message: formData.message, _subject: "Nuevo mensaje desde Portafolio", _template: "table" }) });
-      if (r.ok) { setSubmitSuccess(true); setFormData({ name: "", email: "", message: "" }); setTimeout(() => setSubmitSuccess(false), 5000); } else alert(c.errorMessage);
-    } catch (err) { alert(c.errorConnection); } finally { setIsSubmitting(false); }
+      const r = await fetch("https://formsubmit.co/ajax/tom.pradamd@gmail.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          _subject: "Nuevo mensaje desde Portafolio",
+          _template: "table"
+        })
+      });
+      if (r.ok) {
+        setSubmitSuccess(true);
+        setFormData({ name: "", email: "", message: "" });
+        setTimeout(() => setSubmitSuccess(false), 5000);
+      } else alert(c.errorMessage);
+    } catch (err) {
+      alert(c.errorConnection);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const inputCls = (field) => `w-full px-4 py-3 rounded-xl bg-white/[0.03] border ${errors[field] ? "border-red-500" : "border-white/[0.08]"} text-white text-sm placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-[#FF3333]/50 focus:border-[#FF3333] transition-all duration-300`;
 
   return (
-    <section id="contacto" className="section">
+    <section id="contacto" ref={sectionRef} className="section">
       <div className="page-container">
-        <div className="text-center mb-14">
+        <div className="text-center mb-14 gsap-contact-header opacity-0">
           <div className="section-label mb-4">
             <span className="label-dot" />
             <span className="text-[11px] font-bold text-white/30 tracking-[0.3em] uppercase">{c.tag}</span>
@@ -51,8 +122,8 @@ export default function Contact() {
           <p className="text-white/40 text-base max-w-xl mx-auto font-light leading-relaxed">{c.subtitle}</p>
         </div>
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-14">
-          <div className="space-y-5">
-            <div className="glass card-hover p-8">
+          <div className="space-y-5 gsap-contact-card opacity-0">
+            <MotionCard className="glass card-hover p-8">
               <h3 className="text-lg font-bold text-white mb-3">{c.connectTitle}</h3>
               <p className="text-white/40 text-sm font-light mb-6 leading-relaxed">{c.connectText}</p>
               <div className="space-y-4 mb-6">
@@ -69,24 +140,30 @@ export default function Contact() {
               <div className="flex gap-2">
                 {socialLinks.map((l) => (<a key={l.name} href={l.href} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg bg-white/[0.04] flex items-center justify-center text-white/35 hover:bg-[#FF3333]/15 hover:text-[#FF3333] transition-all duration-300" aria-label={l.name}>{l.icon}</a>))}
               </div>
-            </div>
-            <div className="glass p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            </MotionCard>
+            <MotionCard className="glass p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <span className="relative flex h-2.5 w-2.5"><span className="animate-ping absolute h-full w-full rounded-full bg-[#FF3333] opacity-75" /><span className="relative rounded-full h-2.5 w-2.5 bg-[#FF3333]" /></span>
                 <div><p className="text-sm font-bold text-white">{c.availableTitle}</p><p className="text-xs text-white/40">{c.availableText}</p></div>
               </div>
-              <a href="/CV/Tomas_Medina_CV.pdf" download="Tomas_Medina_CV.pdf" target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 font-bold rounded-xl text-white bg-[#FF3333] hover:bg-[#ff6060] text-sm transition-all">{c.downloadCV}</a>
-            </div>
+              <MotionButton>
+                <a href="/CV/Tomas_Medina_CV.pdf" download="Tomas_Medina_CV.pdf" target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 font-bold rounded-xl text-white bg-[#FF3333] hover:bg-[#ff6060] text-sm transition-all inline-block">{c.downloadCV}</a>
+              </MotionButton>
+            </MotionCard>
           </div>
-          <div className="glass card-hover p-8">
-            <h3 className="text-lg font-bold text-white mb-6">{c.formTitle}</h3>
-            {submitSuccess && (<div className="mb-5 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-2"><svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg><p className="text-emerald-400 text-sm">{c.successMessage}</p></div>)}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div><label htmlFor="name" className="block text-sm text-white/60 mb-1.5">{c.nameLabel}</label><input type="text" id="name" name="name" value={formData.name} onChange={handleChange} placeholder={c.namePlaceholder} className={inputCls("name")} />{errors.name && <p className="mt-1 text-xs text-red-400">{errors.name}</p>}</div>
-              <div><label htmlFor="email" className="block text-sm text-white/60 mb-1.5">{c.emailLabel}</label><input type="email" id="email" name="email" value={formData.email} onChange={handleChange} placeholder={c.emailPlaceholder} className={inputCls("email")} />{errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}</div>
-              <div><label htmlFor="message" className="block text-sm text-white/60 mb-1.5">{c.messageLabel}</label><textarea id="message" name="message" value={formData.message} onChange={handleChange} placeholder={c.messagePlaceholder} rows={4} className={`${inputCls("message")} resize-none`} />{errors.message && <p className="mt-1 text-xs text-red-400">{errors.message}</p>}</div>
-              <button type="submit" disabled={isSubmitting} className="w-full py-3.5 font-bold rounded-xl text-white bg-[#FF3333] hover:bg-[#ff6060] transition-all disabled:opacity-50 text-sm">{isSubmitting ? c.sending : c.send}</button>
-            </form>
+          <div className="gsap-contact-card opacity-0">
+            <MotionCard className="glass card-hover p-8">
+              <h3 className="text-lg font-bold text-white mb-6">{c.formTitle}</h3>
+              {submitSuccess && (<div className="mb-5 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-2"><svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg><p className="text-emerald-400 text-sm">{c.successMessage}</p></div>)}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div><label htmlFor="name" className="block text-sm text-white/60 mb-1.5">{c.nameLabel}</label><input type="text" id="name" name="name" value={formData.name} onChange={handleChange} placeholder={c.namePlaceholder} className={inputCls("name")} />{errors.name && <p className="mt-1 text-xs text-red-400">{errors.name}</p>}</div>
+                <div><label htmlFor="email" className="block text-sm text-white/60 mb-1.5">{c.emailLabel}</label><input type="email" id="email" name="email" value={formData.email} onChange={handleChange} placeholder={c.emailPlaceholder} className={inputCls("email")} />{errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}</div>
+                <div><label htmlFor="message" className="block text-sm text-white/60 mb-1.5">{c.messageLabel}</label><textarea id="message" name="message" value={formData.message} onChange={handleChange} placeholder={c.messagePlaceholder} rows={4} className={`${inputCls("message")} resize-none`} />{errors.message && <p className="mt-1 text-xs text-red-400">{errors.message}</p>}</div>
+                <MotionButton className="w-full">
+                  <button type="submit" disabled={isSubmitting} className="w-full py-3.5 font-bold rounded-xl text-white bg-[#FF3333] hover:bg-[#ff6060] transition-all disabled:opacity-50 text-sm cursor-pointer">{isSubmitting ? c.sending : c.send}</button>
+                </MotionButton>
+              </form>
+            </MotionCard>
           </div>
         </div>
       </div>

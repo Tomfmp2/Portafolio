@@ -158,7 +158,6 @@ html:not(:hover) ::-webkit-scrollbar-thumb {
     -webkit-font-smoothing: antialiased;
   }
   html {
-    scroll-behavior: smooth;
     overflow-y: scroll;
   }
 }

@@ -1,29 +1,41 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
+import { useGSAP } from "@/hooks/use-gsap";
+import { gsap } from "@/lib/gsap";
+import { MotionButton } from "@/components/ui/motion";
+import LazyCanvas from "@/components/3d/LazyCanvas";
+import HeroParticles from "@/components/3d/HeroParticles";
 
 export default function Hero() {
   const { t } = useLanguage();
   const h = t.hero;
+  const containerRef = useRef(null);
 
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
+  useGSAP(() => {
+    const heroElements = containerRef.current?.querySelectorAll(".gsap-hero-anim");
+    if (!heroElements || heroElements.length === 0) return;
 
-  const anim = (delay = 0) =>
-    [
-      "transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]",
-      mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
-      delay ? `delay-[${delay}ms]` : "",
-    ].join(" ");
+    gsap.fromTo(
+      heroElements,
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        stagger: 0.15,
+        ease: "power3.out",
+        delay: 0.1,
+      }
+    );
+  }, { scope: containerRef });
 
   return (
     <section
       id="inicio"
+      ref={containerRef}
       className="relative min-h-screen bg-transparent flex items-center justify-center overflow-hidden"
     >
       {/* ── Background image ────────────────────── */}
@@ -43,12 +55,19 @@ export default function Hero() {
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#0B0B0F] to-transparent" />
       </div>
 
+      {/* ── 3D Particles Ambient Overlay ─────────── */}
+      <div className="absolute inset-0 z-1 pointer-events-none opacity-80">
+        <LazyCanvas className="w-full h-full">
+          <HeroParticles />
+        </LazyCanvas>
+      </div>
+
       {/* ── Content (centered) ──────────────────── */}
       <div className="relative z-10 w-full page-container text-center pt-28 pb-24">
         <div className="max-w-3xl mx-auto">
 
           {/* Eyebrow */}
-          <div className={`flex items-center justify-center gap-3 mb-6 ${anim(0)}`}>
+          <div className="flex items-center justify-center gap-3 mb-6 gsap-hero-anim opacity-0">
             <div className="w-2 h-2 rounded-full bg-[#FF3333] red-glow-sm" />
             <span className="text-[11px] font-medium text-white/50 tracking-[0.28em] uppercase">
               {h.role}
@@ -57,7 +76,7 @@ export default function Hero() {
 
           {/* Headline — single line, styled */}
           <h1
-            className={`font-black tracking-tight leading-none mb-6 whitespace-nowrap text-center ${anim(180)}`}
+            className="font-black tracking-tight leading-none mb-6 whitespace-nowrap text-center gsap-hero-anim opacity-0"
             style={{ fontSize: "clamp(2rem, 6vw, 5.5rem)" }}
           >
             <span className="text-white">Tomas </span>
@@ -71,35 +90,39 @@ export default function Hero() {
           </h1>
 
           {/* Description */}
-          <p className={`text-base sm:text-lg text-white/40 font-light leading-relaxed max-w-lg mx-auto mb-12 ${anim(360)}`}>
+          <p className="text-base sm:text-lg text-white/40 font-light leading-relaxed max-w-lg mx-auto mb-12 gsap-hero-anim opacity-0">
             {h.description}
           </p>
 
           {/* CTAs */}
-          <div className={`flex flex-col sm:flex-row items-center justify-center gap-5 ${anim(520)}`}>
-            <a
-              href="#proyectos"
-              className="group inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-[#FF3333] text-white font-bold text-sm transition-all duration-300 hover:scale-105 red-glow"
-              style={{ boxShadow: "0 0 24px rgba(255,51,51,0.45), 0 0 60px rgba(255,51,51,0.15)" }}
-            >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-              VER PROYECTOS
-            </a>
-            <a
-              href="/CV/Tomas_Medina_CV.pdf"
-              download="Tomas_Medina_CV.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3.5 rounded-full border border-white/15 text-white/60 font-medium text-sm hover:border-white/40 hover:text-white transition-all duration-300"
-            >
-              {h.downloadCV}
-            </a>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-5 gsap-hero-anim opacity-0">
+            <MotionButton>
+              <a
+                href="#proyectos"
+                className="group inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-[#FF3333] text-white font-bold text-sm transition-all duration-300 red-glow"
+                style={{ boxShadow: "0 0 24px rgba(255,51,51,0.45), 0 0 60px rgba(255,51,51,0.15)" }}
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                VER PROYECTOS
+              </a>
+            </MotionButton>
+            <MotionButton>
+              <a
+                href="/CV/Tomas_Medina_CV.pdf"
+                download="Tomas_Medina_CV.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-8 py-3.5 rounded-full border border-white/15 text-white/60 font-medium text-sm hover:border-white/40 hover:text-white transition-all duration-300"
+              >
+                {h.downloadCV}
+              </a>
+            </MotionButton>
           </div>
         </div>
       </div>
 
       {/* ── Social links (bottom left) ────────── */}
-      <div className="hidden lg:flex absolute bottom-10 left-10 z-20 items-center gap-6">
+      <div className="hidden lg:flex absolute bottom-10 left-10 z-20 items-center gap-6 gsap-hero-anim opacity-0">
         <a href="https://github.com/Tomfmp2" target="_blank" rel="noopener noreferrer" className="text-[10px] text-white/25 tracking-[0.2em] uppercase hover:text-white transition-colors">Github</a>
         <div className="w-8 h-px bg-white/15" />
         <a href="https://www.linkedin.com/in/tomasmedinadev/" target="_blank" rel="noopener noreferrer" className="text-[10px] text-white/25 tracking-[0.2em] uppercase hover:text-[#FF3333] transition-colors">LinkedIn</a>
