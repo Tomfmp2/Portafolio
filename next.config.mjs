@@ -1,11 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  compress: true,
   images: {
-    unoptimized: true,
+    formats: ['image/avif', 'image/webp'],
   },
-}
+  transpilePackages: ['three', 'gsap'],
+};
 
-export default nextConfig
+export default nextConfig;

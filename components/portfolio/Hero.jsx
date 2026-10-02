@@ -33,8 +33,9 @@ export default function Hero() {
           alt=""
           fill
           priority
+          sizes="100vw"
           className="object-cover object-center select-none opacity-60"
-          quality={100}
+          quality={90}
         />
         {/* Radial dark vignette to keep center readable */}
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, rgba(11,11,15,0.4) 0%, rgba(11,11,15,0.85) 70%)" }} />
