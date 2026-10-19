@@ -1,55 +1,47 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { Bloom, ChromaticAberration, EffectComposer, Vignette } from "@react-three/postprocessing";
+import type { ChromaticAberrationEffect } from "postprocessing";
 import * as THREE from "three";
 import ParticleCloud, { type ParticleCloudProps } from "./ParticleCloud";
 import Floppies, { type FloppyItem } from "./Floppies";
-import { scrollState } from "@/lib/experience/chapters";
+import World from "./World";
+import { journey } from "@/lib/experience/chapters";
 
-/** Distant static stars: they turn a little with the chapters to give the camera parallax. */
-function Starfield({ count, reducedMotion }: { count: number; reducedMotion: boolean }) {
-  const points = useMemo(() => {
-    const positions = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      const u = Math.random() * 2 - 1;
-      const a = Math.random() * Math.PI * 2;
-      const r = 18 + Math.random() * 14;
-      const s = Math.sqrt(1 - u * u);
-      positions.set([Math.cos(a) * s * r, u * r, Math.sin(a) * s * r], i * 3);
-    }
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    const material = new THREE.PointsMaterial({
-      color: "#C9C4F2",
-      size: 1.6,
-      sizeAttenuation: false,
-      transparent: true,
-      opacity: 0.55,
-      depthWrite: false,
-    });
-    return new THREE.Points(geometry, material);
-  }, [count]);
-
-  useEffect(() => () => {
-    points.geometry.dispose();
-    (points.material as THREE.Material).dispose();
-  }, [points]);
-
+/** Colour fringing that only shows up at speed, so travel feels fast and rest stays clean. */
+function Effects() {
+  const aberration = useRef<ChromaticAberrationEffect>(null);
+  const offset = useRef(new THREE.Vector2());
   useFrame(() => {
-    points.rotation.y = scrollState.chapter * 0.12;
-    if (!reducedMotion) points.rotation.x = scrollState.chapter * 0.03;
+    const k = 0.0004 + journey.warp * 0.0035;
+    offset.current.set(k, k * 0.6);
+    if (aberration.current) aberration.current.offset = offset.current;
   });
-
-  return <primitive object={points} />;
+  return (
+    <EffectComposer multisampling={0}>
+      <Bloom mipmapBlur intensity={0.9} luminanceThreshold={0.25} luminanceSmoothing={0.3} radius={0.7} />
+      <ChromaticAberration ref={aberration} offset={offset.current} radialModulation={false} modulationOffset={0} />
+      <Vignette offset={0.25} darkness={0.75} />
+    </EffectComposer>
+  );
 }
 
-export default function ExperienceScene({ floppies, ...props }: ParticleCloudProps & { floppies: FloppyItem[] }) {
+interface SceneProps extends ParticleCloudProps {
+  floppies: FloppyItem[];
+  levels: string[];
+  effects: boolean;
+}
+
+export default function ExperienceScene({ floppies, levels, effects, ...props }: SceneProps) {
+  const dpr = useThree((state) => state.viewport.dpr);
   return (
     <>
-      <Starfield count={props.isMobile ? 500 : 1200} reducedMotion={props.reducedMotion} />
+      <World labels={levels} fonts={props.fonts} isMobile={props.isMobile} reducedMotion={props.reducedMotion} pixelRatio={dpr} />
       <ParticleCloud {...props} />
       <Floppies items={floppies} fonts={props.fonts} isMobile={props.isMobile} />
+      {effects && <Effects />}
     </>
   );
 }

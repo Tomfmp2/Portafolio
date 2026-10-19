@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { CHAPTERS, SHAPES, scrollState, type Pose, type ShapeKey } from "@/lib/experience/chapters";
+import { CHAPTERS, SHAPES, ease, journey, poseAt, scrollState, stationAt, travelAt, type ShapeKey } from "@/lib/experience/chapters";
 import { buildProceduralShapes, loadBakedShape, type ShapeFonts } from "@/lib/experience/shapes";
 import { interaction, setLevel, subscribe } from "@/lib/experience/store";
 import { sound } from "@/lib/experience/sound";
@@ -38,6 +38,7 @@ const vertexShader = /* glsl */ `
   uniform float uShockAge;
   uniform float uHighlight;
   uniform float uHighlightMix;
+  uniform float uWarp;
 
   uniform vec3 uPhosphor;
   uniform vec3 uSignal;
@@ -75,6 +76,9 @@ const vertexShader = /* glsl */ `
     );
     pos += swirl * (0.006 + uTurbulence * 0.22) * (0.4 + aSeed.y);
 
+    // At travel speed the cloud smears along the flight axis, like a slow shutter.
+    pos.z += (aSeed.w - 0.5) * uWarp * 3.0;
+
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
     float energy = push * 2.0 + ring * 1.4 + lifted;
@@ -103,23 +107,11 @@ const fragmentShader = /* glsl */ `
 const damp = (current: number, target: number, lambda: number, dt: number) =>
   current + (target - current) * (1 - Math.exp(-lambda * dt));
 
-/** Pose interpolated between the two chapters around `value`. */
-function poseAt(value: number, mobile: boolean): Pose {
-  const i = Math.min(Math.floor(value), CHAPTERS.length - 1);
-  const j = Math.min(i + 1, CHAPTERS.length - 1);
-  const t = value - i;
-  const a = mobile ? CHAPTERS[i].mobile : CHAPTERS[i].desktop;
-  const b = mobile ? CHAPTERS[j].mobile : CHAPTERS[j].desktop;
-  const mix3 = (p: number[], q: number[]) => p.map((v, k) => v + (q[k] - v) * t) as [number, number, number];
-  return {
-    camera: mix3(a.camera, b.camera),
-    offset: mix3(a.offset, b.offset),
-    rotation: mix3(a.rotation, b.rotation),
-    scale: a.scale + (b.scale - a.scale) * t,
-  };
-}
-
-const ease = (t: number) => t * t * (3 - 2 * t);
+const BASE_FOV = 40;
+/** Extra field of view at full travel speed: the classic "punch in" of a jump to hyperspace. */
+const WARP_FOV = 14;
+/** World units per second that count as full warp. */
+const WARP_SPEED = 40;
 
 export interface ParticleCloudProps {
   count: number;
@@ -191,6 +183,7 @@ export default function ParticleCloud({ count, isMobile, reducedMotion, fonts }:
           uShockAge: { value: 99 },
           uHighlight: { value: -1 },
           uHighlightMix: { value: 0 },
+          uWarp: { value: 0 },
           uPhosphor: { value: PHOSPHOR },
           uSignal: { value: SIGNAL },
           uPaper: { value: PAPER },
@@ -290,6 +283,7 @@ export default function ParticleCloud({ count, isMobile, reducedMotion, fonts }:
   const tmp = useMemo(
     () => ({
       lookAt: new THREE.Vector3(),
+      station: [0, 0, 0] as [number, number, number],
       raycaster: new THREE.Raycaster(),
       plane: new THREE.Plane(),
       normal: new THREE.Vector3(),
@@ -351,17 +345,34 @@ export default function ParticleCloud({ count, isMobile, reducedMotion, fonts }:
     s.highlight = damp(s.highlight, interaction.highlightLayer >= 0 ? 1 : 0, 7, dt);
     if (interaction.highlightLayer >= 0) u.uHighlight.value = interaction.highlightLayer;
 
+    // Travel: the rig flies to the next station during the morph and measures its own speed.
+    const prevZ = journey.origin[2];
+    stationAt(travelAt(s.chapter), tmp.station);
+    journey.chapter = s.chapter;
+    journey.origin[0] = tmp.station[0];
+    journey.origin[1] = tmp.station[1];
+    journey.origin[2] = tmp.station[2];
+    const speed = dt > 0 ? Math.abs(tmp.station[2] - prevZ) / dt : 0;
+    journey.warp = reducedMotion ? 0 : damp(journey.warp, Math.min(speed / WARP_SPEED, 1), 6, dt);
+    u.uWarp.value = journey.warp;
+
     u.uIntro.value = s.intro;
     u.uTurbulence.value = reducedMotion ? 0 : Math.sin(Math.PI * frac) + (1 - s.intro) * 0.6 + s.shake;
     if (!reducedMotion) u.uTime.value = state.clock.elapsedTime;
     u.uPointerForce.value = s.force;
     u.uHighlightMix.value = s.highlight;
-    const fov = (camera as THREE.PerspectiveCamera).fov ?? 40;
+    const perspective = camera as THREE.PerspectiveCamera;
+    const fov = BASE_FOV + journey.warp * WARP_FOV;
+    if (Math.abs(perspective.fov - fov) > 0.01) {
+      perspective.fov = fov;
+      perspective.updateProjectionMatrix();
+    }
     u.uScale.value = gl.domElement.height / (2 * Math.tan(THREE.MathUtils.degToRad(fov) / 2));
 
     const pose = poseAt(s.chapter, isMobile);
     const idle = reducedMotion ? 0 : state.clock.elapsedTime * 0.05;
-    group.position.set(pose.offset[0], pose.offset[1], pose.offset[2]);
+    const [sx, sy, sz] = tmp.station;
+    group.position.set(sx + pose.offset[0], sy + pose.offset[1], sz + pose.offset[2]);
     group.rotation.set(
       pose.rotation[0] + (isMobile ? 0 : s.tiltY * 0.08),
       pose.rotation[1] + Math.sin(idle) * 0.25 + (isMobile ? 0 : s.tiltX * 0.18) + s.spin,
@@ -370,12 +381,12 @@ export default function ParticleCloud({ count, isMobile, reducedMotion, fonts }:
     group.scale.setScalar(pose.scale);
 
     camera.position.set(
-      pose.offset[0] + pose.camera[0],
-      pose.offset[1] + pose.camera[1],
-      pose.offset[2] + pose.camera[2]
+      group.position.x + pose.camera[0],
+      group.position.y + pose.camera[1],
+      group.position.z + pose.camera[2]
     );
     // Look to the left of the object so it sits off-center, beside the text column.
-    tmp.lookAt.set(pose.offset[0] - (isMobile ? 0 : 1.6), pose.offset[1] - (isMobile ? 0.95 : 0), 0);
+    tmp.lookAt.set(group.position.x - (isMobile ? 0 : 1.6), group.position.y - (isMobile ? 0.95 : 0), sz);
     camera.lookAt(tmp.lookAt);
     camera.updateMatrixWorld();
 
@@ -398,7 +409,8 @@ export default function ParticleCloud({ count, isMobile, reducedMotion, fonts }:
       Math.abs(s.intro - introTarget) > 0.001 ||
       s.force > 0.01 ||
       s.shockAge < 3 ||
-      Math.abs(s.spin) > 0.001;
+      Math.abs(s.spin) > 0.001 ||
+      journey.warp > 0.001;
     if (moving) invalidate();
   });
 

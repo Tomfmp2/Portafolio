@@ -93,7 +93,7 @@ export default function Experience() {
       {webgl && fonts && (
         <LazyCanvas
           className="h-full w-full"
-          camera={{ position: [0, 0.5, 6], fov: 40, near: 0.1, far: 80 }}
+          camera={{ position: [0, 0.5, 6], fov: 40, near: 0.1, far: 160 }}
           frameloop={perf.reducedMotion ? "demand" : "always"}
           gl={{ antialias: false }}
         >
@@ -103,6 +103,8 @@ export default function Experience() {
             reducedMotion={perf.reducedMotion}
             fonts={fonts}
             floppies={t.projects.more.items}
+            levels={t.hud.levels}
+            effects={perf.enablePostprocessing}
           />
         </LazyCanvas>
       )}

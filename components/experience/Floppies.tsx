@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, type ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
-import { scrollState } from "@/lib/experience/chapters";
+import { scrollState, stationAt } from "@/lib/experience/chapters";
 import { emit } from "@/lib/experience/store";
 import { sound } from "@/lib/experience/sound";
 import type { ShapeFonts } from "@/lib/experience/shapes";
@@ -17,6 +17,7 @@ export interface FloppyItem {
 
 /** Chapter where the disks live (the "more projects" screen). */
 const CHAPTER = 4;
+const STATION = stationAt(CHAPTER);
 const LABEL_COLORS = ["#F4B942", "#9C92F0", "#EDEBF7"];
 
 /** Draws a 5¼" floppy sleeve with a handwritten-style label for one project. */
@@ -140,9 +141,9 @@ export default function Floppies({ items, fonts, isMobile }: { items: FloppyItem
     shown.current += (target - shown.current) * (1 - Math.exp(-6 * Math.min(dt, 0.05)));
     const v = shown.current;
     g.visible = v > 0.01;
-    // Same anchor as the chapter's object offset, slightly toward the camera.
-    if (isMobile) g.position.set(0, 0.55 - (1 - v) * 1.2, 1.1);
-    else g.position.set(1.2, -0.5 - (1 - v) * 1.4, 1.2);
+    // Same anchor as the chapter's object offset, slightly toward the camera, at the chapter's station.
+    if (isMobile) g.position.set(STATION[0], STATION[1] + 0.55 - (1 - v) * 1.2, STATION[2] + 1.1);
+    else g.position.set(STATION[0] + 1.2, STATION[1] - 0.5 - (1 - v) * 1.4, STATION[2] + 1.2);
     g.scale.setScalar((isMobile ? 0.7 : 0.85) * (0.6 + v * 0.4));
   });
 
