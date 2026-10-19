@@ -201,6 +201,19 @@ Cada sección es un capítulo del scroll. Una sola nube de partículas se reensa
 - Partículas: 36 000 en escritorio, 22 000 en equipos de bajo consumo y 14 000 en móvil.
 - Medido con Chrome y GPU real (Intel UHD): 60 fps durante el scroll, también con la CPU estrangulada ×4.
 
+**Capa de juego.** El portafolio se recorre como un juego, con el C64 como hilo conductor:
+
+| Pieza | Archivo | Qué hace |
+|---|---|---|
+| Pantalla de arranque | `components/experience/BootScreen.tsx` | Arranque de C64 que pide elegir con o sin sonido; al entrar se encoge dentro del monitor de partículas. Se muestra una vez por sesión, se cierra con Escape y no aparece sin JavaScript. |
+| Partículas interactivas | `components/experience/ParticleCloud.tsx` | El cursor las empuja, un clic o un toque lanza una onda y arrastrar gira el objeto. Mover el ratón rápido agita la bola de nieve. Pasar el cursor (o el foco) por una capa de «Cómo trabajo» levanta su anillo. |
+| Disquetes | `components/experience/Floppies.tsx` | Un disquete de 5¼" por proyecto: al hacer clic carga la demo de terminal o abre el repositorio. La lista del DOM ofrece las mismas acciones con teclado. |
+| HUD | `components/experience/Hud.tsx` | Niveles 1–7 (clicables), una pista de control por nivel, sonido y consola. |
+| Consola | `components/experience/Console.tsx` | Se abre con `/`. Comandos como `AYUDA`, `LISTA`, `IR 3`, `CARGAR "OCAP"`, `DEMO BANCO`, `CV`, `SONIDO` e `IDIOMA`. |
+| Sonido | `lib/experience/sound.ts` | Efectos tipo chip SID sintetizados con WebAudio, sin archivos. Solo suenan si el visitante lo elige. |
+
+El DOM y la escena se comunican mediante `lib/experience/store.ts` (estado mutable que la escena lee en cada frame, más eventos para React). La capa de la página (`.page-ui`) deja pasar los eventos del puntero al canvas, salvo en el texto, la navegación y los diálogos.
+
 **Modelos.** Los modelos originales no se descargan en el sitio (el C64 pesa unos 100 MB por sus texturas 4K). `scripts/bake-particles.mjs` muestrea su superficie una sola vez y guarda 40 000 puntos en `public/particles/*.bin` (234 KB cada uno). Para regenerarlos:
 
 ```bash
