@@ -2,6 +2,7 @@
 
 import { invalidate } from "@react-three/fiber";
 import { useLanguage } from "@/hooks/use-language";
+import SplitChars from "@/components/experience/SplitChars";
 import { interaction } from "@/lib/experience/store";
 import { sound } from "@/lib/experience/sound";
 
@@ -39,7 +40,7 @@ export default function Build() {
     <section id="habilidades" data-chapter={1} className="chapter" aria-labelledby="build-title">
       <div className="chapter-copy page-container">
         <div className="chapter-text">
-          <h2 id="build-title" className="chapter-title">{b.title}</h2>
+          <h2 id="build-title" className="chapter-title"><SplitChars text={b.title} /></h2>
           <p className="lede mt-5">{b.lede}</p>
 
           <ol className="mt-10 space-y-6">

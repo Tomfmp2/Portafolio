@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/hooks/use-language";
+import SplitChars from "@/components/experience/SplitChars";
 import { subscribe } from "@/lib/experience/store";
 import TerminalModal from "./terminal/TerminalModal";
 
@@ -22,8 +23,8 @@ function FeaturedProject({ id, chapter, project, linkLabel }: { id: string; chap
     <section id={id} data-chapter={chapter} className="chapter" aria-labelledby={titleId}>
       <div className="chapter-copy page-container">
         <article className="chapter-text">
-          <p className="font-semibold text-phosphor">{project.kind}</p>
-          <h2 id={titleId} className="chapter-title mt-3">{project.name}</h2>
+          <p className="font-semibold text-phosphor" data-scramble={project.kind}>{project.kind}</p>
+          <h2 id={titleId} className="chapter-title mt-3"><SplitChars text={project.name} /></h2>
           <p className="lede mt-5">{project.text}</p>
           <ul className="mt-8 space-y-3" aria-label={t.projects.factsLabel}>
             {project.facts.map((fact) => (
@@ -58,7 +59,7 @@ function MoreProjects() {
     <section id="mas-proyectos" data-chapter={4} className="chapter" aria-labelledby="more-title">
       <div className="chapter-copy page-container">
         <div className="chapter-text">
-          <h2 id="more-title" className="chapter-title">{m.title}</h2>
+          <h2 id="more-title" className="chapter-title"><SplitChars text={m.title} /></h2>
           <p className="lede mt-5">{m.lede}</p>
           <ul className="mt-9 divide-y divide-line border-y border-line">
             {m.items.map((item) => (

@@ -2,6 +2,7 @@ import Experience from "@/components/experience/Experience";
 import BootScreen from "@/components/experience/BootScreen";
 import Hud from "@/components/experience/Hud";
 import Console from "@/components/experience/Console";
+import TextFx from "@/components/experience/TextFx";
 import Navbar from "@/components/portfolio/Navbar";
 import Hero from "@/components/portfolio/Hero";
 import Build from "@/components/portfolio/Build";
@@ -29,6 +30,7 @@ export default function Home() {
         <Console />
       </div>
       <BootScreen />
+      <TextFx />
     </>
   );
 }

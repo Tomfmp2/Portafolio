@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/hooks/use-language";
+import SplitChars from "@/components/experience/SplitChars";
 
 export default function About() {
   const { t } = useLanguage();
@@ -10,7 +11,7 @@ export default function About() {
     <section id="sobre-mi" data-chapter={5} className="chapter" aria-labelledby="about-title">
       <div className="chapter-copy page-container">
         <div className="chapter-text">
-          <h2 id="about-title" className="chapter-title">{a.title}</h2>
+          <h2 id="about-title" className="chapter-title"><SplitChars text={a.title} /></h2>
           <div className="mt-6 space-y-4 text-lg leading-relaxed text-paper/90">
             {a.paragraphs.map((p) => (
               <p key={p}>{p}</p>

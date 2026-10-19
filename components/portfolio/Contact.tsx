@@ -2,6 +2,7 @@
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useLanguage } from "@/hooks/use-language";
+import SplitChars from "@/components/experience/SplitChars";
 
 const EMAIL = "tom.pradamd@gmail.com";
 const FORM_ENDPOINT = `https://formsubmit.co/ajax/${EMAIL}`;
@@ -106,7 +107,7 @@ export default function Contact() {
     <section id="contacto" data-chapter={6} className="chapter" aria-labelledby="contact-title">
       <div className="chapter-copy page-container">
         <div className="chapter-text">
-          <h2 id="contact-title" className="chapter-title">{c.title}</h2>
+          <h2 id="contact-title" className="chapter-title"><SplitChars text={c.title} /></h2>
           <p className="lede mt-5">{c.lede}</p>
 
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">

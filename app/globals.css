@@ -558,3 +558,39 @@
   .nav-brand svg,
   .nav-link { transition: none; }
 }
+
+/* ---------- Text effects (TextFx) ---------- */
+
+.split-word {
+  display: inline-block;
+  white-space: nowrap;
+  perspective: 600px;
+}
+.split .char {
+  display: inline-block;
+  transform-origin: 50% 80%;
+  backface-visibility: hidden;
+}
+/* Letters of the name hop toward the cursor, with a smaller hop on their neighbours. */
+.display-name .char {
+  transition: transform 0.35s var(--ease-out), color 0.2s;
+}
+.display-name .char:hover {
+  transform: translateY(-0.09em) rotate(-4deg);
+  color: var(--signal);
+}
+.display-name .char:hover + .char,
+.display-name .char:has(+ .char:hover) {
+  transform: translateY(-0.04em);
+}
+/* Chapter copy flies in from the depth of the scene (desktop, see TextFx). */
+@media (min-width: 768px) {
+  .chapter-copy { perspective: 1100px; }
+  .chapter-text { transform-style: preserve-3d; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .display-name .char { transition: none; }
+  .display-name .char:hover,
+  .display-name .char:hover + .char,
+  .display-name .char:has(+ .char:hover) { transform: none; }
+}
