@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import ParticleCloud, { type ParticleCloudProps } from "./ParticleCloud";
+import Floppies, { type FloppyItem } from "./Floppies";
 import { scrollState } from "@/lib/experience/chapters";
 
 /** Distant static stars: they turn a little with the chapters to give the camera parallax. */
@@ -43,11 +44,12 @@ function Starfield({ count, reducedMotion }: { count: number; reducedMotion: boo
   return <primitive object={points} />;
 }
 
-export default function ExperienceScene(props: ParticleCloudProps) {
+export default function ExperienceScene({ floppies, ...props }: ParticleCloudProps & { floppies: FloppyItem[] }) {
   return (
     <>
       <Starfield count={props.isMobile ? 500 : 1200} reducedMotion={props.reducedMotion} />
       <ParticleCloud {...props} />
+      <Floppies items={floppies} fonts={props.fonts} isMobile={props.isMobile} />
     </>
   );
 }

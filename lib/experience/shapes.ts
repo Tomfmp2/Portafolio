@@ -41,7 +41,7 @@ export async function loadBakedShape(url: string, count: number, signal?: AbortS
  * Application, Infrastructure and the API at the edge. Stacked slightly so the
  * elevated camera reads them as layers, not as a single disc.
  */
-function layers(count: number): Float32Array {
+function layers(count: number): { positions: Float32Array; ring: Float32Array } {
   const rand = mulberry32(11);
   const rings = [
     { inner: 0, outer: 0.24, y: 0.18 },
@@ -52,12 +52,13 @@ function layers(count: number): Float32Array {
   const areas = rings.map((r) => r.outer ** 2 - r.inner ** 2);
   const total = areas.reduce((a, b) => a + b, 0);
   const out = new Float32Array(count * 3);
+  const ringOf = new Float32Array(count);
   for (let i = 0; i < count; i++) {
     let pick = rand() * total;
     let ring = rings[0];
     for (let k = 0; k < rings.length; k++) {
       pick -= areas[k];
-      if (pick <= 0) { ring = rings[k]; break; }
+      if (pick <= 0) { ring = rings[k]; ringOf[i] = k; break; }
     }
     // sqrt keeps the density uniform across the annulus.
     const radius = Math.sqrt(ring.inner ** 2 + rand() * (ring.outer ** 2 - ring.inner ** 2));
@@ -66,7 +67,7 @@ function layers(count: number): Float32Array {
     out[i * 3 + 1] = ring.y + (rand() - 0.5) * 0.025;
     out[i * 3 + 2] = Math.sin(angle) * radius;
   }
-  return out;
+  return { positions: out, ring: ringOf };
 }
 
 /** A service graph on a sphere: dense nodes joined by arcs to their nearest neighbours. */
@@ -188,13 +189,18 @@ export interface ShapeFonts {
   mono: string;
 }
 
-/** Builds every procedural shape. Baked ones (`c64`, `globe`) are loaded separately. */
-export function buildProceduralShapes(count: number, fonts: ShapeFonts): Partial<Record<ShapeKey, Float32Array>> {
-  return {
-    layers: layers(count),
+/**
+ * Builds every procedural shape. Baked ones (`c64`, `globe`) are loaded separately.
+ * `layerIndex` tags each point with its Clean Architecture ring so one layer can be lifted.
+ */
+export function buildProceduralShapes(count: number, fonts: ShapeFonts) {
+  const layered = layers(count);
+  const shapes: Partial<Record<ShapeKey, Float32Array>> = {
+    layers: layered.positions,
     network: network(count),
     drift: drift(count),
     screen: screen(count, fonts.mono),
     monogram: monogram(count, fonts.display),
   };
+  return { shapes, layerIndex: layered.ring };
 }

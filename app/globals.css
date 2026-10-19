@@ -169,7 +169,6 @@
   position: fixed;
   inset: 0;
   z-index: 0;
-  pointer-events: none;
   /* Soft blue horizon so the void is never flat black. */
   background:
     radial-gradient(120% 70% at 75% 110%, rgb(53 40 121 / 0.55), transparent 60%),
@@ -181,6 +180,22 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(90deg, rgb(7 6 26 / 0.78) 0%, rgb(7 6 26 / 0.5) 38%, transparent 58%);
+  pointer-events: none;
+}
+/* Vertical swipes over the scene must still scroll the page on touch screens. */
+.experience-layer canvas {
+  touch-action: pan-y !important;
+}
+
+/*
+ * The page UI sits above the scene but lets pointer events fall through to it,
+ * except where there is something to read or press.
+ */
+.page-ui {
+  pointer-events: none;
+}
+.page-ui :where(header, footer, .chapter-text, .hud, [role='dialog'], .pointer-events-auto) {
+  pointer-events: auto;
 }
 @media (max-width: 767px) {
   .experience-layer::after { content: none; }
@@ -256,6 +271,177 @@
 @keyframes rise {
   from { opacity: 0; transform: translateY(0.6em); }
 }
+.booting .hero-rise { animation-play-state: paused; }
+
+/* ---------- Boot screen ---------- */
+
+/*
+ * The real C64 power-on palette: light-blue border, blue screen. Text is lifted
+ * from the original #6C5EB5 to pass contrast on the blue.
+ */
+.boot-screen {
+  --c64-border: #6c5eb5;
+  --c64-text: #b8b0fa;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 5vw, 4rem);
+  background: var(--c64-border);
+  transform-origin: 75% 48%;
+  transition:
+    transform 1.1s var(--ease-out),
+    opacity 0.5s ease 0.6s,
+    border-radius 1.1s var(--ease-out);
+}
+.boot-leaving {
+  transform: scale(0.16);
+  opacity: 0;
+  border-radius: 2.5rem;
+  pointer-events: none;
+}
+@media (max-width: 767px) {
+  .boot-screen { transform-origin: 50% 24%; }
+  .boot-leaving { transform: scale(0.3); }
+}
+.boot-inner {
+  width: min(100%, 64rem);
+  min-height: min(80svh, 40rem);
+  padding: clamp(1.25rem, 4vw, 3rem);
+  background:
+    repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.08) 0 1px, transparent 1px 3px),
+    var(--c64);
+  color: var(--c64-text);
+  font-family: var(--font-mono);
+  font-size: clamp(0.78rem, 1.7vw, 1.15rem);
+  line-height: 1.55;
+  text-transform: uppercase;
+}
+.boot-text {
+  white-space: pre-wrap;
+  font: inherit;
+}
+.boot-prompt {
+  margin-top: 1.5em;
+}
+.boot-button {
+  min-height: 2.75rem;
+  padding: 0 1.1rem;
+  border: 2px solid var(--c64-text);
+  color: var(--c64-text);
+  font: inherit;
+  text-transform: uppercase;
+}
+.boot-button:hover,
+.boot-button:focus-visible {
+  background: var(--c64-text);
+  color: var(--c64);
+  outline: none;
+}
+.boot-skip {
+  display: block;
+  margin-top: 1.75rem;
+  font: inherit;
+  font-size: 0.85em;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .boot-screen { transition: opacity 0.2s; }
+  .boot-leaving { transform: none; }
+}
+
+/* ---------- HUD & console ---------- */
+
+.hud {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem var(--page-px) max(1rem, env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgb(7 6 26 / 0.85), transparent);
+  pointer-events: none;
+}
+.hud > * { pointer-events: auto; }
+.hud-segment {
+  display: block;
+  width: 1.6rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--line);
+  transition: background-color 0.3s, width 0.3s var(--ease-out);
+}
+/* The button's hit area is larger than the bar it draws. */
+.hud-segment { position: relative; }
+.hud-segment::before { content: ''; position: absolute; inset: -0.6rem -0.15rem; }
+.hud-segment.is-done { background: var(--phosphor); }
+.hud-segment.is-active { width: 2.6rem; background: var(--signal); }
+.hud-segment:hover { background: var(--paper); }
+.hud-hint {
+  flex: 1;
+  max-width: 26rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--dim);
+  pointer-events: none;
+}
+.hud-button {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgb(7 6 26 / 0.6);
+  color: var(--paper);
+  font-size: 0.85rem;
+  transition: border-color 0.2s, color 0.2s;
+}
+.hud-button:hover { border-color: var(--phosphor); color: var(--phosphor); }
+.hud-button[aria-pressed='true'] { color: var(--signal); border-color: var(--signal); }
+@media (max-width: 767px) {
+  .hud-hint { display: none; }
+  .hud-segment { width: 0.9rem; }
+  .hud-segment.is-active { width: 1.6rem; }
+}
+
+.console {
+  --c64-border: #6c5eb5;
+  position: fixed;
+  z-index: 60;
+  right: var(--page-px);
+  bottom: 5.5rem;
+  width: min(34rem, calc(100vw - 2 * var(--page-px)));
+  border: 3px solid var(--c64-border);
+  background: var(--c64);
+  color: #b8b0fa;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 0.5);
+}
+.console-log {
+  height: 16rem;
+  overflow-y: auto;
+  padding: 0.75rem 1rem;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+.console-input {
+  flex: 1;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-transform: uppercase;
+  caret-color: #b8b0fa;
+}
+.console-input:focus { outline: none; }
+.console:focus-within { border-color: #b8b0fa; }
 
 /* ---------- Controls ---------- */
 

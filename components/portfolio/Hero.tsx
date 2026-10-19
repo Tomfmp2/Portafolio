@@ -9,9 +9,9 @@ export default function Hero() {
   return (
     <section id="inicio" data-chapter={0} className="chapter" aria-labelledby="hero-name">
       <div className="chapter-copy page-container">
-        <div className="chapter-text !max-w-none">
+        <div className="chapter-text !max-w-none w-fit">
           <p className="hero-rise text-lg font-semibold text-phosphor [--rise-delay:0ms]">{h.role}</p>
-          <h1 id="hero-name" className="display-name mt-4">
+          <h1 id="hero-name" tabIndex={-1} className="display-name mt-4 focus:outline-none">
             <span className="hero-rise block [--rise-delay:120ms]">{h.firstName}</span>
             <span className="hero-rise block [--rise-delay:220ms]">{h.lastName}</span>
           </h1>

@@ -1,6 +1,9 @@
 "use client";
 
+import { invalidate } from "@react-three/fiber";
 import { useLanguage } from "@/hooks/use-language";
+import { interaction } from "@/lib/experience/store";
+import { sound } from "@/lib/experience/sound";
 
 /** Four concentric rings with the current layer filled — a legend for the particle diagram. */
 function LayerGlyph({ index }: { index: number }) {
@@ -22,6 +25,12 @@ function LayerGlyph({ index }: { index: number }) {
   );
 }
 
+function highlight(index: number) {
+  if (index >= 0 && interaction.highlightLayer !== index) sound.tick();
+  interaction.highlightLayer = index;
+  invalidate();
+}
+
 export default function Build() {
   const { t } = useLanguage();
   const b = t.build;
@@ -35,7 +44,16 @@ export default function Build() {
 
           <ol className="mt-10 space-y-6">
             {b.layers.map((layer, i) => (
-              <li key={layer.name} className="flex gap-4">
+              <li
+                key={layer.name}
+                tabIndex={0}
+                // Hover or focus lifts the matching ring in the particle diagram.
+                onPointerEnter={() => highlight(i)}
+                onPointerLeave={() => highlight(-1)}
+                onFocus={() => highlight(i)}
+                onBlur={() => highlight(-1)}
+                className="-mx-3 flex cursor-default gap-4 rounded-md px-3 py-2 transition-colors hover:bg-c64-deep/50 focus-visible:bg-c64-deep/50"
+              >
                 <LayerGlyph index={i} />
                 <div>
                   <h3 className="font-bold text-paper">{layer.name}</h3>

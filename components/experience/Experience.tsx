@@ -5,6 +5,7 @@ import { invalidate } from "@react-three/fiber";
 import LazyCanvas from "@/components/3d/LazyCanvas";
 import ExperienceScene from "./ExperienceScene";
 import { usePerformanceTier } from "@/hooks/use-performance-tier";
+import { useLanguage } from "@/hooks/use-language";
 import { initGSAP, ScrollTrigger } from "@/lib/gsap";
 import { CHAPTERS, HOLD, scrollState } from "@/lib/experience/chapters";
 import type { ShapeFonts } from "@/lib/experience/shapes";
@@ -69,6 +70,7 @@ function useChapterTracking() {
 
 export default function Experience() {
   const perf = usePerformanceTier();
+  const { t } = useLanguage();
   const [webgl, setWebgl] = useState<boolean | null>(null);
   const [fonts, setFonts] = useState<ShapeFonts | null>(null);
 
@@ -95,7 +97,13 @@ export default function Experience() {
           frameloop={perf.reducedMotion ? "demand" : "always"}
           gl={{ antialias: false }}
         >
-          <ExperienceScene count={count} isMobile={perf.isMobile} reducedMotion={perf.reducedMotion} fonts={fonts} />
+          <ExperienceScene
+            count={count}
+            isMobile={perf.isMobile}
+            reducedMotion={perf.reducedMotion}
+            fonts={fonts}
+            floppies={t.projects.more.items}
+          />
         </LazyCanvas>
       )}
     </div>

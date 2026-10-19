@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/hooks/use-language";
+import { subscribe } from "@/lib/experience/store";
 import TerminalModal from "./terminal/TerminalModal";
 
 interface Featured {
@@ -50,6 +51,9 @@ function MoreProjects() {
   const m = t.projects.more;
   const [demo, setDemo] = useState<string | null>(null);
 
+  // The 3D floppies and the console open demos through the shared event bus.
+  useEffect(() => subscribe("demo", (id) => setDemo(id)), []);
+
   return (
     <section id="mas-proyectos" data-chapter={4} className="chapter" aria-labelledby="more-title">
       <div className="chapter-copy page-container">
@@ -82,7 +86,9 @@ function MoreProjects() {
           </a>
         </div>
       </div>
-      <TerminalModal demoId={demo} onClose={() => setDemo(null)} />
+      <div className="pointer-events-auto">
+        <TerminalModal demoId={demo} onClose={() => setDemo(null)} />
+      </div>
     </section>
   );
 }

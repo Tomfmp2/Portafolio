@@ -1,4 +1,7 @@
 import Experience from "@/components/experience/Experience";
+import BootScreen from "@/components/experience/BootScreen";
+import Hud from "@/components/experience/Hud";
+import Console from "@/components/experience/Console";
 import Navbar from "@/components/portfolio/Navbar";
 import Hero from "@/components/portfolio/Hero";
 import Build from "@/components/portfolio/Build";
@@ -12,7 +15,7 @@ export default function Home() {
     <>
       {/* One fixed WebGL layer for the whole page; sections scroll over it. */}
       <Experience />
-      <div className="relative z-10">
+      <div className="page-ui relative z-10">
         <Navbar />
         <main id="contenido">
           <Hero />
@@ -22,7 +25,10 @@ export default function Home() {
           <Contact />
         </main>
         <Footer />
+        <Hud />
+        <Console />
       </div>
+      <BootScreen />
     </>
   );
 }

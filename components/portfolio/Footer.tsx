@@ -9,7 +9,8 @@ export default function Footer() {
 
   return (
     <footer className="relative z-10 border-t border-line bg-void/85 backdrop-blur-sm">
-      <div className="page-container flex flex-col gap-4 py-8 text-sm text-dim md:flex-row md:items-start md:justify-between">
+      {/* Bottom padding keeps the credits clear of the fixed HUD. */}
+      <div className="page-container flex flex-col gap-4 pb-28 pt-8 text-sm text-dim md:flex-row md:items-start md:justify-between">
         <p>© {new Date().getFullYear()} {f.rights}</p>
         <p className="max-w-xl">
           {f.credits}{" "}
