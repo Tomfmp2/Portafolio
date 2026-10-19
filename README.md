@@ -25,6 +25,7 @@
 - [Instalación y Uso Local](#-instalación-y-uso-local)
 - [Despliegue](#-despliegue)
 - [Secciones del Portafolio](#-secciones-del-portafolio)
+- [Experiencia de partículas](#-experiencia-de-partículas)
 - [Autor](#-autor)
 - [Licencia](#-licencia)
 
@@ -173,13 +174,48 @@ Para desplegar tu propia instancia:
 
 ## 🗂️ Secciones del Portafolio
 
-| Sección | Descripción |
-|---|---|
-| **Inicio** | Presentación principal con título, especialidad y estadísticas clave |
-| **Sobre mí** | Historia profesional, ubicación y propuesta de valor |
-| **Habilidades** | Stack técnico con niveles de dominio por categorías |
-| **Proyectos** | Proyectos destacados con descripción, tecnologías y enlaces |
-| **Contacto** | Información de contacto y formulario de mensaje directo |
+Cada sección es un capítulo del scroll. Una sola nube de partículas se reensambla en la forma de cada capítulo:
+
+| Sección (`id`) | Forma de las partículas | Contenido |
+|---|---|---|
+| Inicio (`#inicio`) | Commodore 64 | Nombre, rol, CV y acceso a proyectos |
+| Cómo trabajo (`#habilidades`) | Cuatro anillos concéntricos | Clean Architecture capa por capa, con el stack de cada una |
+| OCAP (`#proyectos`) | Grafo de servicios sobre una esfera | Proyecto destacado .NET |
+| Feria Mágica (`#feria-magica`) | Bola de nieve | Web y API en producción para un cliente |
+| Más proyectos (`#mas-proyectos`) | Pantalla en modo texto | Proyectos de formación y demos en terminal |
+| Sobre mí (`#sobre-mi`) | Nube dispersa | Formación y datos personales |
+| Contacto (`#contacto`) | Monograma `tfm` | Correo, CV y formulario |
+
+---
+
+## ✨ Experiencia de partículas
+
+**Cómo funciona.** `components/experience/` dibuja un único `THREE.Points` fijo detrás de la página. La geometría guarda las siete formas como atributos (`a_c64`, `a_layers`, …) y el vertex shader las mezcla con pesos, así que cambiar de forma no copia datos en la CPU.
+
+**Una sola fuente de verdad.** `lib/experience/chapters.ts` define el orden de los capítulos y la pose de cámara y objeto de cada uno (escritorio y móvil). `Experience.tsx` traduce el scroll a un número, `scrollState.chapter` (2.4 = 40 % del camino entre el capítulo 2 y el 3), mediante un `ScrollTrigger` por sección. La forma, la cámara y la turbulencia se derivan de ese número en `useFrame`. No hay timelines paralelos que puedan desincronizarse.
+
+**Accesibilidad y rendimiento.**
+- El scroll es nativo (Lenis solo lo suaviza en escritorio); nada se fija con pin ni secuestra el desplazamiento.
+- `prefers-reduced-motion`: la escena salta a cada forma sin animar, sin turbulencia ni parallax, y renderiza bajo demanda.
+- Sin WebGL se muestra un fondo estático; todo el contenido está en el DOM.
+- Partículas: 36 000 en escritorio, 22 000 en equipos de bajo consumo y 14 000 en móvil.
+- Medido con Chrome y GPU real (Intel UHD): 60 fps durante el scroll, también con la CPU estrangulada ×4.
+
+**Modelos.** Los modelos originales no se descargan en el sitio (el C64 pesa unos 100 MB por sus texturas 4K). `scripts/bake-particles.mjs` muestrea su superficie una sola vez y guarda 40 000 puntos en `public/particles/*.bin` (234 KB cada uno). Para regenerarlos:
+
+```bash
+node scripts/bake-particles.mjs commodore_64__computer_full_pack.glb public/particles/c64.bin \
+  --count 40000 --weight cable=0 --weight connector=0 --weight peripherals=0 \
+  --weight monitor_plug=0 --weight monitor_screen=2.5
+node scripts/bake-particles.mjs snow_globe.glb public/particles/globe.bin \
+  --count 40000 --weight material_0=0.15 --weight Material.003=0.2 --weight sneg=0.7
+```
+
+Las formas restantes (anillos, grafo, pantalla, nube y monograma) son procedurales a propósito: son diagramas, no sustitutos de modelos.
+
+**Créditos (CC BY 4.0, atribución obligatoria, visible en el footer):**
+- [Commodore 64 || Computer (Full Pack)](https://sketchfab.com/3d-models/commodore-64-full-pack-1f43612fa2d54041bbe2bdff8164c2cd) de dark_igorek.
+- [Snow Globe](https://sketchfab.com/3d-models/none-090bfce9ce394b11bcef261636827b94) de celestial fox.
 
 ---
 
