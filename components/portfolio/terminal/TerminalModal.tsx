@@ -404,6 +404,15 @@ export default function TerminalModal({ demoId, onClose }: { demoId: string | nu
     }
   };
 
+  useEffect(() => {
+    if (!demoId) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [demoId, onClose]);
+
   if (!demoId) return null;
 
   const projectTitle = demoId === 'banking' ? "Banking System" : demoId === 'airline' ? "Airline Tickets" : "BetPlay Simulator";
@@ -417,6 +426,9 @@ export default function TerminalModal({ demoId, onClose }: { demoId: string | nu
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
         className="fixed inset-0 z-[100] p-4 md:p-8 flex items-center justify-center bg-black/80 backdrop-blur-md"
         onClick={handleTerminalClick}
+        role="dialog"
+        aria-modal="true"
+        aria-label={projectTitle}
       >
         <div className="w-full h-full max-w-4xl max-h-[700px] bg-[#09090b] rounded-xl border border-zinc-800 shadow-2xl flex flex-col overflow-hidden relative" onClick={e => e.stopPropagation()}>
           
@@ -431,10 +443,10 @@ export default function TerminalModal({ demoId, onClose }: { demoId: string | nu
               <span>root@{demoId}-env ~ /run/{demoId}</span>
             </div>
             <div className="flex items-center gap-4">
-              <button onClick={handleRestart} title="Restart Demo" className="text-zinc-500 hover:text-white transition-colors">
+              <button onClick={handleRestart} title="Restart Demo" aria-label="Restart demo" className="text-zinc-500 hover:text-white transition-colors">
                 <RotateCcw className="w-4 h-4" />
               </button>
-              <button onClick={onClose} title="Close Terminal" className="text-zinc-500 hover:text-rose-400 transition-colors">
+              <button onClick={onClose} title="Close Terminal" aria-label="Close terminal" className="text-zinc-500 hover:text-rose-400 transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
