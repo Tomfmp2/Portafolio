@@ -1,31 +1,28 @@
+import Experience from "@/components/experience/Experience";
 import Navbar from "@/components/portfolio/Navbar";
 import Hero from "@/components/portfolio/Hero";
-import TechCarousel from "@/components/portfolio/TechCarousel";
-import About from "@/components/portfolio/About";
-import Skills from "@/components/portfolio/Skills";
+import Build from "@/components/portfolio/Build";
 import Projects from "@/components/portfolio/Projects";
+import About from "@/components/portfolio/About";
 import Contact from "@/components/portfolio/Contact";
 import Footer from "@/components/portfolio/Footer";
-import AmbientGlow from "@/components/portfolio/AmbientGlow";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen overflow-x-hidden" style={{ background: "#09090B" }}>
-
-      {/* ── Cinematic ambient glow — 6-layer volumetric orbs ── */}
-      <AmbientGlow />
-
-      {/* ── Page content ─────────────────────────────────────── */}
+    <>
+      {/* One fixed WebGL layer for the whole page; sections scroll over it. */}
+      <Experience />
       <div className="relative z-10">
         <Navbar />
-        <Hero />
-        <TechCarousel />
-        <About />
-        <Skills />
-        <Projects />
-        <Contact />
+        <main id="contenido">
+          <Hero />
+          <Build />
+          <Projects />
+          <About />
+          <Contact />
+        </main>
         <Footer />
       </div>
-    </main>
+    </>
   );
 }

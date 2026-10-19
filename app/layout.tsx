@@ -1,39 +1,41 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Archivo, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { LanguageProvider } from '@/hooks/use-language'
 import SmoothScrollProvider from '@/components/providers/smooth-scroll-provider'
 import './globals.css'
 
-const geistSans = Geist({ 
-  subsets: ["latin"],
-  variable: '--font-geist-sans'
-});
+// Archivo's width axis lets one family carry both the extended display type and the body copy.
+const archivo = Archivo({
+  subsets: ['latin'],
+  axes: ['wdth'],
+  variable: '--font-archivo',
+})
 
-const geistMono = Geist_Mono({ 
-  subsets: ["latin"],
-  variable: '--font-geist-mono'
-});
+const jetbrains = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains',
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://portafolio-alpha-nine-96.vercel.app'),
-  title: 'Tomas Felipe Medina Prada | Backend Developer',
-  description: 'Professional portfolio of Tomas Felipe Medina Prada - Backend Developer specialized in .NET, C#, SQL, Docker, and process automation.',
-  keywords: ['Backend Developer', '.NET', 'C#', 'SQL', 'Docker', 'n8n', 'API', 'Colombia'],
+  title: 'Tomás Felipe Medina Prada | Desarrollador .NET junior',
+  description: 'Portafolio de Tomás Felipe Medina Prada, desarrollador .NET junior en Bucaramanga: APIs en C# y ASP.NET Core con pruebas, Docker y CI.',
+  keywords: ['Desarrollador .NET', 'Backend', 'C#', 'ASP.NET Core', 'Entity Framework Core', 'SQL', 'Docker', 'Colombia'],
   authors: [{ name: 'Tomas Felipe Medina Prada' }],
   creator: 'Tomas Felipe Medina Prada',
   openGraph: {
     type: 'website',
     locale: 'es_CO',
     url: 'https://portafolio-alpha-nine-96.vercel.app',
-    title: 'Tomas Felipe Medina Prada | Backend Developer',
-    description: 'Professional portfolio of Tomas Felipe Medina Prada - Backend Developer specialized in .NET, C#, SQL, Docker, and process automation.',
+    title: 'Tomás Felipe Medina Prada | Desarrollador .NET junior',
+    description: 'Portafolio de Tomás Felipe Medina Prada, desarrollador .NET junior en Bucaramanga: APIs en C# y ASP.NET Core con pruebas, Docker y CI.',
     siteName: 'Tomas Felipe Medina Prada Portfolio',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Tomas Felipe Medina Prada | Backend Developer',
-    description: 'Professional portfolio of Tomas Felipe Medina Prada - Backend Developer specialized in .NET, C#, SQL, Docker, and process automation.',
+    title: 'Tomás Felipe Medina Prada | Desarrollador .NET junior',
+    description: 'Portafolio de Tomás Felipe Medina Prada, desarrollador .NET junior en Bucaramanga: APIs en C# y ASP.NET Core con pruebas, Docker y CI.',
   },
   icons: {
     icon: '/c-sharp-16-svgrepo-com.svg',
@@ -46,16 +48,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className="dark">
-      <head>
-        <link
-          rel="preload"
-          href="https://pub-18dfde3731984fdd8859b4b55c6a0de7.r2.dev/commodore_64__computer_full_pack.glb"
-          as="fetch"
-          crossOrigin="anonymous"
-        />
-      </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
+    <html lang="es" className={`dark ${archivo.variable} ${jetbrains.variable}`}>
+      <body>
         <LanguageProvider>
           <SmoothScrollProvider>
             {children}

@@ -3,58 +3,59 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * Palette taken from the Commodore 64 the story starts on: its night-blue
+ * border, the boot-screen blue, the phosphor lavender of its text, plus one
+ * amber "signal" reserved for actions and highlights.
+ */
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --card: #ffffff;
-  --card-foreground: #0f172a;
-  --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  --primary: #FF3333;
-  --primary-foreground: #ffffff;
-  --secondary: #e02020;
-  --red-glow: rgba(255, 51, 51, 0.35);
-  --secondary-foreground: #ffffff;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --accent: #FF3333;
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #FF3333;
-  --radius: 0.75rem;
-  /* Layout tokens */
-  --page-max: 1400px;
-  --page-px: clamp(1.25rem, 5vw, 4rem);
-}
+  --void: #07061a;
+  --c64: #352879;
+  --c64-deep: #1c1650;
+  --phosphor: #9c92f0;
+  --signal: #f4b942;
+  --paper: #edebf7;
+  --dim: #a3a0c2;
+  --line: rgb(156 146 240 / 0.22);
 
-.dark {
-  --background: #0B0B0F;
-  --foreground: #f1f5f9;
-  --card: #111114;
-  --card-foreground: #f1f5f9;
-  --popover: #111114;
-  --popover-foreground: #f1f5f9;
-  --primary: #FF3333;
-  --primary-foreground: #ffffff;
-  --secondary: #cc3333;
-  --secondary-foreground: #ffffff;
-  --muted: #1a1a1e;
-  --muted-foreground: #71717A;
-  --accent: #FF3333;
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --border: rgba(255, 255, 255, 0.05);
-  --input: #1a1a1e;
-  --ring: #FF3333;
+  /* shadcn tokens (components/ui) mapped onto the palette */
+  --background: var(--void);
+  --foreground: var(--paper);
+  --card: var(--c64-deep);
+  --card-foreground: var(--paper);
+  --popover: var(--c64-deep);
+  --popover-foreground: var(--paper);
+  --primary: var(--signal);
+  --primary-foreground: var(--void);
+  --secondary: var(--c64);
+  --secondary-foreground: var(--paper);
+  --muted: var(--c64-deep);
+  --muted-foreground: var(--dim);
+  --accent: var(--phosphor);
+  --accent-foreground: var(--void);
+  --destructive: #ff6b6b;
+  --destructive-foreground: var(--void);
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--signal);
+  --radius: 0.5rem;
+
+  --page-max: 1360px;
+  --page-px: clamp(1rem, 5vw, 4.5rem);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
-  --font-sans: 'Geist', 'Geist Fallback', system-ui, sans-serif;
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --color-void: var(--void);
+  --color-c64: var(--c64);
+  --color-c64-deep: var(--c64-deep);
+  --color-phosphor: var(--phosphor);
+  --color-signal: var(--signal);
+  --color-paper: var(--paper);
+  --color-dim: var(--dim);
+  --color-line: var(--line);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -78,92 +79,36 @@
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) + 4px);
   --radius-xl: calc(var(--radius) + 10px);
-  --animate-marquee: marquee 55s linear infinite;
-  --animate-marquee-reverse: marquee-reverse 45s linear infinite;
 }
 
-/* ── Keyframes ─────────────────────────────────────────────── */
-@keyframes marquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-@keyframes marquee-reverse {
-  0%   { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
-}
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes red-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255,51,51,0); }
-  50%       { box-shadow: 0 0 28px 6px rgba(255,51,51,0.35); }
-}
-
-.animate-fade-up   { animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
-.animate-red-pulse { animation: red-pulse 3s ease-in-out infinite; }
-
-/* ── Red glow utility ──────────────────────────────────────── */
-/* Apply to any element that should emit the red aura */
-.red-glow {
-  box-shadow: 0 0 16px 2px rgba(255,51,51,0.4), 0 0 40px 6px rgba(255,51,51,0.15);
-}
-.red-glow-text {
-  text-shadow: 0 0 20px rgba(255,51,51,0.6), 0 0 40px rgba(255,51,51,0.3);
-}
-.red-glow-sm {
-  box-shadow: 0 0 8px 1px rgba(255,51,51,0.35), 0 0 20px 2px rgba(255,51,51,0.12);
-}
-
-/* ── Custom scrollbar ──────────────────────────────────────── */
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255,51,51,0.25) transparent;
-}
-
-/* Chromium / Safari */
-::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255,51,51,0.2);
-  border-radius: 99px;
-  transition: background 0.3s ease;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,51,51,0.55);
-}
-
-/* Auto-hide scrollbar when not scrolling (Chromium) */
-html {
-  overflow-y: scroll;
-}
-html:not(:hover) ::-webkit-scrollbar-thumb {
-  background: transparent;
-}
-
-/* ── Base ──────────────────────────────────────────────────── */
 @layer base {
-  * { border-color: var(--border); outline: none; }
-  html, body {
-    background: #09090B;
-    overflow-x: hidden;
-  }
-  body {
-    @apply text-foreground;
-    -webkit-font-smoothing: antialiased;
+  * {
+    @apply border-border;
   }
   html {
-    scroll-behavior: smooth;
-    overflow-y: scroll;
+    background: var(--void);
+    color-scheme: dark;
+  }
+  body {
+    background: var(--void);
+    color: var(--paper);
+    font-family: var(--font-sans);
+    font-variation-settings: 'wdth' 100;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--signal);
+    color: var(--void);
+  }
+  :focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 3px;
+    border-radius: 2px;
   }
 }
 
-/* ── Page layout helpers ───────────────────────────────────── */
+/* ---------- Layout ---------- */
+
 .page-container {
   width: 100%;
   max-width: var(--page-max);
@@ -171,102 +116,185 @@ html:not(:hover) ::-webkit-scrollbar-thumb {
   padding-inline: var(--page-px);
 }
 
-/* ── Section spacing ───────────────────────────────────────── */
-.section { padding-block: clamp(4rem, 8vw, 7rem); }
-
-/* ── Platinum card ─────────────────────────────────────────── */
-.glass {
-  background: linear-gradient(
-    160deg,
-    rgba(255,255,255,0.12) 0%,
-    rgba(255,255,255,0.07) 15%,
-    rgba(255,255,255,0.04) 35%,
-    rgba(20,20,26,0.95) 70%,
-    rgba(14,14,18,1) 100%
-  );
-  border: 1px solid rgba(255,255,255,0.12);
-  border-top-color: rgba(255,255,255,0.2);
-  border-radius: 1.25rem;
-  box-shadow:
-    0 8px 24px rgba(0,0,0,0.25),
-    0 24px 48px rgba(0,0,0,0.2),
-    inset 0 1px 0 rgba(255,255,255,0.14),
-    inset 0 -1px 0 rgba(0,0,0,0.15);
+/*
+ * A chapter is a tall scroll span whose copy stays pinned (sticky, not
+ * scroll-jacked) while the particles hold, then lets go as they morph.
+ * svh keeps the composition stable when mobile browser bars show and hide.
+ */
+.chapter {
   position: relative;
-  overflow: hidden;
+  min-height: 170svh;
 }
-/* Top-edge reflective shine */
-.glass::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 3%;
-  right: 3%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255,255,255,0.18) 15%,
-    rgba(255,255,255,0.45) 50%,
-    rgba(255,255,255,0.18) 85%,
-    transparent 100%
-  );
-  pointer-events: none;
-  z-index: 1;
-}
-/* Diagonal metallic sheen */
-.glass::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 55%;
-  background: linear-gradient(
-    140deg,
-    rgba(255,255,255,0.06) 0%,
-    rgba(255,255,255,0.02) 40%,
-    transparent 70%
-  );
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ── Card hover ────────────────────────────────────────────── */
-.card-hover {
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-              box-shadow 0.35s ease,
-              border-color 0.35s ease,
-              background 0.35s ease;
-}
-.card-hover:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow:
-    0 32px 70px rgba(0,0,0,0.6),
-    inset 0 1px 0 rgba(255,255,255,0.15),
-    0 0 0 1px rgba(255,75,75,0.05);
-}
-
-/* ── Thin rule ─────────────────────────────────────────────── */
-.rule {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
-}
-
-/* ── Label above headings ──────────────────────────────────── */
-.section-label {
+.chapter-copy {
+  position: relative;
+  min-height: 100svh;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
+  padding-block: 6rem 4rem;
 }
-.section-label .label-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #FF3333;
-  flex-shrink: 0;
-  box-shadow: 0 0 8px 2px rgba(255,51,51,0.5), 0 0 20px 4px rgba(255,51,51,0.2);
+.chapter-text {
+  max-width: 34rem;
+}
+/* Pin only when the copy fits: a sticky block taller than the viewport hides its own end. */
+@media (min-width: 768px) and (min-height: 900px) {
+  .chapter-copy {
+    position: sticky;
+    top: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .chapter {
+    min-height: auto;
+    /* Room at the top for the shape, which sits in the upper half on phones. */
+    padding-top: 52svh;
+  }
+  .chapter-copy {
+    position: relative;
+    min-height: 0;
+    padding-block: 0 5rem;
+  }
+  /* Scrim so copy stays legible where it overlaps the particles. */
+  .chapter-text {
+    background: linear-gradient(to bottom, rgb(7 6 26 / 0), rgb(7 6 26 / 0.86) 3rem);
+    padding-top: 3rem;
+    margin-top: -3rem;
+  }
+}
+
+/* ---------- Experience layer ---------- */
+
+.experience-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  /* Soft blue horizon so the void is never flat black. */
+  background:
+    radial-gradient(120% 70% at 75% 110%, rgb(53 40 121 / 0.55), transparent 60%),
+    var(--void);
+}
+/* Veil behind the text column: copy stays legible whatever the particles do. */
+.experience-layer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(7 6 26 / 0.78) 0%, rgb(7 6 26 / 0.5) 38%, transparent 58%);
+}
+@media (max-width: 767px) {
+  .experience-layer::after { content: none; }
+}
+.experience-fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1px 1px at 20% 30%, var(--paper) 50%, transparent 51%),
+    radial-gradient(1px 1px at 70% 20%, var(--phosphor) 50%, transparent 51%),
+    radial-gradient(1px 1px at 40% 80%, var(--paper) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 85% 60%, var(--signal) 50%, transparent 51%),
+    radial-gradient(60% 50% at 75% 45%, rgb(156 146 240 / 0.18), transparent 70%);
+  background-size: 240px 240px, 300px 300px, 200px 200px, 420px 420px, 100% 100%;
+}
+
+/* ---------- Type ---------- */
+
+/*
+ * The name is the one loud element: Archivo at full width and weight, extruded
+ * with stacked offsets in C64 blue — the boot-logo shadow, not a drop shadow.
+ */
+.display-name {
+  font-size: clamp(3.4rem, 13vw, 11.5rem);
+  font-weight: 900;
+  font-variation-settings: 'wdth' 125;
+  line-height: 0.84;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+  text-shadow:
+    1px 1px 0 var(--c64), 2px 2px 0 var(--c64), 3px 3px 0 var(--c64),
+    4px 4px 0 var(--c64), 5px 5px 0 var(--c64), 6px 6px 0 var(--c64),
+    7px 7px 0 var(--c64-deep), 8px 8px 0 var(--c64-deep), 9px 9px 0 var(--c64-deep);
+}
+.chapter-title {
+  font-size: clamp(2.2rem, 5.2vw, 4.4rem);
+  font-weight: 800;
+  font-variation-settings: 'wdth' 118;
+  line-height: 0.95;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.lede {
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+  line-height: 1.55;
+  color: var(--dim);
+  text-wrap: pretty;
+}
+.prompt {
+  font-family: var(--font-mono);
+  color: var(--phosphor);
+}
+.cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.05em;
+  vertical-align: -0.15em;
+  background: var(--phosphor);
+  animation: blink 1.1s steps(1) infinite;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/*
+ * The page's one orchestrated entrance: the hero copy rises while the particles
+ * assemble into the C64. Nothing else on the page animates in on its own.
+ */
+.hero-rise {
+  animation: rise 0.9s var(--ease-out) both;
+  animation-delay: var(--rise-delay, 0ms);
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(0.6em); }
+}
+
+/* ---------- Controls ---------- */
+
+.btn-signal,
+.btn-quiet {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.9rem;
+  padding: 0 1.35rem;
+  border-radius: 999px;
+  font-weight: 650;
+  font-size: 0.95rem;
+  transition: transform 0.25s var(--ease-out), background-color 0.25s, color 0.25s, border-color 0.25s;
+}
+.btn-signal {
+  background: var(--signal);
+  color: var(--void);
+}
+.btn-signal:hover { background: #ffd27a; }
+.btn-signal:active,
+.btn-quiet:active { transform: scale(0.97); }
+.btn-signal:disabled { opacity: 0.55; cursor: progress; }
+.btn-quiet {
+  border: 1px solid var(--line);
+  color: var(--paper);
+}
+.btn-quiet:hover { border-color: var(--phosphor); color: var(--phosphor); }
+
+.link-underline {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.3s var(--ease-out), color 0.2s;
+}
+.link-underline:hover { background-size: 100% 1px; color: var(--signal); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor,
+  .hero-rise { animation: none; }
+  .btn-signal,
+  .btn-quiet,
+  .link-underline { transition: none; }
 }
