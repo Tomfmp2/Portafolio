@@ -37,9 +37,6 @@ export const metadata: Metadata = {
     title: 'Tomás Felipe Medina Prada | Desarrollador .NET junior',
     description: 'Portafolio de Tomás Felipe Medina Prada, desarrollador .NET junior en Bucaramanga: APIs en C# y ASP.NET Core con pruebas, Docker y CI.',
   },
-  icons: {
-    icon: '/c-sharp-16-svgrepo-com.svg',
-  },
 }
 
 export default function RootLayout({
