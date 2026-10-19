@@ -194,9 +194,12 @@ Cada sección es un capítulo del scroll. Una sola nube de partículas se reensa
 
 **Una sola fuente de verdad.** `lib/experience/chapters.ts` define el orden de los capítulos y la pose de cámara y objeto de cada uno (escritorio y móvil). `Experience.tsx` traduce el scroll a un número, `scrollState.chapter` (2.4 = 40 % del camino entre el capítulo 2 y el 3), mediante un `ScrollTrigger` por sección. La forma, la cámara y la turbulencia se derivan de ese número en `useFrame`. No hay timelines paralelos que puedan desincronizarse.
 
+**Un viaje, no diapositivas.** Cada capítulo es una estación más al fondo de la escena (`stationAt`, separadas por `STATION_GAP` y con una trayectoria que serpentea). Mientras la nube cambia de forma, la cámara vuela a la siguiente estación y atraviesa un portal con el número y el nombre del nivel. La velocidad del vuelo (`journey.warp`) abre el campo de visión, estira las partículas y las estrellas en estelas y aumenta la aberración cromática. El decorado vive en `components/experience/World.tsx`: rejilla retro en el suelo, polvo, bloques de píxeles y portales. Solo aporta profundidad; no contiene información.
+
 **Accesibilidad y rendimiento.**
 - El scroll es nativo (Lenis solo lo suaviza en escritorio); nada se fija con pin ni secuestra el desplazamiento.
-- `prefers-reduced-motion`: la escena salta a cada forma sin animar, sin turbulencia ni parallax, y renderiza bajo demanda.
+- `prefers-reduced-motion`: la escena salta a cada forma sin animar, sin turbulencia, parallax ni estelas, y renderiza bajo demanda. Los textos aparecen completos y sin efectos.
+- Postproducción (bloom, aberración cromática y viñeta) solo en equipos que no son de bajo consumo.
 - Sin WebGL se muestra un fondo estático; todo el contenido está en el DOM.
 - Partículas: 36 000 en escritorio, 22 000 en equipos de bajo consumo y 14 000 en móvil.
 - Medido con Chrome y GPU real (Intel UHD): 60 fps durante el scroll, también con la CPU estrangulada ×4.
@@ -210,6 +213,7 @@ Cada sección es un capítulo del scroll. Una sola nube de partículas se reensa
 | Disquetes | `components/experience/Floppies.tsx` | Un disquete de 5¼" por proyecto: al hacer clic carga la demo de terminal o abre el repositorio. La lista del DOM ofrece las mismas acciones con teclado. |
 | HUD | `components/experience/Hud.tsx` | Niveles 1–7 (clicables), una pista de control por nivel, sonido y consola. |
 | Consola | `components/experience/Console.tsx` | Se abre con `/`. Comandos como `AYUDA`, `LISTA`, `IR 3`, `CARGAR "OCAP"`, `DEMO BANCO`, `CV`, `SONIDO` e `IDIOMA`. |
+| Tipografía | `components/experience/TextFx.tsx`, `SplitChars.tsx` | Los títulos se arman letra a letra y las etiquetas se descifran como en la pantalla del C64. En escritorio, el texto de cada capítulo llega desde el fondo y pasa junto a la cámara al salir. Las letras del nombre reaccionan al cursor. `SplitChars` genera las letras con React, así que el cambio de idioma no rompe nada. |
 | Sonido | `lib/experience/sound.ts` | Efectos tipo chip SID sintetizados con WebAudio, sin archivos. Solo suenan si el visitante lo elige. |
 
 El DOM y la escena se comunican mediante `lib/experience/store.ts` (estado mutable que la escena lee en cada frame, más eventos para React). La capa de la página (`.page-ui`) deja pasar los eventos del puntero al canvas, salvo en el texto, la navegación y los diálogos.
