@@ -47,6 +47,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="dark">
+      <head>
+        <link
+          rel="preload"
+          href="https://pub-18dfde3731984fdd8859b4b55c6a0de7.r2.dev/commodore_64__computer_full_pack.glb"
+          as="fetch"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
         <LanguageProvider>
           <SmoothScrollProvider>
