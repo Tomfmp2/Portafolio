@@ -137,10 +137,6 @@
     margin-inline: auto;
     padding-inline: var(--gutter);
   }
-  .section {
-    position: relative;
-    padding-block: clamp(6rem, 14vw, 11rem);
-  }
 
   /* Paper grain: a fixed, very faint noise so the cream reads as paper, not as a flat fill. */
   .grain {
@@ -331,15 +327,6 @@
     z-index: 60;
     transition: transform 0.8s var(--ease-stroke), opacity 0.6s ease, background-color 0.4s;
   }
-  .site-header.is-hidden {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  /* Keyboard users always get it back (the skip link lives here). */
-  .site-header.is-hidden:focus-within {
-    transform: none;
-    opacity: 1;
-  }
   .site-header.is-solid {
     background: rgb(242 239 230 / 0.88);
     backdrop-filter: blur(10px);
@@ -465,11 +452,9 @@
     display: grid;
     gap: 4rem;
   }
-  /* Only when animated: with reduced motion all three are simply listed. */
-  @media (prefers-reduced-motion: no-preference) {
-    .hl-stage > * {
-      grid-area: 1 / 1;
-    }
+  /* Only in the deck: as a plain document all three are simply listed. */
+  .deck-on .hl-stage > * {
+    grid-area: 1 / 1;
   }
   /* The "draw on the hero" hint only makes sense with a mouse or pen. */
   @media not ((hover: hover) and (pointer: fine)) {
@@ -494,34 +479,7 @@
     color: var(--paper);
   }
 
-  .code-panel {
-    font-family: var(--font-mono);
-    font-size: clamp(0.72rem, 0.95vw, 0.85rem);
-    line-height: 1.7;
-    border: 1px solid var(--night-rule);
-    border-radius: 0.75rem;
-    background: #0c0c0c;
-    overflow: auto;
-  }
-  .tok-kw { color: #c9a8ff; }
-  .tok-type { color: var(--marker); }
-  .tok-str { color: #f2c48d; }
-  .tok-com { color: #6f6d66; }
-  .tok-num { color: #8fd6ff; }
 
-  .module-tile {
-    position: relative;
-    padding: 0.9rem 1rem;
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-  }
-  .module-tile svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
 
   .project-row {
     border-top: 1.5px solid var(--ink);
@@ -719,28 +677,21 @@
  * flash on load. Only with JS and motion; otherwise the hero renders complete.
  */
 @media (prefers-reduced-motion: no-preference) {
-  html.js #inicio [data-name-row] {
+  html.deck-on #inicio [data-name-row] {
     visibility: hidden;
   }
-  html.js #inicio .hero-swipe {
+  html.deck-on #inicio .hero-swipe {
     transform: skewX(-8deg) scaleX(0);
   }
-  html.js #inicio [data-hl] {
+  html.deck-on #inicio [data-hl] {
     --hl: 0%;
   }
-  html.js #inicio [data-hero-rest] {
+  html.deck-on #inicio [data-hero-rest] {
     opacity: 0;
   }
 }
 
 @layer components {
-  /* Scenes that pin take the whole screen while they play; static, they don't need to. */
-  @media (prefers-reduced-motion: no-preference) {
-    .verbs-stage,
-    .title-stage {
-      min-height: 100svh;
-    }
-  }
   /* A highlighter stroke under a big title. */
   .title-swipe {
     position: absolute;
@@ -791,7 +742,7 @@
 }
 
 @layer components {
-  /* Full-screen highlighter sweep used between scenes (lib/scene.ts sweep). */
+  /* Full-screen highlighter sweep used between scenes (changeStage in lib/reveal.ts). */
   .sweep-band {
     position: fixed;
     inset: 0;
@@ -818,5 +769,236 @@
   /* Room for words turning in 3D. */
   .statement {
     perspective: 900px;
+  }
+}
+
+/* ---------- The deck (components/site/Deck.tsx) ---------- */
+
+/*
+ * With the deck on, the window never scrolls: scenes are stacked full-screen
+ * layers and only the active one (plus the one leaving, during a transition)
+ * is visible. Without it (reduced motion, no JS) everything below is ignored
+ * and the page reads as a normal document.
+ */
+@layer components {
+  .scene-fill {
+    min-height: 100svh;
+  }
+  html.deck-on,
+  html.deck-on body {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+  .deck-on .deck {
+    position: fixed;
+    inset: 0;
+    perspective: 1600px;
+    touch-action: none;
+  }
+  .deck-on .scene {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    visibility: hidden;
+    background: var(--paper);
+    transform-origin: 50% 50%;
+    touch-action: pan-y;
+  }
+  .deck-on .scene::-webkit-scrollbar {
+    display: none;
+  }
+  .deck-on .scene.is-active,
+  .deck-on .scene.is-leaving {
+    visibility: visible;
+  }
+  .deck-on .scene.is-active {
+    z-index: 2;
+  }
+  .deck-on .scene.is-leaving {
+    z-index: 1;
+  }
+  .deck-on .scene:focus {
+    outline: none;
+  }
+  /* A night scene (OCAP) paints the whole layer, not just its content box. */
+  .deck-on .scene:has(> .on-night) {
+    background: var(--night);
+  }
+  .deck-on .scene-fill {
+    min-height: 100%;
+  }
+
+  /* The case study: in the deck, the head and the lessons share the stage and swap. */
+  .deck-on .case-stage {
+    display: grid;
+    min-height: 100svh;
+  }
+  .deck-on .case-stage > * {
+    grid-area: 1 / 1;
+  }
+  .deck-on .case-head {
+    align-self: center;
+  }
+  .deck-on .case-flow {
+    align-self: end;
+    padding-bottom: clamp(1rem, 4vh, 3rem);
+  }
+  .case-flow {
+    margin-top: clamp(3rem, 7vw, 5rem);
+  }
+  .deck-on .case-flow {
+    margin-top: 0;
+  }
+
+  /* Controls */
+  .deck-rail {
+    position: fixed;
+    right: clamp(0.75rem, 2vw, 1.75rem);
+    top: 50%;
+    z-index: 50;
+    transform: translateY(-50%);
+  }
+  .deck-rail ol {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .deck-rail a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.7rem;
+    min-height: 1.6rem;
+    padding: 0 0.2rem;
+  }
+  .deck-rail-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(8px);
+    transition: opacity 0.25s, transform 0.35s var(--ease-stroke);
+    background: var(--paper);
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+  }
+  .deck-rail a:hover .deck-rail-label,
+  .deck-rail a:focus-visible .deck-rail-label {
+    opacity: 1;
+    transform: none;
+  }
+  .deck-rail-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    transition: height 0.4s var(--ease-stroke), background-color 0.3s;
+  }
+  .deck-rail a[aria-current] .deck-rail-dot {
+    height: 1.8rem;
+    background: var(--marker);
+  }
+  .deck-bar {
+    position: fixed;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: clamp(0.9rem, 2.5vh, 1.6rem);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    pointer-events: none;
+  }
+  .deck-bar > * {
+    pointer-events: auto;
+  }
+  .deck-count {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-variant-numeric: tabular-nums;
+    background: var(--paper);
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--ink);
+  }
+  .deck-count-label {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .deck-arrow {
+    display: grid;
+    place-items: center;
+    width: 2.9rem;
+    height: 2.9rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    transition: background-color 0.25s, transform 0.3s var(--ease-stroke);
+  }
+  .deck-arrow svg {
+    width: 1.15rem;
+    height: 1.15rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .deck-arrow:hover:not(:disabled) {
+    background: var(--marker);
+  }
+  .deck-arrow:active:not(:disabled) {
+    transform: scale(0.93);
+  }
+  .deck-arrow:disabled {
+    opacity: 0.3;
+  }
+  .deck-hint {
+    position: fixed;
+    left: 50%;
+    bottom: clamp(1.2rem, 3vh, 2rem);
+    z-index: 50;
+    transform: translateX(-50%);
+    font-family: var(--font-hand);
+    font-size: 1.5rem;
+    color: var(--ink-soft);
+    animation: hint-bob 2s var(--ease-stroke) infinite;
+    pointer-events: none;
+  }
+  @keyframes hint-bob {
+    50% { transform: translate(-50%, -6px); }
+  }
+  @media (max-width: 899px) {
+    .deck-rail { display: none; }
+    .deck-hint { display: none; }
+    .deck-count-label { display: none; }
+  }
+}
+
+@layer components {
+  .site-header .wordmark {
+    transition: opacity 0.4s, transform 0.5s var(--ease-stroke);
+  }
+  .site-header.on-home .wordmark {
+    opacity: 0;
+    transform: translateY(-0.4em);
+  }
+}
+
+@layer components {
+  .site-header.is-night {
+    color: var(--paper);
+  }
+  .site-header.is-night.is-solid {
+    background: rgb(20 20 20 / 0.86);
+  }
+  .site-header.is-night .btn-ink {
+    background: var(--paper);
+    color: var(--ink);
   }
 }

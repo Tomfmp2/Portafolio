@@ -9,9 +9,11 @@ import { Environment, Lightformer } from "@react-three/drei";
  * screen, caps the pixel ratio, and lights the scene with code-built softboxes
  * (no HDR download). With reduced motion it draws a single still frame.
  */
-export default function Stage({ children, className = "", camera = [0, 0, 6] as [number, number, number], fov = 35 }: {
+export default function Stage({ children, className = "", camera = [0, 0, 6] as [number, number, number], fov = 35, active = true }: {
   children: React.ReactNode;
   className?: string;
+  /** False while its deck scene is off screen: nothing is rendered then. */
+  active?: boolean;
   camera?: [number, number, number];
   fov?: number;
 }) {
@@ -31,7 +33,7 @@ export default function Stage({ children, className = "", camera = [0, 0, 6] as 
   return (
     <div ref={host} className={className} aria-hidden="true">
       <Canvas
-        frameloop={reduced ? "demand" : visible ? "always" : "never"}
+        frameloop={reduced ? "demand" : visible && active ? "always" : "never"}
         dpr={[1, 1.75]}
         camera={{ position: camera, fov }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}

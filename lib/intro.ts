@@ -24,8 +24,8 @@ export function onIntro(callback: () => void) {
 export const INTRO_KEY = "tm-intro-seen";
 
 /**
- * Runs before first paint (inlined in <head>): marks that JS is available and
- * whether this session already saw the intro, so CSS can show or skip the
- * preloader without a flash in either direction.
+ * Runs before first paint (inlined in <head>): marks that JS is available,
+ * turns on the scene deck when motion is allowed, and whether this session
+ * already saw the intro, so CSS lays the page out right from the first frame.
  */
-export const introScript = `try{var d=document.documentElement;d.classList.add('js');if(sessionStorage.getItem('${INTRO_KEY}')||matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('intro-seen')}catch(e){}`;
+export const introScript = `try{var d=document.documentElement;d.classList.add('js');var m=matchMedia('(prefers-reduced-motion: reduce)').matches;if(!m)d.classList.add('deck-on');if(sessionStorage.getItem('${INTRO_KEY}')||m)d.classList.add('intro-seen')}catch(e){}`;

@@ -20,9 +20,9 @@ export default function MoreProjects() {
   };
 
   return (
-    <article className="wrap pt-[clamp(5rem,12vw,10rem)]" aria-labelledby="more-title">
+    <article className="scene-fill wrap flex flex-col justify-center py-[clamp(5rem,10vh,7rem)]" aria-labelledby="more-title">
       <div className="grid gap-6 md:grid-cols-2 md:items-end">
-        <h3 id="more-title" className="headline" data-lines data-skew>
+        <h3 id="more-title" className="headline" data-lines>
           {m.title}
         </h3>
         <p data-reveal className="body-copy">{m.lede}</p>

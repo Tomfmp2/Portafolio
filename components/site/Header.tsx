@@ -1,36 +1,46 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useLanguage } from "@/hooks/use-language";
+import { deckState, subscribeDeck } from "@/lib/deck";
 import { gsap, initGSAP } from "@/lib/gsap";
-import { getLenisInstance, scrollToTarget } from "@/lib/lenis";
 import { checkReducedMotion } from "@/lib/performance";
 import Wordmark from "./Wordmark";
 
 export default function Header() {
   const { t, toggleLang } = useLanguage();
   const [open, setOpen] = useState(false);
-  // Starts hidden: pages open at the top, where the header stays out of the way.
-  const [hidden, setHidden] = useState(true);
   const [solid, setSolid] = useState(false);
+  const [deckOn, setDeckOn] = useState(false);
+  const scene = useSyncExternalStore(subscribeDeck, () => deckState.index, () => 0);
+  // In the deck the hero's name is the logo, so the wordmark steps aside there; the language
+  // switch and the menu stay available on every scene.
+  const home = deckOn && scene === 0;
+  // Over a dark scene (OCAP) the header turns light so it stays readable.
+  const [night, setNight] = useState(false);
+  useEffect(() => {
+    setNight(deckOn && !!document.querySelectorAll(".scene")[scene]?.querySelector(".on-night"));
+  }, [deckOn, scene]);
+  // In the deck scenes scroll inside themselves, so away from the hero the header always has
+  // a background; as a plain document it gets one once the page scrolls.
+  const backed = deckOn ? !home : solid;
   const panel = useRef<HTMLDivElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
 
-  // Out of the way at the very top (the hero's name is the logo there), it eases in once
-  // you start scrolling, slides away while reading down and returns when scrolling up.
+  // As a plain document (reduced motion) it gets a solid background once the page scrolls.
   useEffect(() => {
-    let last = window.scrollY;
-    let goingDown = false;
-    const onScroll = () => {
-      const y = window.scrollY;
-      setSolid(y > 40);
-      if (Math.abs(y - last) > 6) goingDown = y > last;
-      setHidden(y < 120 || (goingDown && y > window.innerHeight));
-      last = y;
-    };
+    const html = document.documentElement;
+    const sync = () => setDeckOn(html.classList.contains("deck-on"));
+    sync();
+    const watch = new MutationObserver(sync);
+    watch.observe(html, { attributes: true, attributeFilter: ["class"] });
+    const onScroll = () => setSolid(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      watch.disconnect();
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -38,10 +48,10 @@ export default function Header() {
     if (!el) return;
     initGSAP();
     const reduced = checkReducedMotion();
-    const lenis = getLenisInstance();
     const links = el.querySelectorAll("[data-menu-item]");
+    // While the menu is open the deck ignores wheel, swipes and arrow keys.
+    document.documentElement.classList.toggle("menu-open", open);
     if (open) {
-      lenis?.stop();
       gsap.set(el, { visibility: "visible" });
       const tl = gsap.timeline();
       tl.to(el, { clipPath: "inset(0 0 0% 0)", duration: reduced ? 0 : 0.8, ease: "expo.inOut" });
@@ -56,7 +66,6 @@ export default function Header() {
         tl.kill();
       };
     }
-    lenis?.start();
     gsap.to(el, {
       clipPath: "inset(0 0 100% 0)",
       duration: reduced ? 0 : 0.7,
@@ -72,7 +81,7 @@ export default function Header() {
 
   return (
     <>
-      <header className={`site-header ${hidden && !open ? "is-hidden" : ""} ${solid && !open ? "is-solid" : ""}`}>
+      <header className={`site-header ${home && !open ? "on-home" : ""} ${backed && !open ? "is-solid" : ""} ${night && !open ? "is-night" : ""}`}>
         <a href="#contenido" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-10 focus:rounded focus:bg-marker focus:px-3 focus:py-2">
           {t.meta.skip}
         </a>
@@ -110,8 +119,9 @@ export default function Header() {
                   onClick={(e) => {
                     e.preventDefault();
                     close(false);
-                    // Wait for the panel to start closing so Lenis is running again.
-                    window.setTimeout(() => scrollToTarget(item.href), 120);
+                    // Once the menu has released the deck, the hash change takes the visitor there
+                    // (the deck listens for it; as a plain document the browser scrolls to it).
+                    window.setTimeout(() => (location.hash = item.href), 60);
                   }}
                 >
                   <mark className="hl">{item.label}</mark>

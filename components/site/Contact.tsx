@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type ChangeEvent, type FormEvent } from "react";
 import dynamic from "next/dynamic";
 import { useLanguage } from "@/hooks/use-language";
 import { links } from "@/lib/content";
 import { gsap, initGSAP, MEDIA } from "@/lib/gsap";
+import { deckState, subscribeDeck } from "@/lib/deck";
+import { useSceneIndex } from "./Deck";
 import WhenNear from "./WhenNear";
 
 // WebGL (three.js) is the heaviest code on the page: fetched only as the visitor nears the contact.
@@ -87,6 +89,32 @@ function EmailButton() {
       </span>
     </div>
   );
+}
+
+/**
+ * Where the 3D keys load: in the deck, the first time the contact scene is reached (and they only
+ * render while it's on screen); as a plain document, once the visitor scrolls near them.
+ */
+function KeycapsSlot() {
+  const index = useSceneIndex();
+  const current = useSyncExternalStore(subscribeDeck, () => deckState.index, () => -1);
+  // Decided after mount from the class the head script set: rendering before that would guess
+  // wrong and, in the deck, every scene overlaps the viewport (so "near" would always be true).
+  const [mode, setMode] = useState<"pending" | "deck" | "document">("pending");
+  const [seen, setSeen] = useState(false);
+  useEffect(() => setMode(document.documentElement.classList.contains("deck-on") ? "deck" : "document"), []);
+  const active = mode === "deck" && current === index;
+  useEffect(() => {
+    if (active) setSeen(true);
+  }, [active]);
+  if (mode === "pending") return null;
+  if (mode === "document")
+    return (
+      <WhenNear className="h-full w-full">
+        <Keycaps className="h-full w-full" />
+      </WhenNear>
+    );
+  return seen ? <Keycaps className="h-full w-full" active={active} /> : null;
 }
 
 export default function Contact() {
@@ -181,9 +209,9 @@ export default function Contact() {
   );
 
   return (
-    <section id="contacto" className="section" aria-labelledby="contact-title">
+    <section className="scene-fill pb-16 pt-[clamp(5rem,10vh,7rem)]" aria-labelledby="contact-title">
       <div className="wrap">
-        <h2 id="contact-title" className="display" data-lines data-skew>
+        <h2 id="contact-title" className="display" data-lines>
           {c.title}
         </h2>
         <div className="mt-12 grid gap-16 lg:grid-cols-2">
@@ -209,9 +237,7 @@ export default function Contact() {
               </a>
             </div>
             <div data-parallax="0.1" className="mt-6 h-[clamp(14rem,30vw,22rem)] w-full max-w-[34rem]">
-              <WhenNear className="h-full w-full">
-                <Keycaps className="h-full w-full" />
-              </WhenNear>
+              <KeycapsSlot />
             </div>
           </div>
 

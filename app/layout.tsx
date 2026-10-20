@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next'
 import { Bricolage_Grotesque, JetBrains_Mono, Reenie_Beanie } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { LanguageProvider } from '@/hooks/use-language'
-import SmoothScrollProvider from '@/components/providers/smooth-scroll-provider'
 import { introScript } from '@/lib/intro'
 import './globals.css'
 
@@ -72,7 +71,7 @@ export default function RootLayout({
       </head>
       <body>
         <LanguageProvider>
-          <SmoothScrollProvider>{children}</SmoothScrollProvider>
+          {children}
         </LanguageProvider>
         <Analytics />
       </body>

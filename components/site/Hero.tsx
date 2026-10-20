@@ -3,90 +3,68 @@
 import { useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { links } from "@/lib/content";
-import { gsap, initGSAP, MEDIA, SplitText } from "@/lib/gsap";
-import { onIntro } from "@/lib/intro";
-import { scene, settle, sweep } from "@/lib/scene";
+import { gsap, initGSAP, SplitText } from "@/lib/gsap";
+import { useDeckOn, useScene } from "./Deck";
 import HighlighterCanvas from "./HighlighterCanvas";
 import Marked from "./Marked";
 import Note from "./Note";
 
 const MARKER = "#d4ff3a";
+const R = gsap.utils.random;
 
 export default function Hero() {
   const { t } = useLanguage();
   const h = t.hero;
   const root = useRef<HTMLElement>(null);
+  const split = useRef<SplitText | null>(null);
+  const deck = useDeckOn();
 
+  // Letters are split once the deck runs; without masks so they are free to scatter.
   useEffect(() => {
     const el = root.current;
-    if (!el) return;
+    if (!el || !deck) return;
     initGSAP();
-    const mm = gsap.matchMedia();
-    let offIntro = () => {};
-
-    mm.add({ motion: MEDIA.motion, desktop: MEDIA.desktop }, (ctx) => {
-      const { motion, desktop } = ctx.conditions as { motion: boolean; desktop: boolean };
-      if (!motion) return;
-
-      const rows = el.querySelectorAll<HTMLElement>("[data-name-row]");
-      // No masks: the letters need to be free to scatter on the way out.
-      const split = SplitText.create(rows, { type: "chars", charsClass: "hero-char" });
-      const R = gsap.utils.random;
-      const mark = el.querySelector<HTMLElement>("[data-hl]");
-      const swipe = el.querySelector<HTMLElement>("[data-swipe]");
-      const rest = el.querySelectorAll("[data-hero-rest]");
-
-      gsap.set(split.chars, { yPercent: () => R(90, 150), rotation: () => R(-25, 25), opacity: 0 });
-      // CSS keeps the name hidden until this point (see the hero start state in globals.css).
-      gsap.set(rows, { visibility: "visible" });
-      gsap.set(rest, { opacity: 0, y: 16 });
-      if (mark) gsap.set(mark, { "--hl": "0%" });
-      if (swipe) gsap.set(swipe, { scaleX: 0 });
-
-      // The one orchestrated entrance of the page, right after the preloader lifts.
-      offIntro = onIntro(() => {
-        const tl = gsap.timeline({ delay: 0.15 });
-        tl.to(split.chars, { yPercent: 0, rotation: 0, opacity: 1, duration: 1.2, ease: "expo.out", stagger: { each: 0.045, from: "start" } });
-        // A wide highlighter stroke under the surname, then the key phrase.
-        if (swipe) tl.to(swipe, { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, "-=0.4");
-        tl.to(rest, { opacity: 1, y: 0, duration: 0.8, stagger: 0.08 }, "-=0.4");
-        if (mark) tl.to(mark, { "--hl": "100%", duration: 1.1, ease: "power2.inOut" }, "-=0.3");
-      });
-
-      // The hero as a scene: it holds still while the scroll draws a hand-drawn ring around the
-      // CV button, pauses, then leaves: the letters rise out through their masks, the stroke
-      // retracts, the ring is wiped and the rest lifts away. Scrolling back rebuilds it.
-      const ring = el.querySelector<SVGPathElement>("[data-ring] path");
-      const outgoing = el.querySelectorAll("[data-hero-out]");
-      const tl = scene(el, desktop ? 170 : 130, { start: "top top" });
-      if (ring) tl.fromTo(ring, { drawSVG: "0%" }, { drawSVG: "100%", duration: 1 });
-      // While pinned, the two rows of the name drift apart, as if the page turns.
-      if (desktop) tl.to(rows[0], { xPercent: -6, duration: 1 }, 0).to(rows[1], { xPercent: 8, duration: 1 }, 0);
-      settle(tl, 0.35);
-      const out = tl.duration();
-      // The letters burst apart, each its own way; the stroke, ring and copy clear; then a
-      // highlighter sweep rises over the screen and wipes the hero away.
-      tl.fromTo(
-        split.chars,
-        { yPercent: 0, xPercent: 0, rotation: 0, opacity: 1 },
-        { yPercent: () => R(-320, -140), xPercent: () => R(-90, 90), rotation: () => R(-70, 70), opacity: 0, duration: 0.8, stagger: { each: 0.02, from: "random" }, ease: "power3.in", immediateRender: false },
-        out
-      );
-      if (swipe) tl.fromTo(swipe, { scaleX: 1 }, { scaleX: 0, transformOrigin: "right center", duration: 0.5, ease: "power2.in", immediateRender: false }, out);
-      if (ring) tl.to(ring, { drawSVG: "100% 100%", duration: 0.5, ease: "power2.in" }, out);
-      tl.fromTo(outgoing, { opacity: 1, y: 0 }, { opacity: 0, y: -60, skewY: -4, duration: 0.5, stagger: 0.08, ease: "power2.in", immediateRender: false }, out + 0.1);
-      sweep(tl, out + 0.35, () => {});
-      return () => split.revert();
-    });
-
+    split.current = SplitText.create(el.querySelectorAll("[data-name-row]"), { type: "chars", charsClass: "hero-char" });
     return () => {
-      offIntro();
-      mm.revert();
+      split.current?.revert();
+      split.current = null;
     };
-  }, []);
+  }, [deck]);
+
+  useScene({
+    // The opening of the whole site: letters land from different angles, the highlighter strikes
+    // a stroke under the surname and the key phrase, and a ring is drawn around the CV.
+    enter(tl, at) {
+      const el = root.current;
+      const chars = split.current?.chars;
+      if (!el || !chars) return;
+      const swipe = el.querySelector("[data-swipe]");
+      const mark = el.querySelector("[data-hl]");
+      const ring = el.querySelector("[data-ring] path");
+      const rest = el.querySelectorAll("[data-hero-rest]");
+      tl.set(el.querySelectorAll("[data-name-row]"), { visibility: "visible" }, 0);
+      // Coming back after the exit: bring the copy blocks back before their parts animate in.
+      tl.set(el.querySelectorAll("[data-hero-out]"), { opacity: 1, y: 0, skewY: 0 }, 0);
+      tl.fromTo(chars, { yPercent: () => R(90, 160), rotation: () => R(-30, 30), opacity: 0 }, { yPercent: 0, rotation: 0, opacity: 1, duration: 1.1, ease: "expo.out", stagger: 0.045 }, at);
+      if (swipe) tl.fromTo(swipe, { scaleX: 0, transformOrigin: "left center" }, { scaleX: 1, duration: 0.9, ease: "power2.inOut" }, at + 0.7);
+      tl.fromTo(rest, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.08 }, at + 0.9);
+      if (mark) tl.fromTo(mark, { "--hl": "0%" }, { "--hl": "100%", duration: 0.9, ease: "power2.inOut" }, at + 1.2);
+      if (ring) tl.fromTo(ring, { drawSVG: "0%" }, { drawSVG: "100%", duration: 0.9, ease: "power1.inOut" }, at + 1.8);
+    },
+    // The letters burst apart, each its own way, and the strokes and copy clear.
+    leave(tl, at) {
+      const el = root.current;
+      const chars = split.current?.chars;
+      if (!el || !chars) return;
+      tl.to(chars, { yPercent: () => R(-320, -140), xPercent: () => R(-90, 90), rotation: () => R(-70, 70), opacity: 0, duration: 0.7, stagger: { each: 0.015, from: "random" }, ease: "power3.in" }, at);
+      tl.to(el.querySelector("[data-swipe]"), { scaleX: 0, transformOrigin: "right center", duration: 0.4, ease: "power2.in" }, at);
+      tl.to(el.querySelector("[data-ring] path"), { drawSVG: "100% 100%", duration: 0.4 }, at);
+      tl.to(el.querySelectorAll("[data-hero-out]"), { opacity: 0, y: -50, skewY: -4, duration: 0.45, stagger: 0.06, ease: "power2.in" }, at + 0.05);
+    },
+  });
 
   return (
-    <section ref={root} id="inicio" data-motion-owned className="relative flex min-h-svh flex-col justify-end overflow-hidden pb-[clamp(2rem,6vh,4rem)] pt-28" aria-labelledby="hero-name">
+    <section ref={root} data-motion-owned className="hero scene-fill relative flex flex-col justify-end overflow-hidden pb-[clamp(5rem,10vh,7rem)] pt-28" aria-labelledby="hero-name">
       <HighlighterCanvas color={MARKER} />
       <div className="hero-content wrap relative">
         <h1 id="hero-name" className="display select-none">
@@ -116,7 +94,7 @@ export default function Hero() {
               <a href={links.cv} download className="btn btn-ink relative z-[1]">
                 {h.cv}
               </a>
-              {/* Hand-drawn ring the pen draws around the CV as you start scrolling */}
+              {/* Hand-drawn ring around the CV */}
               <svg data-ring className="hero-ring" viewBox="0 0 200 80" preserveAspectRatio="none" aria-hidden="true">
                 <path d="M34 10 C86 -4 172 2 193 30 C207 54 168 77 98 76 C38 75 4 61 7 39 C10 19 58 5 128 9" />
               </svg>

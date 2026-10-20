@@ -112,9 +112,9 @@ function Keyboard() {
   );
 }
 
-export default function Keycaps({ className = "" }: { className?: string }) {
+export default function Keycaps({ className = "", active = true }: { className?: string; active?: boolean }) {
   return (
-    <Stage className={className} camera={[0, 4.2, 7]} fov={36}>
+    <Stage className={className} active={active} camera={[0, 4.2, 7]} fov={36}>
       <Keyboard />
     </Stage>
   );
