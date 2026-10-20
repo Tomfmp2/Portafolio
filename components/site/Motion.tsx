@@ -2,14 +2,14 @@
 
 import { useEffect } from "react";
 import { gsap, initGSAP, MEDIA, ScrollTrigger, SplitText } from "@/lib/gsap";
-import { PEN_APPROACH, penAlong } from "@/lib/pen";
+import { penHold, penSweepProgress } from "@/lib/pen";
 
 /** Elements a section animates itself opt out of the generic behaviours with this attribute. */
 const OWNED = "[data-motion-owned] *";
 
 /**
  * The behaviours every section shares, wired once per render of the page:
- * - [data-hl]    highlighter sweeps across the phrase when it is read
+ * - [data-hl]    the 3D pen highlights the phrase, in step with the scroll
  * - [data-note]  the margin note's arrow is drawn, then its words appear
  * - [data-lines] a heading rises line by line from under its baseline
  * - [data-count] a number counts up to its value
@@ -26,19 +26,23 @@ export default function Motion() {
         gsap.utils.toArray<T>(selector).filter((el) => !el.matches(OWNED));
 
       pick<HTMLElement>("[data-hl]").forEach((el) => {
-        gsap.set(el, { "--hl": "0%" });
-        // The 3D pen travels to the phrase first, then draws it at a readable pace.
-        gsap.timeline({ scrollTrigger: { trigger: el, start: "top 75%" } })
-          .to({}, { duration: PEN_APPROACH, onUpdate: () => penAlong(el, 0) })
-          .to(el, {
-            "--hl": "100%",
-            // Longer phrases take longer, like a real pen, within limits.
-            duration: gsap.utils.clamp(0.9, 2, (el.textContent?.length ?? 20) / 20),
-            ease: "power1.inOut",
-            onUpdate() {
-              penAlong(el, this.progress());
-            },
-          });
+        el.style.setProperty("--hl", "0%");
+        // Tied to the scroll over a long range: the pen comes to the phrase, then draws it as you
+        // read down. Scrolling slowly draws slowly; pausing leaves the pen waiting on the phrase.
+        const owner = {};
+        const proxy = { p: 0 };
+        gsap.to(proxy, {
+          p: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 88%",
+            end: "top 42%",
+            scrub: 0.9,
+            onToggle: (self) => penHold(owner, self.isActive),
+          },
+          onUpdate: () => penSweepProgress(el, proxy.p, (d) => el.style.setProperty("--hl", `${d * 100}%`)),
+        });
       });
 
       pick<HTMLElement>("[data-note]").forEach((note) => {
@@ -87,8 +91,11 @@ export default function Motion() {
         });
       }
 
-      // matchMedia reverts tweens, not text we wrote: put the real numbers back.
-      return () => pick<HTMLElement>("[data-count]").forEach((el) => (el.textContent = el.dataset.count ?? ""));
+      // matchMedia reverts tweens, not what we wrote by hand: restore the numbers and highlights.
+      return () => {
+        pick<HTMLElement>("[data-count]").forEach((el) => (el.textContent = el.dataset.count ?? ""));
+        pick<HTMLElement>("[data-hl]").forEach((el) => el.style.removeProperty("--hl"));
+      };
     });
 
     // Layout shifts once fonts arrive; measure again so triggers sit where the text really is.

@@ -87,7 +87,7 @@ export default function Layers() {
       gsap.set(copyEls, { opacity: 0.3 });
       const tl = gsap.timeline({
         defaults: { ease: "power2.inOut" },
-        scrollTrigger: { trigger: el.querySelector("[data-stage]"), start: "center center", end: "+=220%", pin: true, scrub: 0.8 },
+        scrollTrigger: { trigger: el.querySelector("[data-stage]"), start: "center center", end: "+=360%", pin: true, scrub: 1 },
       });
       tl.to(plateEls, { z: (i) => spread(i), duration: 1, stagger: 0.05 });
       // Walk the layers from the core outwards: lift the plate, ink its description.

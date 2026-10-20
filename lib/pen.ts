@@ -1,13 +1,16 @@
 /**
  * Where the 3D highlighter should be writing. Anything that draws a highlight
  * (a sweep on scroll, the hero intro, the visitor dragging on the hero) reports
- * the current tip position in viewport pixels; the pen flies there while
- * reports keep coming and goes back to rest when they stop.
+ * the current tip position in viewport pixels. Scroll-driven sweeps also hold
+ * the pen while the scroll sits inside their range, so it waits on the phrase
+ * when the visitor pauses instead of wandering off.
  */
 export const pen = { x: 0, y: 0, at: -Infinity };
 
-/** How long after the last report the pen still counts as writing: it lingers before going back (ms). */
+/** How long after the last report an unheld pen still counts as writing: it lingers before going back (ms). */
 export const WRITING_GRACE = 650;
+
+const holds = new Set<object>();
 
 export function penWrite(x: number, y: number) {
   pen.x = x;
@@ -15,7 +18,13 @@ export function penWrite(x: number, y: number) {
   pen.at = performance.now();
 }
 
-export const isWriting = () => performance.now() - pen.at < WRITING_GRACE;
+/** Keeps the pen at its last reported point while `owner` holds it. */
+export function penHold(owner: object, held: boolean) {
+  if (held) holds.add(owner);
+  else holds.delete(owner);
+}
+
+export const isWriting = () => holds.size > 0 || performance.now() - pen.at < WRITING_GRACE;
 
 /**
  * Reports the tip at `progress` (0–1) along a highlighted phrase, following its
@@ -40,5 +49,16 @@ export function penAlong(el: Element, progress: number) {
   penWrite(last.right, last.top + last.height * 0.72);
 }
 
-/** Seconds a sweep waits while the pen travels to the start of its phrase. */
+/** Seconds a timed sweep waits while the pen travels to the start of its phrase. */
 export const PEN_APPROACH = 0.55;
+
+/**
+ * Wires a scroll-scrubbed highlight on `mark`: the first part of the range
+ * brings the pen to the start of the phrase, the rest draws it. The pen is
+ * held for the whole range. `apply` paints the sweep for a progress of 0–1.
+ */
+export function penSweepProgress(mark: Element, progress: number, apply: (p: number) => void, approach = 0.25) {
+  const draw = Math.max(0, (progress - approach) / (1 - approach));
+  apply(draw);
+  penAlong(mark, draw);
+}

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { gsap, initGSAP, MEDIA } from "@/lib/gsap";
+import { penHold, penWrite } from "@/lib/pen";
 import Note from "./Note";
 
 interface CaseStudyProps {
@@ -40,7 +41,9 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
       if (!motion) return;
 
       if (night) {
-        gsap.fromTo(el, { scale: 0.94, borderRadius: "3rem" }, { scale: 1, borderRadius: "1.25rem", ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "top 35%", scrub: true } });
+        // The night sheet opens out over the paper. A clip, not a scale: a transform here would
+        // break the pinned lessons inside (position: fixed is relative to transformed ancestors).
+        gsap.fromTo(el, { clipPath: "inset(0% 4% 0% 4% round 3rem)" }, { clipPath: "inset(0% 0% 0% 0% round 1.25rem)", ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "top 35%", scrub: true } });
       }
       // The name runs on one line and slides sideways while the case is on screen, far
       // enough that a long name is read in full. Without motion it simply wraps.
@@ -55,9 +58,38 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
         );
       }
 
+      // The lessons: on desktop the block holds still for a long stretch while the 3D pen draws
+      // the rail from one lesson to the next, lighting each as it passes.
       const steps = gsap.utils.toArray<HTMLElement>("[data-step]", el);
-      const tl = gsap.timeline({ defaults: { ease: "none" }, scrollTrigger: { trigger: el.querySelector("[data-flow]"), start: "top 80%", end: "bottom 55%", scrub: 0.6 } });
-      tl.fromTo(el.querySelector("[data-rail]"), { "--rail": 0 }, { "--rail": 1, duration: steps.length });
+      const rail = el.querySelector<HTMLElement>("[data-rail]");
+      const owner = {};
+      const drawn = { p: 0 };
+      const tl = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: el.querySelector("[data-flow]"),
+          start: desktop ? "center center" : "top 80%",
+          end: desktop ? "+=150%" : "bottom 45%",
+          pin: desktop,
+          scrub: 1,
+          onUpdate: (self) => penHold(owner, self.progress > 0.001 && self.progress < 0.999),
+          onLeave: () => penHold(owner, false),
+          onLeaveBack: () => penHold(owner, false),
+        },
+      });
+      tl.to(drawn, {
+        p: 1,
+        duration: steps.length,
+        onUpdate: () => {
+          if (!rail) return;
+          rail.style.setProperty("--rail", String(drawn.p));
+          // The rail grows by scaling, so its box ends exactly at the tip
+          // (horizontal on desktop, vertical on phones).
+          const r = rail.getBoundingClientRect();
+          if (desktop) penWrite(r.right, r.top + r.height / 2);
+          else penWrite(r.left + r.width / 2, r.bottom);
+        },
+      });
       steps.forEach((step, i) => {
         tl.fromTo(step.querySelector("[data-dot]"), { scale: 0.4, backgroundColor: night ? "#141414" : "#f2efe6" }, { scale: 1, backgroundColor: "#d4ff3a", duration: 0.3 }, i + 0.2)
           .fromTo(step.querySelector("[data-step-copy]"), { opacity: 0.25 }, { opacity: 1, duration: 0.4 }, i + 0.2);

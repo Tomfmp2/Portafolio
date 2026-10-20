@@ -5,7 +5,7 @@ import { useLanguage } from "@/hooks/use-language";
 import { links } from "@/lib/content";
 import { gsap, initGSAP, MEDIA, SplitText } from "@/lib/gsap";
 import { onIntro } from "@/lib/intro";
-import { PEN_APPROACH, penAlong, penWrite } from "@/lib/pen";
+import { PEN_APPROACH, penAlong, penHold, penWrite } from "@/lib/pen";
 import HighlighterCanvas from "./HighlighterCanvas";
 import Marked from "./Marked";
 import Note from "./Note";
@@ -75,36 +75,53 @@ export default function Hero() {
           }, "-=0.3");
       });
 
-      // First stretch of scroll: the pen circles the CV button, tied to the scroll (scroll back to erase).
+      // First stretch of scroll: the hero holds still (desktop) while the pen travels to the CV
+      // button and circles it, in step with the scroll. Scrolling back erases the ring.
       const ring = el.querySelector<SVGPathElement>("[data-ring] path");
+      const owner = {};
       if (ring) {
         const svg = ring.ownerSVGElement!;
         const length = ring.getTotalLength();
-        gsap.fromTo(ring, { drawSVG: "0%" }, {
-          drawSVG: "100%",
-          ease: "none",
+        const proxy = { p: 0 };
+        const tipAt = (d: number) => {
+          const pt = ring.getPointAtLength(d * length);
+          const box = svg.getBoundingClientRect();
+          const vb = svg.viewBox.baseVal;
+          penWrite(box.left + (pt.x / vb.width) * box.width, box.top + (pt.y / vb.height) * box.height);
+        };
+        const tl = gsap.timeline({
+          defaults: { ease: "none" },
           scrollTrigger: {
             trigger: el,
             start: "top top",
-            end: "+=40%",
-            scrub: 0.4,
-            onUpdate: (self) => {
-              if (self.progress <= 0 || self.progress >= 1) return;
-              const pt = ring.getPointAtLength(self.progress * length);
-              const box = svg.getBoundingClientRect();
-              const vb = svg.viewBox.baseVal;
-              penWrite(box.left + (pt.x / vb.width) * box.width, box.top + (pt.y / vb.height) * box.height);
-            },
+            end: desktop ? "+=90%" : "+=50%",
+            pin: desktop,
+            scrub: 1,
+            // Held only once the visitor has actually started this stretch, not while resting at the top.
+            onUpdate: (self) => penHold(owner, self.progress > 0.001 && self.progress < 0.999),
+            onLeave: () => penHold(owner, false),
+            onLeaveBack: () => penHold(owner, false),
           },
         });
+        // A fifth of the range to reach the button, the rest to draw around it.
+        tl.to(proxy, {
+          p: 1,
+          duration: 1,
+          onUpdate: () => {
+            const d = Math.max(0, (proxy.p - 0.2) / 0.8);
+            gsap.set(ring, { drawSVG: `${d * 100}%` });
+            tipAt(d);
+          },
+        });
+        // While pinned, the two rows of the name drift apart, as if the page turns.
+        if (desktop) {
+          tl.to(rows[0], { xPercent: -6, duration: 1 }, 0).to(rows[1], { xPercent: 8, duration: 1 }, 0);
+        }
       }
-
-      // Leaving the hero: the two rows of the name drift apart, as if the page turns.
-      if (desktop) {
-        gsap.to(rows[0], { xPercent: -6, ease: "none", scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: true } });
-        gsap.to(rows[1], { xPercent: 8, ease: "none", scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: true } });
-      }
-      return () => split.revert();
+      return () => {
+        penHold(owner, false);
+        split.revert();
+      };
     });
 
     return () => {

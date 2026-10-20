@@ -85,7 +85,7 @@ function Rig() {
   const rig = useRef<THREE.Group>(null);
   const grip = useRef<THREE.Mesh>(null);
   const { size, camera, raycaster } = useThree();
-  const live = useRef({ appear: 0, target: 0, lastY: 0, spin: 0, pointerX: 0, pointerY: 0, blend: 0 });
+  const live = useRef({ appear: 0, target: 0, lastY: 0, spin: 0, pointerX: 0, pointerY: 0, blend: 0, vx: 0, vy: 0 });
   // Grabbing: where the pointer is, the grab offset, the throw velocity and the spot the visitor left it.
   const drag = useRef({ active: false, hover: false, px: 0, py: 0, ox: 0, oy: 0, vx: 0, vy: 0, lastT: 0, anchored: false, ax: 0, ay: 0 });
   const restRot = useMemo(() => new THREE.Euler(), []);
@@ -209,8 +209,12 @@ function Rig() {
 
     if (d.active) {
       // In the hand: follow the pointer closely and lean into the movement.
-      g.position.x = THREE.MathUtils.damp(g.position.x, d.px + d.ox, 22, dt);
-      g.position.y = THREE.MathUtils.damp(g.position.y, d.py + d.oy, 22, dt);
+      const px = g.position.x;
+      const py = g.position.y;
+      g.position.x = THREE.MathUtils.damp(px, d.px + d.ox, 22, dt);
+      g.position.y = THREE.MathUtils.damp(py, d.py + d.oy, 22, dt);
+      s.vx = (g.position.x - px) / Math.max(dt, 1e-3);
+      s.vy = (g.position.y - py) / Math.max(dt, 1e-3);
       g.rotation.x = THREE.MathUtils.damp(g.rotation.x, 0.4 - d.vy * 0.0004, 8, dt);
       g.rotation.y = THREE.MathUtils.damp(g.rotation.y, -0.6 + d.vx * 0.0004, 8, dt);
       g.rotation.z = THREE.MathUtils.damp(g.rotation.z, -1 - THREE.MathUtils.clamp(d.vx * 0.0006, -0.7, 0.7), 8, dt);
@@ -240,7 +244,7 @@ function Rig() {
 
     // One continuous blend between resting and writing instead of a hard switch,
     // so the pen visibly travels to the phrase and back.
-    s.blend = THREE.MathUtils.damp(s.blend, writing ? 1 : 0, writing ? 3.2 : 1.6, dt);
+    s.blend = THREE.MathUtils.damp(s.blend, writing ? 1 : 0, writing ? 2.6 : 1.4, dt);
     const k = s.blend;
 
     // Resting place: wherever the visitor left it, otherwise beside the name on the hero
@@ -263,16 +267,27 @@ function Rig() {
     goal.lerpVectors(rest, write, k);
     const scale = THREE.MathUtils.lerp(restScale, mobile ? 34 : 56, k);
 
-    // Loose while travelling, tight once it is actually writing (or sliding after a throw).
+    // A spring, not an exponential chase: it eases out of rest, travels on a soft curve and
+    // settles without snapping. Soft while travelling, stiff once writing (or sliding after a
+    // throw) so the tip stays on the stroke. Two substeps keep the stiff case stable.
     const sliding = d.anchored && Math.hypot(d.vx, d.vy) > SETTLE;
-    const lambda = sliding ? 18 : THREE.MathUtils.lerp(3, 11, k * k);
-    g.position.x = THREE.MathUtils.damp(g.position.x, goal.x, lambda, dt);
-    g.position.y = THREE.MathUtils.damp(g.position.y, goal.y - (1 - s.appear) * h * 0.6, lambda, dt);
-    const sway = Math.sin(t * 6) * 0.025 * k;
-    g.rotation.x = THREE.MathUtils.damp(g.rotation.x, THREE.MathUtils.lerp(restRot.x, WRITE_ROT.x, k), 3, dt);
-    g.rotation.y = THREE.MathUtils.damp(g.rotation.y, THREE.MathUtils.lerp(restRot.y, WRITE_ROT.y, k) + sway, 3, dt);
-    g.rotation.z = THREE.MathUtils.damp(g.rotation.z, THREE.MathUtils.lerp(restRot.z, WRITE_ROT.z, k), 3, dt);
-    g.scale.setScalar(THREE.MathUtils.damp(g.scale.x, scale * s.appear + 0.001, 3, dt));
+    const stiffness = sliding ? 260 : THREE.MathUtils.lerp(26, 190, k * k);
+    const damping = 2 * Math.sqrt(stiffness) * (k > 0.5 ? 1 : 0.85);
+    const gy = goal.y - (1 - s.appear) * h * 0.6;
+    for (let i = 0; i < 2; i++) {
+      const step = dt / 2;
+      s.vx += ((goal.x - g.position.x) * stiffness - s.vx * damping) * step;
+      s.vy += ((gy - g.position.y) * stiffness - s.vy * damping) * step;
+      g.position.x += s.vx * step;
+      g.position.y += s.vy * step;
+    }
+    // Lean a little into the direction of travel.
+    const lean = THREE.MathUtils.clamp(s.vx * 0.00035, -0.35, 0.35);
+    const sway = Math.sin(t * 5) * 0.02 * k;
+    g.rotation.x = THREE.MathUtils.damp(g.rotation.x, THREE.MathUtils.lerp(restRot.x, WRITE_ROT.x, k) - s.vy * 0.0002, 2.5, dt);
+    g.rotation.y = THREE.MathUtils.damp(g.rotation.y, THREE.MathUtils.lerp(restRot.y, WRITE_ROT.y, k) + sway, 2.5, dt);
+    g.rotation.z = THREE.MathUtils.damp(g.rotation.z, THREE.MathUtils.lerp(restRot.z, WRITE_ROT.z, k) - lean, 2.5, dt);
+    g.scale.setScalar(THREE.MathUtils.damp(g.scale.x, scale * s.appear + 0.001, 2.5, dt));
   });
 
   return (
