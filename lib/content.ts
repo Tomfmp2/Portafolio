@@ -42,7 +42,7 @@ const es = {
     where: "Bucaramanga, Colombia. Disponible para trabajar en remoto.",
     cv: "Descargar CV",
     work: "Ver proyectos",
-    drawHint: "arrastra el cursor y subraya tú también",
+    drawHint: "arrastra para subrayar, o agarra el marcador",
     available: "Disponible para trabajar",
   },
   highlights: {
@@ -194,7 +194,7 @@ const en: Content = {
     where: "Bucaramanga, Colombia. Available to work remotely.",
     cv: "Download CV",
     work: "See projects",
-    drawHint: "drag the cursor and highlight something yourself",
+    drawHint: "drag to highlight, or grab the marker",
     available: "Available for work",
   },
   highlights: {
