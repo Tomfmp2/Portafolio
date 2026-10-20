@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { gsap, initGSAP, MEDIA, ScrollTrigger, SplitText } from "@/lib/gsap";
+import { PEN_APPROACH, penAlong } from "@/lib/pen";
 
 /** Elements a section animates itself opt out of the generic behaviours with this attribute. */
 const OWNED = "[data-motion-owned] *";
@@ -25,17 +26,19 @@ export default function Motion() {
         gsap.utils.toArray<T>(selector).filter((el) => !el.matches(OWNED));
 
       pick<HTMLElement>("[data-hl]").forEach((el) => {
-        gsap.fromTo(
-          el,
-          { "--hl": "0%" },
-          {
+        gsap.set(el, { "--hl": "0%" });
+        // The 3D pen travels to the phrase first, then draws it at a readable pace.
+        gsap.timeline({ scrollTrigger: { trigger: el, start: "top 75%" } })
+          .to({}, { duration: PEN_APPROACH, onUpdate: () => penAlong(el, 0) })
+          .to(el, {
             "--hl": "100%",
             // Longer phrases take longer, like a real pen, within limits.
-            duration: gsap.utils.clamp(0.5, 1.4, (el.textContent?.length ?? 20) / 30),
-            ease: "power2.inOut",
-            scrollTrigger: { trigger: el, start: "top 78%", toggleActions: "play none none none" },
-          }
-        );
+            duration: gsap.utils.clamp(0.9, 2, (el.textContent?.length ?? 20) / 20),
+            ease: "power1.inOut",
+            onUpdate() {
+              penAlong(el, this.progress());
+            },
+          });
       });
 
       pick<HTMLElement>("[data-note]").forEach((note) => {

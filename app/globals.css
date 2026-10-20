@@ -329,10 +329,16 @@
     position: fixed;
     inset: 0 0 auto;
     z-index: 60;
-    transition: transform 0.5s var(--ease-stroke), background-color 0.3s;
+    transition: transform 0.8s var(--ease-stroke), opacity 0.6s ease, background-color 0.4s;
   }
   .site-header.is-hidden {
-    transform: translateY(-110%);
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  /* Keyboard users always get it back (the skip link lives here). */
+  .site-header.is-hidden:focus-within {
+    transform: none;
+    opacity: 1;
   }
   .site-header.is-solid {
     background: rgb(242 239 230 / 0.88);
@@ -660,5 +666,104 @@
   .verb-outline .verb {
     color: transparent;
     -webkit-text-stroke: 1.5px var(--ink);
+  }
+}
+
+@layer components {
+  /* The stroke the 3D pen draws under the surname on arrival. */
+  .hero-swipe {
+    position: absolute;
+    left: 0.75em;
+    right: -0.12em;
+    bottom: 0.04em;
+    height: 0.3em;
+    background: var(--marker);
+    transform-origin: left center;
+    transform: skewX(-8deg);
+    border-radius: 0.04em;
+  }
+  @media (min-width: 768px) {
+    .hero-swipe {
+      left: 1.45em;
+    }
+  }
+  .avail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+    padding: 0.45rem 1rem 0.45rem 0.8rem;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .avail-dot {
+    position: relative;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--marker);
+    box-shadow: 0 0 0 1.5px var(--ink);
+  }
+  .avail-dot::after {
+    content: '';
+    position: absolute;
+    inset: -0.35rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    opacity: 0;
+    animation: avail-pulse 2.4s var(--ease-stroke) infinite;
+  }
+  @keyframes avail-pulse {
+    0% { transform: scale(0.5); opacity: 0.6; }
+    100% { transform: scale(1.4); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .avail-dot::after { animation: none; }
+  }
+}
+
+@layer components {
+  .hero-ring {
+    position: absolute;
+    inset: -0.9rem -1.3rem;
+    width: calc(100% + 2.6rem);
+    height: calc(100% + 1.8rem);
+    overflow: visible;
+    pointer-events: none;
+    fill: none;
+    stroke: var(--marker);
+    stroke-width: 7px;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+  .hero-ring path {
+    vector-effect: non-scaling-stroke;
+    /* Undrawn until GSAP takes over, so it never flashes in fully formed. */
+    stroke-dasharray: 0 9999;
+  }
+  /* Without motion the ring isn't drawn: it only exists as the pen's scroll gesture. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-ring { display: none; }
+  }
+}
+
+/*
+ * Hero start state before GSAP takes over, so the finished highlights never
+ * flash on load. Only with JS and motion; otherwise the hero renders complete.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html.js #inicio [data-name-row] {
+    visibility: hidden;
+  }
+  html.js #inicio .hero-swipe {
+    transform: skewX(-8deg) scaleX(0);
+  }
+  html.js #inicio [data-hl] {
+    --hl: 0%;
+  }
+  html.js #inicio [data-hero-rest] {
+    opacity: 0;
   }
 }

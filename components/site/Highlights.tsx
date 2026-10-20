@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { links } from "@/lib/content";
 import { gsap, initGSAP, MEDIA, SplitText } from "@/lib/gsap";
+import { PEN_APPROACH, penAlong } from "@/lib/pen";
 import Marked from "./Marked";
 import Note from "./Note";
 
@@ -33,7 +34,10 @@ export default function Highlights() {
           const mark = item.querySelector("[data-hl]");
           const note = item.querySelector("[data-note]");
           const tl = gsap.timeline({ scrollTrigger: { trigger: item, start: "top 75%" } });
-          if (mark) tl.fromTo(mark, { "--hl": "0%" }, { "--hl": "100%", duration: 0.9, ease: "power2.inOut" });
+          if (mark)
+            tl.set(mark, { "--hl": "0%" })
+              .to({}, { duration: PEN_APPROACH, onUpdate: () => penAlong(mark, 0) })
+              .to(mark, { "--hl": "100%", duration: 1.4, ease: "power1.inOut", onUpdate() { penAlong(mark, this.progress()); } });
           if (note) tl.from(note, { opacity: 0, x: 10, duration: 0.5 }, "-=0.3");
         });
         return;
@@ -67,7 +71,11 @@ export default function Highlights() {
 
         if (i > 0) tl.fromTo(item, { opacity: 0, yPercent: 18 }, { opacity: 1, yPercent: 0, duration: 0.6 }, at - 0.4);
         tl.to(words, { opacity: 1, duration: 1.2, stagger: 1.2 / words.length }, at);
-        if (mark) tl.to(mark, { "--hl": "100%", duration: 0.7 }, at + 1.1);
+        if (mark) {
+          // The pen gets to the phrase while the words are still inking in, then draws it.
+          tl.to({}, { duration: 0.35, onUpdate: () => penAlong(mark, 0) }, at + 0.75);
+          tl.to(mark, { "--hl": "100%", duration: 0.8, onUpdate() { penAlong(mark, this.progress()); } }, at + 1.1);
+        }
         if (note) tl.to(note, { opacity: 1, duration: 0.3 }, at + 1.6);
         if (strokes.length) tl.from(strokes, { drawSVG: 0, duration: 0.4, stagger: 0.1 }, at + 1.6);
         if (i < items.length - 1) tl.to(item, { opacity: 0, yPercent: -14, duration: 0.6 }, at + 2.6);

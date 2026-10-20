@@ -10,18 +10,22 @@ import Wordmark from "./Wordmark";
 export default function Header() {
   const { t, toggleLang } = useLanguage();
   const [open, setOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
+  // Starts hidden: pages open at the top, where the header stays out of the way.
+  const [hidden, setHidden] = useState(true);
   const [solid, setSolid] = useState(false);
   const panel = useRef<HTMLDivElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
 
-  // Slide away while reading down, come back as soon as the visitor scrolls up.
+  // Out of the way at the very top (the hero's name is the logo there), it eases in once
+  // you start scrolling, slides away while reading down and returns when scrolling up.
   useEffect(() => {
     let last = window.scrollY;
+    let goingDown = false;
     const onScroll = () => {
       const y = window.scrollY;
       setSolid(y > 40);
-      if (Math.abs(y - last) > 6) setHidden(y > last && y > 400);
+      if (Math.abs(y - last) > 6) goingDown = y > last;
+      setHidden(y < 120 || (goingDown && y > window.innerHeight));
       last = y;
     };
     onScroll();

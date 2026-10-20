@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { penWrite } from "@/lib/pen";
 
 type Point = { x: number; y: number };
 type Stroke = { points: Point[]; endedAt: number | null };
@@ -81,6 +82,8 @@ export default function HighlighterCanvas({ color }: { color: string }) {
       const p = local(e);
       const last = current.points[current.points.length - 1];
       if (Math.hypot(p.x - last.x, p.y - last.y) > 2) current.points.push(p);
+      // The 3D pen follows the visitor's stroke.
+      penWrite(e.clientX, e.clientY);
       schedule();
     };
     const onUp = () => {

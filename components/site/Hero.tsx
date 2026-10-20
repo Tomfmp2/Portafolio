@@ -1,19 +1,16 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import dynamic from "next/dynamic";
 import { useLanguage } from "@/hooks/use-language";
 import { links } from "@/lib/content";
 import { gsap, initGSAP, MEDIA, SplitText } from "@/lib/gsap";
 import { onIntro } from "@/lib/intro";
+import { PEN_APPROACH, penAlong, penWrite } from "@/lib/pen";
 import HighlighterCanvas from "./HighlighterCanvas";
 import Marked from "./Marked";
 import Note from "./Note";
 
 const MARKER = "#d4ff3a";
-
-// WebGL is decorative here and heavy: load it on the client only, after the page.
-const Marker = dynamic(() => import("./three/Marker"), { ssr: false });
 
 export default function Hero() {
   const { t } = useLanguage();
@@ -34,19 +31,73 @@ export default function Hero() {
       const rows = el.querySelectorAll<HTMLElement>("[data-name-row]");
       const split = SplitText.create(rows, { type: "chars", mask: "chars" });
       const mark = el.querySelector<HTMLElement>("[data-hl]");
+      const swipe = el.querySelector<HTMLElement>("[data-swipe]");
       const rest = el.querySelectorAll("[data-hero-rest]");
 
       gsap.set(split.chars, { yPercent: 105 });
+      // CSS keeps the name hidden until this point (see the hero start state in globals.css).
+      gsap.set(rows, { visibility: "visible" });
       gsap.set(rest, { opacity: 0, y: 16 });
       if (mark) gsap.set(mark, { "--hl": "0%" });
+      if (swipe) gsap.set(swipe, { scaleX: 0 });
 
       // The one orchestrated entrance of the page, right after the preloader lifts.
       offIntro = onIntro(() => {
         const tl = gsap.timeline({ delay: 0.15 });
-        tl.to(split.chars, { yPercent: 0, duration: 1.2, ease: "expo.out", stagger: { each: 0.045, from: "start" } })
-          .to(rest, { opacity: 1, y: 0, duration: 0.8, stagger: 0.08 }, "-=0.7");
-        if (mark) tl.to(mark, { "--hl": "100%", duration: 0.9, ease: "power2.inOut" }, "-=0.3");
+        tl.to(split.chars, { yPercent: 0, duration: 1.2, ease: "expo.out", stagger: { each: 0.045, from: "start" } });
+        // The 3D pen comes down and draws: first a wide stroke under the surname, then the key phrase.
+        if (swipe)
+          tl.to({}, {
+            duration: PEN_APPROACH + 0.2,
+            onUpdate: () => {
+              const r = swipe.getBoundingClientRect();
+              penWrite(r.left, r.top + r.height * 0.5);
+            },
+          }, "-=0.5").to(swipe, {
+            scaleX: 1,
+            duration: 1.7,
+            ease: "power1.inOut",
+            onUpdate() {
+              // It grows with scaleX, so its right edge is exactly where the tip is.
+              const r = swipe.getBoundingClientRect();
+              penWrite(r.right, r.top + r.height * 0.5);
+            },
+          });
+        tl.to(rest, { opacity: 1, y: 0, duration: 0.8, stagger: 0.08 }, "-=0.4");
+        if (mark)
+          tl.to({}, { duration: PEN_APPROACH, onUpdate: () => penAlong(mark, 0) }, "-=0.2").to(mark, {
+            "--hl": "100%",
+            duration: 1.6,
+            ease: "power1.inOut",
+            onUpdate() {
+              penAlong(mark, this.progress());
+            },
+          }, "-=0.3");
       });
+
+      // First stretch of scroll: the pen circles the CV button, tied to the scroll (scroll back to erase).
+      const ring = el.querySelector<SVGPathElement>("[data-ring] path");
+      if (ring) {
+        const svg = ring.ownerSVGElement!;
+        const length = ring.getTotalLength();
+        gsap.fromTo(ring, { drawSVG: "0%" }, {
+          drawSVG: "100%",
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top top",
+            end: "+=40%",
+            scrub: 0.4,
+            onUpdate: (self) => {
+              if (self.progress <= 0 || self.progress >= 1) return;
+              const pt = ring.getPointAtLength(self.progress * length);
+              const box = svg.getBoundingClientRect();
+              const vb = svg.viewBox.baseVal;
+              penWrite(box.left + (pt.x / vb.width) * box.width, box.top + (pt.y / vb.height) * box.height);
+            },
+          },
+        });
+      }
 
       // Leaving the hero: the two rows of the name drift apart, as if the page turns.
       if (desktop) {
@@ -65,14 +116,21 @@ export default function Hero() {
   return (
     <section ref={root} id="inicio" data-motion-owned className="relative flex min-h-svh flex-col justify-end overflow-hidden pb-[clamp(2rem,6vh,4rem)] pt-28" aria-labelledby="hero-name">
       <HighlighterCanvas color={MARKER} />
-      <Marker className="pointer-events-none absolute right-0 top-[4%] z-0 h-[48svh] w-[75vw] md:top-[2%] md:h-[86svh] md:w-[56vw]" />
-      <div className="hero-content wrap">
+      <div className="hero-content wrap relative">
+        <p data-hero-rest className="avail md:absolute md:right-[var(--gutter)] md:top-[clamp(1rem,4vh,3rem)]">
+          <span className="avail-dot" aria-hidden="true" />
+          {h.available}
+        </p>
         <h1 id="hero-name" className="display select-none">
           <span data-name-row className="block">
             {h.name[0]}
           </span>{" "}
-          <span data-name-row className="block pl-[0.9em] md:pl-[1.6em]">
-            {h.name[1]}
+          <span className="relative block w-fit pl-[0.9em] md:pl-[1.6em]">
+            <span data-name-row className="relative z-[1] block">
+              {h.name[1]}
+            </span>
+            {/* The stroke the pen draws under the surname on arrival */}
+            <span data-swipe className="hero-swipe" aria-hidden="true" />
           </span>
         </h1>
 
@@ -86,9 +144,15 @@ export default function Hero() {
             </p>
           </div>
           <div data-hero-rest className="flex flex-wrap items-center gap-3">
-            <a href={links.cv} download className="btn btn-ink">
-              {h.cv}
-            </a>
+            <span className="relative inline-block">
+              <a href={links.cv} download className="btn btn-ink relative z-[1]">
+                {h.cv}
+              </a>
+              {/* Hand-drawn ring the pen draws around the CV as you start scrolling */}
+              <svg data-ring className="hero-ring" viewBox="0 0 200 80" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M34 10 C86 -4 172 2 193 30 C207 54 168 77 98 76 C38 75 4 61 7 39 C10 19 58 5 128 9" />
+              </svg>
+            </span>
             <a href="#proyectos" className="btn btn-line">
               {h.work}
             </a>

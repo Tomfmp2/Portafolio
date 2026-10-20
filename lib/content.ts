@@ -43,6 +43,7 @@ const es = {
     cv: "Descargar CV",
     work: "Ver proyectos",
     drawHint: "arrastra el cursor y subraya tú también",
+    available: "Disponible para trabajar",
   },
   highlights: {
     title: "Si tienes 30 segundos",
@@ -194,6 +195,7 @@ const en: Content = {
     cv: "Download CV",
     work: "See projects",
     drawHint: "drag the cursor and highlight something yourself",
+    available: "Available for work",
   },
   highlights: {
     title: "If you have 30 seconds",
