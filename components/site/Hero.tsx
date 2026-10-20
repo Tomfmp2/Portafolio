@@ -117,10 +117,6 @@ export default function Hero() {
     <section ref={root} id="inicio" data-motion-owned className="relative flex min-h-svh flex-col justify-end overflow-hidden pb-[clamp(2rem,6vh,4rem)] pt-28" aria-labelledby="hero-name">
       <HighlighterCanvas color={MARKER} />
       <div className="hero-content wrap relative">
-        <p data-hero-rest className="avail md:absolute md:right-[var(--gutter)] md:top-[clamp(1rem,4vh,3rem)]">
-          <span className="avail-dot" aria-hidden="true" />
-          {h.available}
-        </p>
         <h1 id="hero-name" className="display select-none">
           <span data-name-row className="block">
             {h.name[0]}

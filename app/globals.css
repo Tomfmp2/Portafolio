@@ -687,41 +687,6 @@
       left: 1.45em;
     }
   }
-  .avail {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin-bottom: 1.5rem;
-    padding: 0.45rem 1rem 0.45rem 0.8rem;
-    border: 1.5px solid var(--ink);
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 0.95rem;
-  }
-  .avail-dot {
-    position: relative;
-    width: 0.7rem;
-    height: 0.7rem;
-    border-radius: 50%;
-    background: var(--marker);
-    box-shadow: 0 0 0 1.5px var(--ink);
-  }
-  .avail-dot::after {
-    content: '';
-    position: absolute;
-    inset: -0.35rem;
-    border-radius: 50%;
-    border: 1.5px solid var(--ink);
-    opacity: 0;
-    animation: avail-pulse 2.4s var(--ease-stroke) infinite;
-  }
-  @keyframes avail-pulse {
-    0% { transform: scale(0.5); opacity: 0.6; }
-    100% { transform: scale(1.4); opacity: 0; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .avail-dot::after { animation: none; }
-  }
 }
 
 @layer components {
