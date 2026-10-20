@@ -185,6 +185,10 @@ Tipografía: **Bricolage Grotesque** (títulos y texto, con sus ejes de ancho y 
 
 **Escenas de scroll.** Cada momento animado es una escena (`lib/scene.ts`): cuando el bloque llega a su sitio se queda fijo, el scroll reproduce la animación y, al terminar (con un breve respiro, `settle`), la página sigue bajando con normalidad. Son escenas la portada, «Si tienes 30 segundos», los verbos, el título «Proyectos», la cabecera y las lecciones de cada proyecto, la pila de capas y «Sobre mí». Solo se fija lo que cabe en la pantalla: en móvil la cabecera de los proyectos, la pila de capas y el texto de «Sobre mí» se animan mientras pasan. Como React crea las escenas en orden de efectos (hijos antes que padres), `Motion` ordena todos los disparadores por su posición en la página y vuelve a medir al final.
 
+**Entrada y salida para todo.** Cada escena termina con su propia salida (las letras suben por su máscara, las franjas y líneas se recogen, las placas salen volando) antes de soltar la página; al subir se recompone. Lo que no se fija entra mientras sube desde el borde inferior y sale al cruzar el superior (`data-lines`, `data-reveal`, `data-reveal="x"` en `Motion`), con dos tramos de scroll independientes. Dentro de una escena (`data-pin`), la salida la hace la escena.
+
+**Interacción.** Botones magnéticos, letras del nombre que pasan a contorno bajo el cursor, verbos que se subrayan al pasar, capas cuya placa se levanta al señalar su descripción, puntos de las lecciones que laten y el subrayado a mano en la portada.
+
 **3D.** Las teclas del contacto (`three/Keycaps.tsx`) están modeladas en código, sin modelos ni HDR descargados. Se cargan solo en el cliente y solo renderizan mientras están en pantalla.
 
 **Accesibilidad y rendimiento.**

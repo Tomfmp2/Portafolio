@@ -32,6 +32,9 @@ export default function Verbs() {
         tl.to(verb, { color: "#111111", duration: 0.12 }, (i / outlined.length) * 0.9);
       });
       settle(tl);
+      // Exit: the rows part, one up and one down, and fade.
+      const out = tl.duration();
+      rows.forEach((row, i) => tl.to(row, { yPercent: i % 2 ? 80 : -80, opacity: 0, duration: 0.6, ease: "power2.in" }, out));
     });
     return () => mm.revert();
   }, []);

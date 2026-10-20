@@ -41,7 +41,7 @@ function ToolsMarquee({ tools }: { tools: string[] }) {
   const half = Math.ceil(tools.length / 2);
   const rows = [tools.slice(0, half), tools.slice(half)];
   return (
-    <div ref={root} className="mt-[clamp(4rem,8vw,7rem)] space-y-3 border-y-[1.5px] border-ink py-6" aria-hidden="true">
+    <div ref={root} data-reveal className="mt-[clamp(4rem,8vw,7rem)] space-y-3 border-y-[1.5px] border-ink py-6" aria-hidden="true">
       {rows.map((row, i) => (
         <div key={i} data-row className="marquee">
           <div data-track className="flex flex-none">
@@ -79,16 +79,33 @@ export default function Layers() {
       const copyEls = gsap.utils.toArray<HTMLElement>("[data-layer-copy]", el);
       const spread = (i: number) => i * (desktop ? SPREAD : SPREAD * 0.6);
 
+      // Hovering a layer's description lifts its plate (copy reads top-down, plates bottom-up).
+      const hoverOffs = motion
+        ? copyEls.map((copy, k) => {
+            const plate = plateEls[plateEls.length - 1 - k];
+            const lift = (up: boolean) => gsap.to(plate, { y: up ? -18 : 0, duration: 0.5, ease: "back.out(2)" });
+            const on = () => lift(true);
+            const off = () => lift(false);
+            copy.addEventListener("pointerenter", on);
+            copy.addEventListener("pointerleave", off);
+            return () => {
+              copy.removeEventListener("pointerenter", on);
+              copy.removeEventListener("pointerleave", off);
+            };
+          })
+        : [];
+      const cleanup = () => hoverOffs.forEach((off) => off());
+
       if (!motion || !desktop) {
         plateEls.forEach((p, i) => gsap.set(p, { z: spread(i) }));
-        return;
+        return cleanup;
       }
 
       gsap.set(plateEls, { z: 0 });
       gsap.set(copyEls, { opacity: 0.3 });
       const stage = el.querySelector("[data-stage]");
       if (!stage) return;
-      const tl = scene(stage, 360, {}, "power2.inOut");
+      const tl = scene(stage, 440, {}, "power2.inOut");
       tl.to(plateEls, { z: (i) => spread(i), duration: 1, stagger: 0.05 });
       // Walk the layers from the core outwards: lift the plate, ink its description.
       plateEls.forEach((plate, i) => {
@@ -97,19 +114,25 @@ export default function Layers() {
           .to(copy, { opacity: 1, duration: 0.4 }, "<")
           .to(plate, { z: spread(i), duration: 0.5 }, 1.6 + i * 0.8);
       });
-      settle(tl);
+      settle(tl, 0.25);
+      // Exit: the stack closes up again and flies off the top, and the copy fades with it.
+      const out = tl.duration();
+      tl.to(plateEls, { z: 0, duration: 0.4 }, out)
+        .to(plateEls, { y: -260, opacity: 0, duration: 0.6, stagger: 0.06, ease: "power2.in" }, out + 0.35)
+        .to(stage.querySelectorAll("h2, [data-layers-lede], [data-layer-copy]"), { opacity: 0, y: -32, duration: 0.5, stagger: 0.05, ease: "power2.in" }, out + 0.3);
+      return cleanup;
     });
     return () => mm.revert();
   }, []);
 
   return (
     <section ref={root} id="como-trabajo" className="section overflow-hidden" aria-labelledby="layers-title">
-      <div data-stage className="wrap grid gap-12 lg:min-h-svh lg:grid-cols-2 lg:items-center">
+      <div data-stage data-pin className="wrap grid gap-12 lg:min-h-svh lg:grid-cols-2 lg:items-center">
         <div>
           <h2 id="layers-title" className="headline max-w-[13ch]" data-lines>
             {l.title}
           </h2>
-          <p className="body-copy mt-6">{l.lede}</p>
+          <p data-layers-lede className="body-copy mt-6">{l.lede}</p>
           <ol className="mt-10 space-y-5">
             {l.items.map((item) => (
               <li key={item.name} data-layer-copy className="grid grid-cols-[9rem_minmax(0,1fr)] gap-4 border-t-[1.5px] border-ink pt-4 max-sm:grid-cols-1">
@@ -132,7 +155,7 @@ export default function Layers() {
       </div>
 
       <div className="wrap">
-        <h3 className="mt-[clamp(4rem,8vw,7rem)] text-lg font-semibold">{l.around}</h3>
+        <h3 data-reveal className="mt-[clamp(4rem,8vw,7rem)] text-lg font-semibold">{l.around}</h3>
         {/* The bands below are decorative motion; this is the same list for assistive tech. */}
         <p className="sr-only">{l.tools.join(", ")}</p>
       </div>

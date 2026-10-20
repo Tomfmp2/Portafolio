@@ -29,7 +29,7 @@ export default function Hero() {
       if (!motion) return;
 
       const rows = el.querySelectorAll<HTMLElement>("[data-name-row]");
-      const split = SplitText.create(rows, { type: "chars", mask: "chars" });
+      const split = SplitText.create(rows, { type: "chars", mask: "chars", charsClass: "hero-char" });
       const mark = el.querySelector<HTMLElement>("[data-hl]");
       const swipe = el.querySelector<HTMLElement>("[data-swipe]");
       const rest = el.querySelectorAll("[data-hero-rest]");
@@ -51,18 +51,21 @@ export default function Hero() {
         if (mark) tl.to(mark, { "--hl": "100%", duration: 1.1, ease: "power2.inOut" }, "-=0.3");
       });
 
-      // First stretch of scroll: the hero holds still while the scroll draws a hand-drawn ring
-      // around the CV button. Scrolling back erases it.
+      // The hero as a scene: it holds still while the scroll draws a hand-drawn ring around the
+      // CV button, pauses, then leaves: the letters rise out through their masks, the stroke
+      // retracts, the ring is wiped and the rest lifts away. Scrolling back rebuilds it.
       const ring = el.querySelector<SVGPathElement>("[data-ring] path");
-      if (ring) {
-        const tl = scene(el, desktop ? 90 : 70, { start: "top top" });
-        tl.fromTo(ring, { drawSVG: "0%" }, { drawSVG: "100%", duration: 1 });
-        // While pinned, the two rows of the name drift apart, as if the page turns.
-        if (desktop) {
-          tl.to(rows[0], { xPercent: -6, duration: 1 }, 0).to(rows[1], { xPercent: 8, duration: 1 }, 0);
-        }
-        settle(tl);
-      }
+      const outgoing = el.querySelectorAll("[data-hero-out]");
+      const tl = scene(el, desktop ? 140 : 110, { start: "top top" });
+      if (ring) tl.fromTo(ring, { drawSVG: "0%" }, { drawSVG: "100%", duration: 1 });
+      // While pinned, the two rows of the name drift apart, as if the page turns.
+      if (desktop) tl.to(rows[0], { xPercent: -6, duration: 1 }, 0).to(rows[1], { xPercent: 8, duration: 1 }, 0);
+      settle(tl, 0.35);
+      const out = tl.duration();
+      tl.fromTo(split.chars, { yPercent: 0 }, { yPercent: -110, duration: 0.7, stagger: 0.025, ease: "power2.in", immediateRender: false }, out);
+      if (swipe) tl.fromTo(swipe, { scaleX: 1 }, { scaleX: 0, transformOrigin: "right center", duration: 0.5, ease: "power2.in", immediateRender: false }, out);
+      if (ring) tl.to(ring, { drawSVG: "100% 100%", duration: 0.5, ease: "power2.in" }, out);
+      tl.fromTo(outgoing, { opacity: 1, y: 0 }, { opacity: 0, y: -40, duration: 0.5, stagger: 0.08, ease: "power2.in", immediateRender: false }, out + 0.1);
       return () => split.revert();
     });
 
@@ -89,7 +92,7 @@ export default function Hero() {
           </span>
         </h1>
 
-        <div className="mt-[clamp(2rem,5vh,3.5rem)] grid gap-8 border-t-[1.5px] border-ink pt-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+        <div data-hero-out className="mt-[clamp(2rem,5vh,3.5rem)] grid gap-8 border-t-[1.5px] border-ink pt-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
           <div>
             <p className="lead max-w-[30ch]">
               <Marked text={h.lead} />
@@ -113,7 +116,7 @@ export default function Hero() {
             </a>
           </div>
         </div>
-        <div data-hero-rest className="pointer-hint mt-6 hidden justify-end md:flex">
+        <div data-hero-rest data-hero-out className="pointer-hint mt-6 hidden justify-end md:flex">
           <Note arrow="up-left" decorative>
             {h.drawHint}
           </Note>

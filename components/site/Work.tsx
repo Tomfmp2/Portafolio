@@ -24,9 +24,14 @@ export default function Work() {
       const swipe = el.querySelector<HTMLElement>("[data-title-swipe]");
       if (!title || !swipe) return;
       const split = SplitText.create(title, { type: "chars", mask: "chars" });
-      const tl = scene(el, 90);
+      const tl = scene(el, 130);
       tl.from(split.chars, { yPercent: 110, duration: 1, stagger: 0.06 }).fromTo(swipe, { "--swipe": 0 }, { "--swipe": 1, duration: 1 });
-      settle(tl);
+      settle(tl, 0.3);
+      // Exit: the stroke retracts toward its end and the letters rise out through their masks.
+      const out = tl.duration();
+      tl.set(swipe, { transformOrigin: "right center" }, out)
+        .to(swipe, { "--swipe": 0, duration: 0.6, ease: "power2.in" }, out)
+        .to(split.chars, { yPercent: -110, duration: 0.8, stagger: 0.04, ease: "power2.in" }, out + 0.1);
       return () => {
         split.revert();
         swipe.style.removeProperty("--swipe");

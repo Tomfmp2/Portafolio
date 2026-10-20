@@ -755,3 +755,37 @@
     z-index: -1;
   }
 }
+
+@layer components {
+  /* Letters of the name: hover one and it turns to outline. Only the letters take the pointer,
+     so dragging anywhere else on the hero still draws with the highlighter. */
+  .hero-char {
+    pointer-events: auto;
+    transition: color 0.25s, -webkit-text-stroke-color 0.25s;
+    -webkit-text-stroke: 2px transparent;
+  }
+  .hero-char:hover {
+    color: transparent;
+    -webkit-text-stroke-color: var(--ink);
+  }
+  /* Verbs take a highlighter stroke under the pointer. */
+  .verb {
+    background: linear-gradient(var(--marker), var(--marker)) no-repeat 0 62% / 0 0.4em;
+    transition: background-size 0.45s var(--ease-stroke);
+  }
+  .verb:hover {
+    background-size: 100% 0.4em;
+  }
+  /* A lesson's dot pulses under the pointer. */
+  .flow-step:hover .flow-dot {
+    animation: dot-pulse 0.9s var(--ease-stroke) infinite;
+  }
+  @keyframes dot-pulse {
+    50% { transform: scale(1.35); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-char,
+    .verb { transition: none; }
+    .flow-step:hover .flow-dot { animation: none; }
+  }
+}

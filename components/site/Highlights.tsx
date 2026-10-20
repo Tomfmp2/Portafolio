@@ -59,6 +59,11 @@ export default function Highlights() {
         if (i < items.length - 1) tl.to(item, { opacity: 0, yPercent: -14, duration: 0.6 }, at + 3.5);
       });
       settle(tl, 0.06);
+      // Exit: the last statement lifts away and the section's header rule is drawn back in.
+      const out = tl.duration();
+      tl.to(items[items.length - 1], { opacity: 0, yPercent: -18, duration: 0.6, ease: "power2.in" }, out)
+        .to(el.querySelector("[data-hl-head]"), { opacity: 0, y: -24, duration: 0.5, ease: "power2.in" }, out + 0.1)
+        .to(el.querySelector("[data-progress]")?.parentElement ?? [], { scaleX: 0, transformOrigin: "right center", duration: 0.5, ease: "power2.in" }, out + 0.1);
       if (progress) tl.fromTo(progress, { scaleX: 0 }, { scaleX: 1, duration: tl.duration() }, 0);
 
       return () => {
@@ -73,7 +78,7 @@ export default function Highlights() {
   return (
     <section ref={root} id="lo-importante" data-motion-owned className="relative bg-paper" aria-labelledby="highlights-title">
       <div className="wrap flex min-h-svh flex-col justify-center py-24">
-        <div className="flex items-baseline justify-between gap-6 border-b-[1.5px] border-ink pb-4">
+        <div data-hl-head className="flex items-baseline justify-between gap-6 border-b-[1.5px] border-ink pb-4">
           <h2 id="highlights-title" className="text-lg font-semibold">
             {hl.title}
           </h2>

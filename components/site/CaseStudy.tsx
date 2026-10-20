@@ -55,7 +55,7 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
         gsap.set(name, { whiteSpace: "nowrap" });
         const overflow = () => Math.max(name.scrollWidth - name.clientWidth, 0);
         const headTl = desktop
-          ? scene(head, 120, { invalidateOnRefresh: true })
+          ? scene(head, 170, { invalidateOnRefresh: true })
           : gsap.timeline({ defaults: { ease: "none" }, scrollTrigger: { trigger: head, start: "top 80%", end: "bottom 40%", scrub: 1, invalidateOnRefresh: true } });
         headTl.fromTo(name, { x: () => (overflow() ? 0 : name.clientWidth * 0.06) }, { x: () => (overflow() ? -overflow() : -name.clientWidth * 0.04), duration: 1 }, 0);
         headTl.from(head.querySelectorAll("[data-head-rest]"), { opacity: 0, y: 24, duration: 0.3, stagger: 0.1 }, 0.15);
@@ -65,7 +65,12 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
           count.textContent = "0";
           headTl.to(n, { v: value, duration: 0.6, onUpdate: () => (count.textContent = String(Math.round(n.v))) }, 0.3);
         });
-        if (desktop) settle(headTl);
+        if (desktop) {
+          settle(headTl, 0.25);
+          // Exit: the head lifts away piece by piece before the lessons take the screen.
+          const out = headTl.duration();
+          headTl.to(head.children, { opacity: 0, y: -48, duration: 0.5, stagger: 0.08, ease: "power2.in" }, out);
+        }
       }
 
       // Lessons scene: the block holds while the scroll draws the rail from one lesson to the
@@ -74,13 +79,17 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
       const rail = el.querySelector<HTMLElement>("[data-rail]");
       const flow = el.querySelector<HTMLElement>("[data-flow]");
       if (!flow) return;
-      const tl = scene(flow, desktop ? 150 : 130);
+      const tl = scene(flow, desktop ? 200 : 170);
       if (rail) tl.fromTo(rail, { "--rail": 0 }, { "--rail": 1, duration: steps.length });
       steps.forEach((step, i) => {
         tl.fromTo(step.querySelector("[data-dot]"), { scale: 0.4, backgroundColor: night ? "#141414" : "#f2efe6" }, { scale: 1, backgroundColor: "#d4ff3a", duration: 0.3 }, i + 0.2)
           .fromTo(step.querySelector("[data-step-copy]"), { opacity: 0.25 }, { opacity: 1, duration: 0.4 }, i + 0.2);
       });
-      settle(tl);
+      settle(tl, 0.25);
+      // Exit: the lessons leave one after another and the rail is drawn back.
+      const out = tl.duration();
+      tl.to(flow.querySelectorAll("h4, [data-step]"), { opacity: 0, y: -32, duration: 0.5, stagger: 0.08, ease: "power2.in" }, out);
+      if (rail) tl.to(rail, { "--rail": 0, duration: 0.6, ease: "power2.in" }, out);
 
       return () => counts.forEach((count) => (count.textContent = count.dataset.caseCount ?? ""));
     });
@@ -95,7 +104,7 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
       aria-labelledby={`${id}-title`}
     >
       <div className="wrap">
-        <div data-head className="flex flex-col justify-center">
+        <div data-head data-pin className="flex flex-col justify-center">
         <p className="small">
           {project.when}. {project.role}
         </p>
@@ -134,7 +143,7 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
         </div>
         </div>
 
-        <div data-flow className="mt-[clamp(4rem,8vw,6rem)]">
+        <div data-flow data-pin className="mt-[clamp(4rem,8vw,6rem)]">
           <h4 className="title">{t.work.learnedTitle}</h4>
           <div className="relative mt-10">
             <span data-rail className={`flow-rail ${night ? "!bg-paper/70" : ""}`} aria-hidden="true" />

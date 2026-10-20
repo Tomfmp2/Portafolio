@@ -25,12 +25,12 @@ export default function MoreProjects() {
         <h3 id="more-title" className="headline" data-lines>
           {m.title}
         </h3>
-        <p className="body-copy">{m.lede}</p>
+        <p data-reveal className="body-copy">{m.lede}</p>
       </div>
 
       <ul className="mt-12">
         {m.items.map((item) => (
-          <li key={item.name} className="project-row grid gap-x-8 gap-y-3 py-7 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_auto] md:items-center">
+          <li key={item.name} data-reveal="x" className="project-row grid gap-x-8 gap-y-3 py-7 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_auto] md:items-center">
             <div>
               <h4 className="title">
                 <mark className="hl">{item.name}</mark>
@@ -52,7 +52,7 @@ export default function MoreProjects() {
         ))}
       </ul>
 
-      <a href={links.github} target="_blank" rel="noopener noreferrer" className="link mt-8 inline-block font-medium">
+      <a href={links.github} target="_blank" rel="noopener noreferrer" data-reveal className="link mt-8 inline-block font-medium">
         {m.all}
       </a>
 

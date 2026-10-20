@@ -79,7 +79,7 @@ function EmailButton() {
 
   return (
     <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-      <button ref={ref} type="button" onClick={copy} onPointerEnter={() => hover(true)} onPointerLeave={() => hover(false)} onFocus={() => hover(true)} onBlur={() => hover(false)} className="btn btn-ink min-h-16 px-8 text-[clamp(1.05rem,2.2vw,1.5rem)]" aria-describedby="copy-status">
+      <button ref={ref} type="button" data-own-magnet onClick={copy} onPointerEnter={() => hover(true)} onPointerLeave={() => hover(false)} onFocus={() => hover(true)} onBlur={() => hover(false)} className="btn btn-ink min-h-16 px-8 text-[clamp(1.05rem,2.2vw,1.5rem)]" aria-describedby="copy-status">
         {links.email}
       </button>
       <span className="small" id="copy-status" role="status">
@@ -143,7 +143,7 @@ export default function Contact() {
     }`;
 
   const field = (name: Field, label: string, type: "text" | "email" | "textarea", autoComplete?: string) => (
-    <div>
+    <div data-reveal>
       <label htmlFor={`contact-${name}`} className="text-sm font-medium">
         {label}
       </label>
@@ -188,11 +188,11 @@ export default function Contact() {
         </h2>
         <div className="mt-12 grid gap-16 lg:grid-cols-2">
           <div>
-            <p className="lead max-w-[32ch]">{c.lede}</p>
-            <div className="mt-10">
+            <p data-reveal className="lead max-w-[32ch]">{c.lede}</p>
+            <div data-reveal className="mt-10">
               <EmailButton />
             </div>
-            <p className="mt-10 text-ink-soft">
+            <p data-reveal className="mt-10 text-ink-soft">
               {c.elsewhere}{" "}
               {elsewhere.map((l, i) => (
                 <span key={l.name}>
@@ -203,9 +203,11 @@ export default function Contact() {
                 </span>
               ))}
             </p>
-            <a href={links.cv} download className="btn btn-line mt-8">
-              {t.hero.cv}
-            </a>
+            <div data-reveal className="mt-8">
+              <a href={links.cv} download className="btn btn-line">
+                {t.hero.cv}
+              </a>
+            </div>
             <div data-parallax="0.1" className="mt-6 h-[clamp(14rem,30vw,22rem)] w-full max-w-[34rem]">
               <WhenNear className="h-full w-full">
                 <Keycaps className="h-full w-full" />
@@ -214,13 +216,13 @@ export default function Contact() {
           </div>
 
           <form onSubmit={onSubmit} noValidate className="space-y-7">
-            <h3 className="title !text-[clamp(1.5rem,2.6vw,2.1rem)]">{c.formTitle}</h3>
+            <h3 data-reveal className="title !text-[clamp(1.5rem,2.6vw,2.1rem)]">{c.formTitle}</h3>
             <div className="grid gap-7 sm:grid-cols-2">
               {field("name", c.nameLabel, "text", "name")}
               {field("email", c.emailLabel, "email", "email")}
             </div>
             {field("message", c.messageLabel, "textarea")}
-            <div className="flex flex-wrap items-center gap-4">
+            <div data-reveal className="flex flex-wrap items-center gap-4">
               <button type="submit" className="btn btn-ink" disabled={status === "sending"}>
                 {status === "sending" ? c.sending : c.send}
               </button>
