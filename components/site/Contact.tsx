@@ -5,7 +5,9 @@ import dynamic from "next/dynamic";
 import { useLanguage } from "@/hooks/use-language";
 import { links } from "@/lib/content";
 import { gsap, initGSAP, MEDIA } from "@/lib/gsap";
+import WhenNear from "./WhenNear";
 
+// WebGL (three.js) is the heaviest code on the page: fetched only as the visitor nears the contact.
 const Keycaps = dynamic(() => import("./three/Keycaps"), { ssr: false });
 // Same names as in three/Keycaps; not imported from there so the WebGL chunk stays lazy.
 const ENTER_HOVER = "contact:enter-hover";
@@ -205,7 +207,9 @@ export default function Contact() {
               {t.hero.cv}
             </a>
             <div data-parallax="0.1" className="mt-6 h-[clamp(14rem,30vw,22rem)] w-full max-w-[34rem]">
-              <Keycaps className="h-full w-full" />
+              <WhenNear className="h-full w-full">
+                <Keycaps className="h-full w-full" />
+              </WhenNear>
             </div>
           </div>
 

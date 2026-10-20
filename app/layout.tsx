@@ -19,12 +19,16 @@ const hand = Reenie_Beanie({
   subsets: ['latin'],
   weight: '400',
   variable: '--font-hand',
+  // Margin notes appear further down the page: keep them out of the critical download.
+  preload: false,
 })
 
 // Monospace, only inside code and the terminal.
 const mono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono-code',
+  // Only used inside the demo terminal.
+  preload: false,
 })
 
 const description =

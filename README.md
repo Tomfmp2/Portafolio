@@ -40,7 +40,6 @@ El sitio combina un diseño limpio y moderno con un stack tecnológico de alto r
 
 - ⚡ Renderizado del lado del servidor con **Next.js 16**
 - 🎨 Interfaz completamente responsiva con **Tailwind CSS v4**
-- 🧩 Componentes accesibles y reutilizables con **Radix UI / shadcn/ui**
 - 📊 Analíticas de visitas integradas con **Vercel Analytics**
 - 💯 Código 100% tipado en **TypeScript**
 
@@ -63,32 +62,21 @@ El sitio combina un diseño limpio y moderno con un stack tecnológico de alto r
 | [TypeScript](https://www.typescriptlang.org/) | 5.7.3 | Tipado estático para JavaScript |
 | [Tailwind CSS](https://tailwindcss.com/) | 4.x | Framework de estilos utility-first |
 
-### Componentes UI
+### Animación y 3D
 
 | Tecnología | Descripción |
 |---|---|
-| [Radix UI](https://www.radix-ui.com/) | Primitivos de componentes accesibles y sin estilos |
-| [shadcn/ui](https://ui.shadcn.com/) | Sistema de componentes construido sobre Radix UI |
-| [Lucide React](https://lucide.dev/) | Librería de íconos SVG |
-| [Embla Carousel](https://www.embla-carousel.com/) | Carrusel ligero y accesible |
-| [Recharts](https://recharts.org/) | Librería de gráficos para React |
-
-### Formularios y Validación
-
-| Tecnología | Descripción |
-|---|---|
-| [React Hook Form](https://react-hook-form.com/) | Manejo de formularios con alto rendimiento |
-| [Zod](https://zod.dev/) | Esquemas de validación con inferencia de tipos |
+| [GSAP](https://gsap.com/) | ScrollTrigger, SplitText, DrawSVG y ScrambleText para las escenas de scroll |
+| [Lenis](https://lenis.darkroom.engineering/) | Scroll suave sincronizado con GSAP |
+| [React Three Fiber](https://r3f.docs.pmnd.rs/) + [drei](https://drei.docs.pmnd.rs/) | Las teclas 3D del contacto (se cargan solo al acercarse) |
+| [Framer Motion](https://motion.dev/) + [Lucide](https://lucide.dev/) | La terminal de demos (se carga solo al abrirla) |
 
 ### Utilidades y DevOps
 
 | Tecnología | Descripción |
 |---|---|
 | [Vercel](https://vercel.com/) | Plataforma de despliegue y alojamiento |
-| [Vercel Analytics](https://vercel.com/analytics) | Análisis de tráfico en tiempo real |
-| [next-themes](https://github.com/pacocoursey/next-themes) | Gestión de temas claro/oscuro |
-| [clsx](https://github.com/lukeed/clsx) + [tailwind-merge](https://github.com/dcastil/tailwind-merge) | Utilidades para composición de clases CSS |
-| [Sonner](https://sonner.emilkowal.ski/) | Componente de notificaciones toast |
+| [Vercel Analytics](https://vercel.com/analytics) | Análisis de tráfico |
 
 ---
 
@@ -97,12 +85,10 @@ El sitio combina un diseño limpio y moderno con un stack tecnológico de alto r
 ```
 Portafolio/
 ├── app/                    # Rutas y páginas (Next.js App Router)
-├── components/             # Componentes reutilizables de la UI
+├── components/site/        # Secciones y piezas del sitio
 ├── hooks/                  # Custom hooks de React
 ├── lib/                    # Utilidades y helpers compartidos
 ├── public/                 # Archivos estáticos (imágenes, íconos, fuentes)
-├── styles/                 # Estilos globales y configuración de Tailwind
-├── components.json         # Configuración de shadcn/ui
 ├── next.config.mjs         # Configuración de Next.js
 ├── tailwind.config         # Configuración de Tailwind CSS
 ├── tsconfig.json           # Configuración de TypeScript

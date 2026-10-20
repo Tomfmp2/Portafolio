@@ -1,14 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { useLanguage } from "@/hooks/use-language";
 import { links } from "@/lib/content";
-import TerminalModal from "./TerminalModal";
+
+// The demo terminal (and framer-motion with it) is fetched the first time someone opens a demo.
+const TerminalModal = dynamic(() => import("./TerminalModal"), { ssr: false });
 
 export default function MoreProjects() {
   const { t } = useLanguage();
   const m = t.work.more;
   const [demo, setDemo] = useState<string | null>(null);
+  // Stays mounted after the first open so its closing animation can still play.
+  const [opened, setOpened] = useState(false);
+  const open = (id: string) => {
+    setOpened(true);
+    setDemo(id);
+  };
 
   return (
     <article className="wrap pt-[clamp(5rem,12vw,10rem)]" aria-labelledby="more-title">
@@ -31,7 +40,7 @@ export default function MoreProjects() {
             <p className="body-copy">{item.text}</p>
             <div className="flex flex-wrap gap-2 md:justify-end">
               {item.demoId && (
-                <button type="button" onClick={() => setDemo(item.demoId!)} className="btn btn-ink min-h-11 px-5 text-sm">
+                <button type="button" onClick={() => open(item.demoId!)} className="btn btn-ink min-h-11 px-5 text-sm">
                   {m.demo}
                 </button>
               )}
@@ -47,7 +56,7 @@ export default function MoreProjects() {
         {m.all}
       </a>
 
-      <TerminalModal demoId={demo} onClose={() => setDemo(null)} />
+      {opened && <TerminalModal demoId={demo} onClose={() => setDemo(null)} />}
     </article>
   );
 }
