@@ -188,7 +188,7 @@ Tipografía: **Bricolage Grotesque** (títulos y texto, con sus ejes de ancho y 
 | Sección | Qué ocurre |
 |---|---|
 | Precarga | Cortina de tinta con contador. Una vez por sesión; un script en `<head>` evita destellos y la omite con movimiento reducido. |
-| Portada | El nombre entra letra a letra. Con ratón se puede subrayar arrastrando (`HighlighterCanvas`). Un marcador 3D sigue al puntero y gira con el scroll. |
+| Portada | El nombre entra letra a letra y el bolígrafo 3D pinta una franja bajo el apellido y subraya la frase clave. Al empezar a bajar, rodea "Descargar CV". Con ratón se puede subrayar arrastrando (`HighlighterCanvas`). La cabecera está oculta arriba del todo y aparece al bajar. |
 | Si tienes 30 segundos | Sección fija en escritorio: tres afirmaciones se leen palabra a palabra, se subrayan y se anotan. |
 | Verbos | Aprender, construir, probar, entregar, en dos filas que se deslizan en sentidos opuestos. |
 | Proyectos | Cada caso cuenta qué aprendí, con una línea que avanza con el scroll. OCAP va en una hoja nocturna que se desliza sobre el papel. |
@@ -197,13 +197,15 @@ Tipografía: **Bricolage Grotesque** (títulos y texto, con sus ejes de ancho y 
 
 **Cómo está organizado el movimiento.** `lib/gsap.ts` registra GSAP y sus plugins una sola vez. `components/site/Motion.tsx` aplica los comportamientos comunes por atributo (`data-hl`, `data-note`, `data-lines`, `data-count`, `data-parallax`); cada sección con coreografía propia se marca con `data-motion-owned`. El contenido se vuelve a montar al cambiar de idioma (`key={lang}`) para que SplitText nunca choque con React.
 
-**3D.** `components/site/three/` contiene el marcador y las teclas, modelados en código (sin modelos ni HDR descargados). Se cargan solo en el cliente y solo renderizan mientras están en pantalla.
+**El bolígrafo 3D.** `components/site/three/Pen.tsx` es una capa fija y transparente sobre toda la página, con cámara ortográfica (1 unidad = 1 px) para que la punta caiga sobre el texto. Cada subrayado informa de la posición de la punta con `penAlong`/`penWrite` (`lib/pen.ts`): el bolígrafo se acerca primero a la frase, la recorre y vuelve a reposar, mezclando ambas poses de forma continua. En reposo se aparca junto al nombre o en el margen y gira con la velocidad del scroll.
+
+**3D.** El bolígrafo y las teclas del contacto (`three/Keycaps.tsx`) están modelados en código, sin modelos ni HDR descargados. Se cargan solo en el cliente; las teclas solo renderizan mientras están en pantalla y el bolígrafo no existe con movimiento reducido.
 
 **Accesibilidad y rendimiento.**
 - Con `prefers-reduced-motion` todo el texto aparece completo y estático, sin precarga ni 3D animado.
 - El cursor lima acompaña al puntero del sistema, que nunca se oculta.
 - Las notas que repiten un dato del texto se ocultan a los lectores de pantalla; las cintas animadas tienen su texto equivalente.
-- Medido en Chrome headless con GPU: unos 50 fps durante el scroll continuo con todos los efectos activos.
+- Medido en Chrome headless con GPU: 60 fps durante el scroll continuo con todos los efectos activos.
 
 **Contenido.** Todo el texto, en español e inglés, está en `lib/content.ts`. Las frases entre `==así==` se subrayan.
 
