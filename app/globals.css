@@ -789,3 +789,34 @@
     .flow-step:hover .flow-dot { animation: none; }
   }
 }
+
+@layer components {
+  /* Full-screen highlighter sweep used between scenes (lib/scene.ts sweep). */
+  .sweep-band {
+    position: fixed;
+    inset: 0;
+    z-index: 58;
+    background: var(--marker);
+    pointer-events: none;
+    clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+  }
+  /* The highlighter block that reveals and hides each line of a heading. */
+  .line-mask-inner-mask {
+    position: relative;
+  }
+  .line-cover {
+    position: absolute;
+    inset: 0.04em -0.05em 0.1em;
+    background: var(--marker);
+    transform: scaleX(0);
+    transform-origin: left center;
+    pointer-events: none;
+  }
+  .on-night .line-cover {
+    background: var(--marker);
+  }
+  /* Room for words turning in 3D. */
+  .statement {
+    perspective: 900px;
+  }
+}

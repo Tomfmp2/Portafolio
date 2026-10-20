@@ -39,6 +39,7 @@ export default function Home() {
         <Motion />
       </div>
       <Cursor />
+      <div id="sweep" className="sweep-band" aria-hidden="true" />
       <div className="grain" aria-hidden="true" />
     </>
   );

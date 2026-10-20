@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { gsap, initGSAP, MEDIA } from "@/lib/gsap";
-import { scene, settle } from "@/lib/scene";
+import { scene, settle, sweep } from "@/lib/scene";
 
 /**
  * The way of working, as four verbs set huge: one row in outline, one in ink.
@@ -22,7 +22,7 @@ export default function Verbs() {
     const mm = gsap.matchMedia();
     mm.add(MEDIA.motion, () => {
       const rows = el.querySelectorAll<HTMLElement>("[data-row]");
-      const tl = scene(el, 140);
+      const tl = scene(el, 170);
       rows.forEach((row, i) => {
         tl.fromTo(row, { xPercent: i % 2 ? -40 : 0 }, { xPercent: i % 2 ? 0 : -40, duration: 1 }, 0);
       });
@@ -35,6 +35,8 @@ export default function Verbs() {
       // Exit: the rows part, one up and one down, and fade.
       const out = tl.duration();
       rows.forEach((row, i) => tl.to(row, { yPercent: i % 2 ? 80 : -80, opacity: 0, duration: 0.6, ease: "power2.in" }, out));
+      // A highlighter sweep wipes the screen clean before the projects open.
+      sweep(tl, out + 0.25, () => {});
     });
     return () => mm.revert();
   }, []);
@@ -44,7 +46,7 @@ export default function Verbs() {
     <div ref={root} className="verbs-stage flex flex-col justify-center overflow-hidden py-[clamp(3rem,8vw,6rem)]">
       <p className="sr-only">{verbs.join(", ")}</p>
       {[0, 2].map((offset) => (
-        <div key={offset} data-row className={`flex w-max whitespace-nowrap ${offset ? "" : "verb-outline"}`} aria-hidden="true">
+        <div key={offset} data-row data-skew className={`flex w-max whitespace-nowrap ${offset ? "" : "verb-outline"}`} aria-hidden="true">
           {row(offset).map((verb, i) => (
             <span key={i} className="verb">
               {verb}

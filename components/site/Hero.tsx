@@ -5,7 +5,7 @@ import { useLanguage } from "@/hooks/use-language";
 import { links } from "@/lib/content";
 import { gsap, initGSAP, MEDIA, SplitText } from "@/lib/gsap";
 import { onIntro } from "@/lib/intro";
-import { scene, settle } from "@/lib/scene";
+import { scene, settle, sweep } from "@/lib/scene";
 import HighlighterCanvas from "./HighlighterCanvas";
 import Marked from "./Marked";
 import Note from "./Note";
@@ -29,12 +29,14 @@ export default function Hero() {
       if (!motion) return;
 
       const rows = el.querySelectorAll<HTMLElement>("[data-name-row]");
-      const split = SplitText.create(rows, { type: "chars", mask: "chars", charsClass: "hero-char" });
+      // No masks: the letters need to be free to scatter on the way out.
+      const split = SplitText.create(rows, { type: "chars", charsClass: "hero-char" });
+      const R = gsap.utils.random;
       const mark = el.querySelector<HTMLElement>("[data-hl]");
       const swipe = el.querySelector<HTMLElement>("[data-swipe]");
       const rest = el.querySelectorAll("[data-hero-rest]");
 
-      gsap.set(split.chars, { yPercent: 105 });
+      gsap.set(split.chars, { yPercent: () => R(90, 150), rotation: () => R(-25, 25), opacity: 0 });
       // CSS keeps the name hidden until this point (see the hero start state in globals.css).
       gsap.set(rows, { visibility: "visible" });
       gsap.set(rest, { opacity: 0, y: 16 });
@@ -44,7 +46,7 @@ export default function Hero() {
       // The one orchestrated entrance of the page, right after the preloader lifts.
       offIntro = onIntro(() => {
         const tl = gsap.timeline({ delay: 0.15 });
-        tl.to(split.chars, { yPercent: 0, duration: 1.2, ease: "expo.out", stagger: { each: 0.045, from: "start" } });
+        tl.to(split.chars, { yPercent: 0, rotation: 0, opacity: 1, duration: 1.2, ease: "expo.out", stagger: { each: 0.045, from: "start" } });
         // A wide highlighter stroke under the surname, then the key phrase.
         if (swipe) tl.to(swipe, { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, "-=0.4");
         tl.to(rest, { opacity: 1, y: 0, duration: 0.8, stagger: 0.08 }, "-=0.4");
@@ -56,16 +58,24 @@ export default function Hero() {
       // retracts, the ring is wiped and the rest lifts away. Scrolling back rebuilds it.
       const ring = el.querySelector<SVGPathElement>("[data-ring] path");
       const outgoing = el.querySelectorAll("[data-hero-out]");
-      const tl = scene(el, desktop ? 140 : 110, { start: "top top" });
+      const tl = scene(el, desktop ? 170 : 130, { start: "top top" });
       if (ring) tl.fromTo(ring, { drawSVG: "0%" }, { drawSVG: "100%", duration: 1 });
       // While pinned, the two rows of the name drift apart, as if the page turns.
       if (desktop) tl.to(rows[0], { xPercent: -6, duration: 1 }, 0).to(rows[1], { xPercent: 8, duration: 1 }, 0);
       settle(tl, 0.35);
       const out = tl.duration();
-      tl.fromTo(split.chars, { yPercent: 0 }, { yPercent: -110, duration: 0.7, stagger: 0.025, ease: "power2.in", immediateRender: false }, out);
+      // The letters burst apart, each its own way; the stroke, ring and copy clear; then a
+      // highlighter sweep rises over the screen and wipes the hero away.
+      tl.fromTo(
+        split.chars,
+        { yPercent: 0, xPercent: 0, rotation: 0, opacity: 1 },
+        { yPercent: () => R(-320, -140), xPercent: () => R(-90, 90), rotation: () => R(-70, 70), opacity: 0, duration: 0.8, stagger: { each: 0.02, from: "random" }, ease: "power3.in", immediateRender: false },
+        out
+      );
       if (swipe) tl.fromTo(swipe, { scaleX: 1 }, { scaleX: 0, transformOrigin: "right center", duration: 0.5, ease: "power2.in", immediateRender: false }, out);
       if (ring) tl.to(ring, { drawSVG: "100% 100%", duration: 0.5, ease: "power2.in" }, out);
-      tl.fromTo(outgoing, { opacity: 1, y: 0 }, { opacity: 0, y: -40, duration: 0.5, stagger: 0.08, ease: "power2.in", immediateRender: false }, out + 0.1);
+      tl.fromTo(outgoing, { opacity: 1, y: 0 }, { opacity: 0, y: -60, skewY: -4, duration: 0.5, stagger: 0.08, ease: "power2.in", immediateRender: false }, out + 0.1);
+      sweep(tl, out + 0.35, () => {});
       return () => split.revert();
     });
 

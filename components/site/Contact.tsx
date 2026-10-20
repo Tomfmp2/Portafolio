@@ -183,7 +183,7 @@ export default function Contact() {
   return (
     <section id="contacto" className="section" aria-labelledby="contact-title">
       <div className="wrap">
-        <h2 id="contact-title" className="display" data-lines>
+        <h2 id="contact-title" className="display" data-lines data-skew>
           {c.title}
         </h2>
         <div className="mt-12 grid gap-16 lg:grid-cols-2">

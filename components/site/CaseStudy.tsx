@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
-import { gsap, initGSAP, MEDIA } from "@/lib/gsap";
+import { gsap, initGSAP, MEDIA, SplitText } from "@/lib/gsap";
 import { scene, settle } from "@/lib/scene";
 import Note from "./Note";
 
@@ -49,6 +49,7 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
       // up with the scroll and the summary comes in. On phones the head is taller than the
       // screen, so it can't hold; the same things play as it scrolls past instead.
       const head = el.querySelector<HTMLElement>("[data-head]");
+      let nameSplit: SplitText | null = null;
       const name = el.querySelector<HTMLElement>("[data-name]");
       const counts = gsap.utils.toArray<HTMLElement>("[data-case-count]", el);
       if (head && name) {
@@ -67,9 +68,12 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
         });
         if (desktop) {
           settle(headTl, 0.25);
-          // Exit: the head lifts away piece by piece before the lessons take the screen.
+          // Exit: the name's letters burst apart and the rest is wiped away upward.
           const out = headTl.duration();
-          headTl.to(head.children, { opacity: 0, y: -48, duration: 0.5, stagger: 0.08, ease: "power2.in" }, out);
+          nameSplit = SplitText.create(name, { type: "chars" });
+          const R = gsap.utils.random;
+          headTl.to(nameSplit.chars, { yPercent: () => R(-280, -120), xPercent: () => R(-80, 80), rotation: () => R(-60, 60), opacity: 0, duration: 0.7, stagger: { each: 0.015, from: "random" }, ease: "power3.in" }, out)
+            .to([...head.children].filter((c) => c !== name), { clipPath: "inset(0% 0% 100% 0%)", y: -50, skewY: -3, duration: 0.5, stagger: 0.08, ease: "power2.in" }, out + 0.1);
         }
       }
 
@@ -88,10 +92,13 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
       settle(tl, 0.25);
       // Exit: the lessons leave one after another and the rail is drawn back.
       const out = tl.duration();
-      tl.to(flow.querySelectorAll("h4, [data-step]"), { opacity: 0, y: -32, duration: 0.5, stagger: 0.08, ease: "power2.in" }, out);
+      tl.to(flow.querySelectorAll("h4, [data-step]"), { clipPath: "inset(0% 0% 100% 0%)", y: -48, rotation: () => gsap.utils.random(-6, 6), duration: 0.5, stagger: 0.08, ease: "power2.in" }, out);
       if (rail) tl.to(rail, { "--rail": 0, duration: 0.6, ease: "power2.in" }, out);
 
-      return () => counts.forEach((count) => (count.textContent = count.dataset.caseCount ?? ""));
+      return () => {
+        nameSplit?.revert();
+        counts.forEach((count) => (count.textContent = count.dataset.caseCount ?? ""));
+      };
     });
     return () => mm.revert();
   }, [night]);
@@ -108,7 +115,7 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
         <p className="small">
           {project.when}. {project.role}
         </p>
-        <h3 id={`${id}-title`} data-name className="display mt-4 !text-[clamp(3.6rem,12vw,13rem)]">
+        <h3 id={`${id}-title`} data-name data-skew className="display mt-4 !text-[clamp(3.6rem,12vw,13rem)]">
           {project.name}
         </h3>
 

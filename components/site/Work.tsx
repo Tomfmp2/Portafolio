@@ -23,15 +23,19 @@ export default function Work() {
       const title = el.querySelector<HTMLElement>("h2 [data-title-text]");
       const swipe = el.querySelector<HTMLElement>("[data-title-swipe]");
       if (!title || !swipe) return;
-      const split = SplitText.create(title, { type: "chars", mask: "chars" });
+      // No masks: letters fall in from different heights and angles, and burst apart on the way out.
+      const split = SplitText.create(title, { type: "chars" });
+      // The stroke starts undrawn; it is only drawn once the letters have landed.
+      swipe.style.setProperty("--swipe", "0");
+      const R = gsap.utils.random;
       const tl = scene(el, 130);
-      tl.from(split.chars, { yPercent: 110, duration: 1, stagger: 0.06 }).fromTo(swipe, { "--swipe": 0 }, { "--swipe": 1, duration: 1 });
+      tl.from(split.chars, { yPercent: () => R(-180, 180), rotation: () => R(-45, 45), scale: () => R(0.4, 1.6), opacity: 0, duration: 1, stagger: { each: 0.05, from: "center" }, ease: "back.out(1.4)" }).fromTo(swipe, { "--swipe": 0 }, { "--swipe": 1, duration: 1 });
       settle(tl, 0.3);
       // Exit: the stroke retracts toward its end and the letters rise out through their masks.
       const out = tl.duration();
       tl.set(swipe, { transformOrigin: "right center" }, out)
         .to(swipe, { "--swipe": 0, duration: 0.6, ease: "power2.in" }, out)
-        .to(split.chars, { yPercent: -110, duration: 0.8, stagger: 0.04, ease: "power2.in" }, out + 0.1);
+        .to(split.chars, { yPercent: () => R(-260, -120), xPercent: () => R(-120, 120), rotation: () => R(-90, 90), opacity: 0, duration: 0.8, stagger: { each: 0.03, from: "random" }, ease: "power3.in" }, out + 0.1);
       return () => {
         split.revert();
         swipe.style.removeProperty("--swipe");
@@ -43,7 +47,7 @@ export default function Work() {
   return (
     <section id="proyectos" className="pb-[clamp(6rem,12vw,10rem)] pt-[clamp(2rem,5vw,4rem)]" aria-labelledby="work-title">
       <div ref={stage} className="title-stage wrap flex flex-col justify-center">
-        <h2 id="work-title" className="display relative isolate w-fit">
+        <h2 id="work-title" data-skew className="display relative isolate w-fit">
           <span data-title-text>{t.work.title}</span>
           <span data-title-swipe className="title-swipe" aria-hidden="true" />
         </h2>

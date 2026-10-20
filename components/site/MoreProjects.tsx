@@ -22,7 +22,7 @@ export default function MoreProjects() {
   return (
     <article className="wrap pt-[clamp(5rem,12vw,10rem)]" aria-labelledby="more-title">
       <div className="grid gap-6 md:grid-cols-2 md:items-end">
-        <h3 id="more-title" className="headline" data-lines>
+        <h3 id="more-title" className="headline" data-lines data-skew>
           {m.title}
         </h3>
         <p data-reveal className="body-copy">{m.lede}</p>

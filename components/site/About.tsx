@@ -29,14 +29,14 @@ export default function About() {
       const tl = scene(desktop ? wrap : el, desktop ? 220 : 160);
       if (desktop && mark) tl.fromTo(mark, { "--hl": "0%" }, { "--hl": "100%", duration: 1 });
       tl.fromTo(el.querySelector("[data-rail]"), { scaleY: 0 }, { scaleY: 1, duration: 2 }, desktop ? 0.8 : 0);
-      entries.forEach((entry, i) => tl.from(entry, { opacity: 0, x: 24, duration: 0.35 }, (desktop ? 0.8 : 0) + (i / entries.length) * 2));
+      entries.forEach((entry, i) => tl.from(entry, { clipPath: "inset(0% 100% 0% 0%)", x: 40, duration: 0.35, ease: "power3.out" }, (desktop ? 0.8 : 0) + (i / entries.length) * 2));
       settle(tl, 0.25);
       // Exit: the stages leave one after another, the rail is drawn back down and, on desktop,
       // the story and the facts lift away with them.
       const out = tl.duration();
-      tl.to(entries, { opacity: 0, y: -28, duration: 0.45, stagger: 0.07, ease: "power2.in" }, out)
+      tl.to(entries, { clipPath: "inset(0% 0% 100% 0%)", y: -40, rotation: () => gsap.utils.random(-5, 5), duration: 0.45, stagger: 0.07, ease: "power2.in" }, out)
         .to(el.querySelector("[data-rail]"), { scaleY: 0, transformOrigin: "bottom center", duration: 0.6, ease: "power2.in" }, out + 0.1);
-      if (desktop) tl.to(wrap.querySelectorAll("[data-about-out]"), { opacity: 0, y: -36, duration: 0.5, stagger: 0.08, ease: "power2.in" }, out + 0.15);
+      if (desktop) tl.to(wrap.querySelectorAll("[data-about-out]"), { clipPath: "inset(0% 0% 100% 0%)", y: -50, skewY: -3, duration: 0.5, stagger: 0.08, ease: "power2.in" }, out + 0.15);
 
       if (!desktop && mark) {
         gsap.fromTo(mark, { "--hl": "0%" }, { "--hl": "100%", ease: "none", scrollTrigger: { trigger: mark, start: "top 85%", end: "top 45%", scrub: 0.9 } });

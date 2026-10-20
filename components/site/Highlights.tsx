@@ -46,22 +46,32 @@ export default function Highlights() {
 
         // Opacity, not visibility: hidden statements must stay in the accessibility tree.
         gsap.set(item, { opacity: i === 0 ? 1 : 0 });
-        gsap.set(words, { opacity: 0.12 });
+        gsap.set(words, { opacity: 0.12, transformOrigin: "50% 100%" });
         if (mark) (mark as HTMLElement).style.setProperty("--hl", "0%");
         if (note) gsap.set(note, { opacity: 0 });
 
         if (i > 0) tl.fromTo(item, { opacity: 0, yPercent: 18 }, { opacity: 1, yPercent: 0, duration: 0.6 }, at - 0.4);
-        tl.to(words, { opacity: 1, duration: 1.4, stagger: 1.4 / words.length }, at);
+        // Words turn up into place one after another, like cards flipping onto the table.
+        tl.fromTo(words, { opacity: 0.12, yPercent: 50, rotationX: -75 }, { opacity: 1, yPercent: 0, rotationX: 0, duration: 1.4, stagger: 1.4 / words.length, ease: "back.out(1.6)" }, at);
         // The key phrase is highlighted while the last words ink in.
         if (mark) tl.fromTo(mark, { "--hl": "0%" }, { "--hl": "100%", duration: 1.4 }, at + 1.1);
         if (note) tl.to(note, { opacity: 1, duration: 0.3 }, at + 2.5);
         if (strokes.length) tl.from(strokes, { drawSVG: 0, duration: 0.5, stagger: 0.1 }, at + 2.5);
-        if (i < items.length - 1) tl.to(item, { opacity: 0, yPercent: -14, duration: 0.6 }, at + 3.5);
+        // Exit: the words scatter upward in a random order, each turning away.
+        if (i < items.length - 1) {
+          tl.to(words, { yPercent: () => gsap.utils.random(-160, -60), rotationX: 80, rotation: () => gsap.utils.random(-12, 12), opacity: 0, duration: 0.6, stagger: { each: 0.015, from: "random" }, ease: "power2.in" }, at + 3.4);
+          if (note) tl.to(note, { opacity: 0, x: 30, duration: 0.4 }, at + 3.4);
+          // The highlight leaves with its words instead of floating on its own.
+          if (mark) tl.to(mark, { "--hl": "0%", duration: 0.4 }, at + 3.4);
+        }
       });
       settle(tl, 0.06);
       // Exit: the last statement lifts away and the section's header rule is drawn back in.
       const out = tl.duration();
-      tl.to(items[items.length - 1], { opacity: 0, yPercent: -18, duration: 0.6, ease: "power2.in" }, out)
+      const lastWords = splits[splits.length - 1].words;
+      tl.to(lastWords, { yPercent: () => gsap.utils.random(-160, -60), rotationX: 80, rotation: () => gsap.utils.random(-12, 12), opacity: 0, duration: 0.6, stagger: { each: 0.015, from: "random" }, ease: "power2.in" }, out)
+        .to(items[items.length - 1].querySelector("[data-note]"), { opacity: 0, x: 30, duration: 0.4 }, out)
+        .to(items[items.length - 1].querySelector("[data-hl]"), { "--hl": "0%", duration: 0.4 }, out)
         .to(el.querySelector("[data-hl-head]"), { opacity: 0, y: -24, duration: 0.5, ease: "power2.in" }, out + 0.1)
         .to(el.querySelector("[data-progress]")?.parentElement ?? [], { scaleX: 0, transformOrigin: "right center", duration: 0.5, ease: "power2.in" }, out + 0.1);
       if (progress) tl.fromTo(progress, { scaleX: 0 }, { scaleX: 1, duration: tl.duration() }, 0);
