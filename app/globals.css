@@ -466,7 +466,7 @@
     gap: 4rem;
   }
   /* Only when animated: with reduced motion all three are simply listed. */
-  @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+  @media (prefers-reduced-motion: no-preference) {
     .hl-stage > * {
       grid-area: 1 / 1;
     }
@@ -670,7 +670,7 @@
 }
 
 @layer components {
-  /* The stroke the 3D pen draws under the surname on arrival. */
+  /* The highlighter stroke drawn under the surname on arrival. */
   .hero-swipe {
     position: absolute;
     left: 0.75em;
@@ -708,7 +708,7 @@
     /* Undrawn until GSAP takes over, so it never flashes in fully formed. */
     stroke-dasharray: 0 9999;
   }
-  /* Without motion the ring isn't drawn: it only exists as the pen's scroll gesture. */
+  /* Without motion the ring isn't drawn: it only exists as a scroll gesture. */
   @media (prefers-reduced-motion: reduce) {
     .hero-ring { display: none; }
   }
@@ -730,5 +730,28 @@
   }
   html.js #inicio [data-hero-rest] {
     opacity: 0;
+  }
+}
+
+@layer components {
+  /* Scenes that pin take the whole screen while they play; static, they don't need to. */
+  @media (prefers-reduced-motion: no-preference) {
+    .verbs-stage,
+    .title-stage {
+      min-height: 100svh;
+    }
+  }
+  /* A highlighter stroke under a big title. */
+  .title-swipe {
+    position: absolute;
+    left: -0.04em;
+    right: -0.08em;
+    bottom: 0.02em;
+    height: 0.26em;
+    background: var(--marker);
+    transform: skewX(-8deg) scaleX(var(--swipe, 1));
+    transform-origin: left center;
+    border-radius: 0.04em;
+    z-index: -1;
   }
 }

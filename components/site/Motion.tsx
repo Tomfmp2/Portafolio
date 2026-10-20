@@ -2,14 +2,13 @@
 
 import { useEffect } from "react";
 import { gsap, initGSAP, MEDIA, ScrollTrigger, SplitText } from "@/lib/gsap";
-import { penHold, penSweepProgress } from "@/lib/pen";
 
 /** Elements a section animates itself opt out of the generic behaviours with this attribute. */
 const OWNED = "[data-motion-owned] *";
 
 /**
  * The behaviours every section shares, wired once per render of the page:
- * - [data-hl]    the 3D pen highlights the phrase, in step with the scroll
+ * - [data-hl]    the highlighter sweeps across the phrase, in step with the scroll
  * - [data-note]  the margin note's arrow is drawn, then its words appear
  * - [data-lines] a heading rises line by line from under its baseline
  * - [data-count] a number counts up to its value
@@ -26,23 +25,8 @@ export default function Motion() {
         gsap.utils.toArray<T>(selector).filter((el) => !el.matches(OWNED));
 
       pick<HTMLElement>("[data-hl]").forEach((el) => {
-        el.style.setProperty("--hl", "0%");
-        // Tied to the scroll over a long range: the pen comes to the phrase, then draws it as you
-        // read down. Scrolling slowly draws slowly; pausing leaves the pen waiting on the phrase.
-        const owner = {};
-        const proxy = { p: 0 };
-        gsap.to(proxy, {
-          p: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 88%",
-            end: "top 42%",
-            scrub: 0.9,
-            onToggle: (self) => penHold(owner, self.isActive),
-          },
-          onUpdate: () => penSweepProgress(el, proxy.p, (d) => el.style.setProperty("--hl", `${d * 100}%`)),
-        });
+        // Tied to the scroll over a long range: scrolling slowly draws slowly.
+        gsap.fromTo(el, { "--hl": "0%" }, { "--hl": "100%", ease: "none", scrollTrigger: { trigger: el, start: "top 88%", end: "top 42%", scrub: 0.9 } });
       });
 
       pick<HTMLElement>("[data-note]").forEach((note) => {
@@ -98,6 +82,11 @@ export default function Motion() {
       };
     });
 
+    // Sections create their pinned scenes in React's effect order (children before parents),
+    // not in page order, so a scene could be measured before a pin above it adds its scroll.
+    // This component mounts last: put every trigger in page order and measure once more.
+    ScrollTrigger.sort();
+    ScrollTrigger.refresh();
     // Layout shifts once fonts arrive; measure again so triggers sit where the text really is.
     document.fonts.ready.then(() => ScrollTrigger.refresh());
     return () => mm.revert();

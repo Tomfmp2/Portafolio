@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { gsap, initGSAP, MEDIA, ScrollTrigger } from "@/lib/gsap";
+import { scene, settle } from "@/lib/scene";
 
 /** Vertical gap between plates once the stack has come apart (px). */
 const SPREAD = 78;
@@ -85,10 +86,9 @@ export default function Layers() {
 
       gsap.set(plateEls, { z: 0 });
       gsap.set(copyEls, { opacity: 0.3 });
-      const tl = gsap.timeline({
-        defaults: { ease: "power2.inOut" },
-        scrollTrigger: { trigger: el.querySelector("[data-stage]"), start: "center center", end: "+=360%", pin: true, scrub: 1 },
-      });
+      const stage = el.querySelector("[data-stage]");
+      if (!stage) return;
+      const tl = scene(stage, 360, {}, "power2.inOut");
       tl.to(plateEls, { z: (i) => spread(i), duration: 1, stagger: 0.05 });
       // Walk the layers from the core outwards: lift the plate, ink its description.
       plateEls.forEach((plate, i) => {
@@ -97,6 +97,7 @@ export default function Layers() {
           .to(copy, { opacity: 1, duration: 0.4 }, "<")
           .to(plate, { z: spread(i), duration: 0.5 }, 1.6 + i * 0.8);
       });
+      settle(tl);
     });
     return () => mm.revert();
   }, []);

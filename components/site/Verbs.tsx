@@ -3,10 +3,12 @@
 import { useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { gsap, initGSAP, MEDIA } from "@/lib/gsap";
+import { scene, settle } from "@/lib/scene";
 
 /**
- * The way of working, as four verbs set huge: one row in outline, one in ink,
- * sliding in opposite directions with the scroll.
+ * The way of working, as four verbs set huge: one row in outline, one in ink.
+ * A scene: the band holds still while the scroll runs both rows across in
+ * opposite directions and inks the outlined verbs one by one.
  */
 export default function Verbs() {
   const { t } = useLanguage();
@@ -20,16 +22,23 @@ export default function Verbs() {
     const mm = gsap.matchMedia();
     mm.add(MEDIA.motion, () => {
       const rows = el.querySelectorAll<HTMLElement>("[data-row]");
+      const tl = scene(el, 140);
       rows.forEach((row, i) => {
-        gsap.fromTo(row, { xPercent: i % 2 ? -30 : 0 }, { xPercent: i % 2 ? 0 : -30, ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 0.4 } });
+        tl.fromTo(row, { xPercent: i % 2 ? -40 : 0 }, { xPercent: i % 2 ? 0 : -40, duration: 1 }, 0);
       });
+      // The outlined verbs fill with ink in turn as the band runs.
+      const outlined = el.querySelectorAll<HTMLElement>(".verb-outline .verb");
+      outlined.forEach((verb, i) => {
+        tl.to(verb, { color: "#111111", duration: 0.12 }, (i / outlined.length) * 0.9);
+      });
+      settle(tl);
     });
     return () => mm.revert();
   }, []);
 
   const row = (offset: number) => [...verbs.slice(offset), ...verbs.slice(0, offset), ...verbs];
   return (
-    <div ref={root} className="overflow-hidden py-[clamp(3rem,8vw,6rem)]">
+    <div ref={root} className="verbs-stage flex flex-col justify-center overflow-hidden py-[clamp(3rem,8vw,6rem)]">
       <p className="sr-only">{verbs.join(", ")}</p>
       {[0, 2].map((offset) => (
         <div key={offset} data-row className={`flex w-max whitespace-nowrap ${offset ? "" : "verb-outline"}`} aria-hidden="true">

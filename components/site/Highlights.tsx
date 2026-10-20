@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { links } from "@/lib/content";
 import { gsap, initGSAP, MEDIA, SplitText } from "@/lib/gsap";
-import { penHold, penSweepProgress } from "@/lib/pen";
+import { scene, settle } from "@/lib/scene";
 import Marked from "./Marked";
 import Note from "./Note";
 
@@ -29,42 +29,12 @@ export default function Highlights() {
       if (!motion) return;
       const items = gsap.utils.toArray<HTMLElement>("[data-statement]", el);
 
-      // Each phrase is drawn by the 3D pen, in step with the scroll, over a long range.
+      // Each key phrase is highlighted in step with the scroll, over a long range.
       const clearMarks = () => el.querySelectorAll<HTMLElement>("[data-hl]").forEach((m) => m.style.removeProperty("--hl"));
-      const sweep = (mark: Element) => (p: number) => penSweepProgress(mark, p, (d) => (mark as HTMLElement).style.setProperty("--hl", `${d * 100}%`));
-
-      if (!desktop) {
-        items.forEach((item) => {
-          const mark = item.querySelector("[data-hl]");
-          const note = item.querySelector("[data-note]");
-          const owner = {};
-          const proxy = { p: 0 };
-          if (mark) (mark as HTMLElement).style.setProperty("--hl", "0%");
-          const tl = gsap.timeline({
-            scrollTrigger: { trigger: item, start: "top 85%", end: "top 30%", scrub: 0.9, onToggle: (self) => penHold(owner, self.isActive) },
-          });
-          tl.to(proxy, { p: 1, duration: 1, ease: "none", onUpdate: () => mark && sweep(mark)(proxy.p) });
-          if (note) tl.from(note, { opacity: 0, x: 10, duration: 0.3 }, 0.75);
-        });
-        return clearMarks;
-      }
 
       const splits = items.map((item) => SplitText.create(item.querySelector("p")!, { type: "words" }));
-      // Windows of the timeline where the pen is drawing; it's held on the phrase inside them.
-      const windows: [number, number][] = [];
-      const owner = {};
-      const tl = gsap.timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: {
-          trigger: el,
-          start: "top top",
-          end: `+=${items.length * 180}%`,
-          pin: true,
-          scrub: 1,
-          onUpdate: () => penHold(owner, windows.some(([a, b]) => tl.time() > a && tl.time() < b)),
-          onToggle: (self) => !self.isActive && penHold(owner, false),
-        },
-      });
+      // One scene on every screen size: the block holds while the three statements are read in turn.
+      const tl = scene(el, items.length * (desktop ? 180 : 150), { start: "top top" });
       const progress = el.querySelector("[data-progress]");
 
       items.forEach((item, i) => {
@@ -82,16 +52,13 @@ export default function Highlights() {
 
         if (i > 0) tl.fromTo(item, { opacity: 0, yPercent: 18 }, { opacity: 1, yPercent: 0, duration: 0.6 }, at - 0.4);
         tl.to(words, { opacity: 1, duration: 1.4, stagger: 1.4 / words.length }, at);
-        if (mark) {
-          // The pen reaches the phrase while the words are still inking in, then draws it.
-          const proxy = { p: 0 };
-          windows.push([at + 0.9, at + 2.6]);
-          tl.to(proxy, { p: 1, duration: 1.7, onUpdate: () => sweep(mark)(proxy.p) }, at + 0.9);
-        }
+        // The key phrase is highlighted while the last words ink in.
+        if (mark) tl.fromTo(mark, { "--hl": "0%" }, { "--hl": "100%", duration: 1.4 }, at + 1.1);
         if (note) tl.to(note, { opacity: 1, duration: 0.3 }, at + 2.5);
         if (strokes.length) tl.from(strokes, { drawSVG: 0, duration: 0.5, stagger: 0.1 }, at + 2.5);
         if (i < items.length - 1) tl.to(item, { opacity: 0, yPercent: -14, duration: 0.6 }, at + 3.5);
       });
+      settle(tl, 0.06);
       if (progress) tl.fromTo(progress, { scaleX: 0 }, { scaleX: 1, duration: tl.duration() }, 0);
 
       return () => {

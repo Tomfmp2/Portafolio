@@ -42,7 +42,7 @@ const es = {
     where: "Bucaramanga, Colombia. Disponible para trabajar en remoto.",
     cv: "Descargar CV",
     work: "Ver proyectos",
-    drawHint: "arrastra para subrayar, o agarra el marcador",
+    drawHint: "arrastra el cursor y subraya tú también",
   },
   highlights: {
     title: "Si tienes 30 segundos",
@@ -193,7 +193,7 @@ const en: Content = {
     where: "Bucaramanga, Colombia. Available to work remotely.",
     cv: "Download CV",
     work: "See projects",
-    drawHint: "drag to highlight, or grab the marker",
+    drawHint: "drag the cursor and highlight something yourself",
   },
   highlights: {
     title: "If you have 30 seconds",

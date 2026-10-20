@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { gsap, initGSAP, MEDIA } from "@/lib/gsap";
-import { penHold, penWrite } from "@/lib/pen";
+import { scene, settle } from "@/lib/scene";
 import Note from "./Note";
 
 interface CaseStudyProps {
@@ -45,55 +45,44 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
         // break the pinned lessons inside (position: fixed is relative to transformed ancestors).
         gsap.fromTo(el, { clipPath: "inset(0% 4% 0% 4% round 3rem)" }, { clipPath: "inset(0% 0% 0% 0% round 1.25rem)", ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "top 35%", scrub: true } });
       }
-      // The name runs on one line and slides sideways while the case is on screen, far
-      // enough that a long name is read in full. Without motion it simply wraps.
+      // Head scene: the case holds still while its name runs across in full, the numbers count
+      // up with the scroll and the summary comes in. On phones the head is taller than the
+      // screen, so it can't hold; the same things play as it scrolls past instead.
+      const head = el.querySelector<HTMLElement>("[data-head]");
       const name = el.querySelector<HTMLElement>("[data-name]");
-      if (name) {
+      const counts = gsap.utils.toArray<HTMLElement>("[data-case-count]", el);
+      if (head && name) {
         gsap.set(name, { whiteSpace: "nowrap" });
         const overflow = () => Math.max(name.scrollWidth - name.clientWidth, 0);
-        gsap.fromTo(
-          name,
-          { x: () => (overflow() ? 0 : name.clientWidth * (desktop ? 0.08 : 0.03)) },
-          { x: () => (overflow() ? -overflow() : -name.clientWidth * (desktop ? 0.06 : 0.03)), ease: "none", scrollTrigger: { trigger: el, start: "top 85%", end: "bottom 30%", scrub: true, invalidateOnRefresh: true } }
-        );
+        const headTl = desktop
+          ? scene(head, 120, { invalidateOnRefresh: true })
+          : gsap.timeline({ defaults: { ease: "none" }, scrollTrigger: { trigger: head, start: "top 80%", end: "bottom 40%", scrub: 1, invalidateOnRefresh: true } });
+        headTl.fromTo(name, { x: () => (overflow() ? 0 : name.clientWidth * 0.06) }, { x: () => (overflow() ? -overflow() : -name.clientWidth * 0.04), duration: 1 }, 0);
+        headTl.from(head.querySelectorAll("[data-head-rest]"), { opacity: 0, y: 24, duration: 0.3, stagger: 0.1 }, 0.15);
+        counts.forEach((count) => {
+          const value = Number(count.dataset.caseCount);
+          const n = { v: 0 };
+          count.textContent = "0";
+          headTl.to(n, { v: value, duration: 0.6, onUpdate: () => (count.textContent = String(Math.round(n.v))) }, 0.3);
+        });
+        if (desktop) settle(headTl);
       }
 
-      // The lessons: on desktop the block holds still for a long stretch while the 3D pen draws
-      // the rail from one lesson to the next, lighting each as it passes.
+      // Lessons scene: the block holds while the scroll draws the rail from one lesson to the
+      // next, lighting each as it passes. It fits the screen at every size, so it always holds.
       const steps = gsap.utils.toArray<HTMLElement>("[data-step]", el);
       const rail = el.querySelector<HTMLElement>("[data-rail]");
-      const owner = {};
-      const drawn = { p: 0 };
-      const tl = gsap.timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: {
-          trigger: el.querySelector("[data-flow]"),
-          start: desktop ? "center center" : "top 80%",
-          end: desktop ? "+=150%" : "bottom 45%",
-          pin: desktop,
-          scrub: 1,
-          onUpdate: (self) => penHold(owner, self.progress > 0.001 && self.progress < 0.999),
-          onLeave: () => penHold(owner, false),
-          onLeaveBack: () => penHold(owner, false),
-        },
-      });
-      tl.to(drawn, {
-        p: 1,
-        duration: steps.length,
-        onUpdate: () => {
-          if (!rail) return;
-          rail.style.setProperty("--rail", String(drawn.p));
-          // The rail grows by scaling, so its box ends exactly at the tip
-          // (horizontal on desktop, vertical on phones).
-          const r = rail.getBoundingClientRect();
-          if (desktop) penWrite(r.right, r.top + r.height / 2);
-          else penWrite(r.left + r.width / 2, r.bottom);
-        },
-      });
+      const flow = el.querySelector<HTMLElement>("[data-flow]");
+      if (!flow) return;
+      const tl = scene(flow, desktop ? 150 : 130);
+      if (rail) tl.fromTo(rail, { "--rail": 0 }, { "--rail": 1, duration: steps.length });
       steps.forEach((step, i) => {
         tl.fromTo(step.querySelector("[data-dot]"), { scale: 0.4, backgroundColor: night ? "#141414" : "#f2efe6" }, { scale: 1, backgroundColor: "#d4ff3a", duration: 0.3 }, i + 0.2)
           .fromTo(step.querySelector("[data-step-copy]"), { opacity: 0.25 }, { opacity: 1, duration: 0.4 }, i + 0.2);
       });
+      settle(tl);
+
+      return () => counts.forEach((count) => (count.textContent = count.dataset.caseCount ?? ""));
     });
     return () => mm.revert();
   }, [night]);
@@ -106,6 +95,7 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
       aria-labelledby={`${id}-title`}
     >
       <div className="wrap">
+        <div data-head className="flex flex-col justify-center">
         <p className="small">
           {project.when}. {project.role}
         </p>
@@ -114,7 +104,7 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
         </h3>
 
         <div className="mt-12 grid gap-12 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
-          <div>
+          <div data-head-rest>
             <p className="lead max-w-[34ch]">{project.summary}</p>
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
               <a href={link.href} target="_blank" rel="noopener noreferrer" className={`btn ${night ? "btn-line" : "btn-ink"}`}>
@@ -126,12 +116,12 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
             </div>
             {project.privateNote && <p className="small mt-4">{project.privateNote}</p>}
           </div>
-          <dl className="grid content-start gap-8 sm:grid-cols-2" data-parallax="0.12">
+          <dl className="grid content-start gap-8 sm:grid-cols-2" data-head-rest>
             {project.stats.map((s) => (
               <div key={s.label} className={`border-t-[1.5px] pt-4 ${rule}`}>
                 <dt className="sr-only">{s.label}</dt>
                 <dd>
-                  <span className="stat-value block" data-count={s.value}>
+                  <span className="stat-value block" data-case-count={s.value}>
                     {s.value}
                   </span>
                   <span className="small mt-2 block" aria-hidden="true">
@@ -141,6 +131,7 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
               </div>
             ))}
           </dl>
+        </div>
         </div>
 
         <div data-flow className="mt-[clamp(4rem,8vw,6rem)]">

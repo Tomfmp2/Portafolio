@@ -1,7 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import Preloader from "@/components/site/Preloader";
 import Header from "@/components/site/Header";
@@ -16,13 +14,8 @@ import About from "@/components/site/About";
 import Contact from "@/components/site/Contact";
 import Footer from "@/components/site/Footer";
 
-// The 3D pen is decorative and heavy: client only, loaded after the page.
-const Pen = dynamic(() => import("@/components/site/three/Pen"), { ssr: false });
-
 export default function Home() {
   const { lang } = useLanguage();
-  const [motion, setMotion] = useState(false);
-  useEffect(() => setMotion(matchMedia("(prefers-reduced-motion: no-preference)").matches), []);
   return (
     <>
       <Preloader />
@@ -45,7 +38,6 @@ export default function Home() {
         <Footer />
         <Motion />
       </div>
-      {motion && <Pen />}
       <Cursor />
       <div className="grain" aria-hidden="true" />
     </>

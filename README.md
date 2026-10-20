@@ -188,8 +188,8 @@ Tipografía: **Bricolage Grotesque** (títulos y texto, con sus ejes de ancho y 
 | Sección | Qué ocurre |
 |---|---|
 | Precarga | Cortina de tinta con contador. Una vez por sesión; un script en `<head>` evita destellos y la omite con movimiento reducido. |
-| Portada | El nombre entra letra a letra y el bolígrafo 3D pinta una franja bajo el apellido y subraya la frase clave. Al empezar a bajar, rodea "Descargar CV". Con ratón se puede subrayar arrastrando (`HighlighterCanvas`). La cabecera está oculta arriba del todo y aparece al bajar. |
-| Si tienes 30 segundos | Sección fija en escritorio: tres afirmaciones se leen palabra a palabra, se subrayan y se anotan. |
+| Portada | El nombre entra letra a letra, una franja lima se pinta bajo el apellido y se subraya la frase clave. Al empezar a bajar, la portada se queda fija mientras se dibuja un anillo alrededor de "Descargar CV". Con ratón se puede subrayar arrastrando (`HighlighterCanvas`). La cabecera está oculta arriba del todo y aparece al bajar. |
+| Si tienes 30 segundos | Escena fija (también en móvil): tres afirmaciones se leen palabra a palabra, se subrayan y se anotan, una tras otra. |
 | Verbos | Aprender, construir, probar, entregar, en dos filas que se deslizan en sentidos opuestos. |
 | Proyectos | Cada caso cuenta qué aprendí, con una línea que avanza con el scroll. OCAP va en una hoja nocturna que se desliza sobre el papel. |
 | Cómo pienso un sistema | Las capas de la arquitectura como placas en CSS 3D que se separan con el scroll. |
@@ -197,9 +197,9 @@ Tipografía: **Bricolage Grotesque** (títulos y texto, con sus ejes de ancho y 
 
 **Cómo está organizado el movimiento.** `lib/gsap.ts` registra GSAP y sus plugins una sola vez. `components/site/Motion.tsx` aplica los comportamientos comunes por atributo (`data-hl`, `data-note`, `data-lines`, `data-count`, `data-parallax`); cada sección con coreografía propia se marca con `data-motion-owned`. El contenido se vuelve a montar al cambiar de idioma (`key={lang}`) para que SplitText nunca choque con React.
 
-**El bolígrafo 3D.** `components/site/three/Pen.tsx` es una capa fija y transparente sobre toda la página, con cámara ortográfica (1 unidad = 1 px) para que la punta caiga sobre el texto. Cada subrayado informa de la posición de la punta con `penAlong`/`penWrite` (`lib/pen.ts`). Los subrayados avanzan con el scroll, en tramos largos: el bolígrafo se acerca a la frase, la recorre al ritmo del visitante y, mientras el scroll siga dentro del tramo, se queda sobre ella (`penHold`). Se mueve con un muelle (posición, velocidad y amortiguación): suave al viajar y rígido al escribir, para que la punta no se separe del trazo. La portada, «Si tienes 30 segundos», «Lo que me dejó» y la pila de capas se fijan durante un tramo largo para que cada gesto se aprecie. En reposo se aparca junto al nombre o en el margen y gira con la velocidad del scroll. Se puede agarrar y arrastrar (con ratón o con el dedo) y lanzar: se desliza con inercia, rebota en los bordes y se queda flotando donde se suelte. Como la capa deja pasar los clics, el agarre se detecta con un raycast contra una zona invisible más ancha que el cuerpo.
+**Escenas de scroll.** Cada momento animado es una escena (`lib/scene.ts`): cuando el bloque llega a su sitio se queda fijo, el scroll reproduce la animación y, al terminar (con un breve respiro, `settle`), la página sigue bajando con normalidad. Son escenas la portada, «Si tienes 30 segundos», los verbos, el título «Proyectos», la cabecera y las lecciones de cada proyecto, la pila de capas y «Sobre mí». Solo se fija lo que cabe en la pantalla: en móvil la cabecera de los proyectos, la pila de capas y el texto de «Sobre mí» se animan mientras pasan. Como React crea las escenas en orden de efectos (hijos antes que padres), `Motion` ordena todos los disparadores por su posición en la página y vuelve a medir al final.
 
-**3D.** El bolígrafo y las teclas del contacto (`three/Keycaps.tsx`) están modelados en código, sin modelos ni HDR descargados. Se cargan solo en el cliente; las teclas solo renderizan mientras están en pantalla y el bolígrafo no existe con movimiento reducido.
+**3D.** Las teclas del contacto (`three/Keycaps.tsx`) están modeladas en código, sin modelos ni HDR descargados. Se cargan solo en el cliente y solo renderizan mientras están en pantalla.
 
 **Accesibilidad y rendimiento.**
 - Con `prefers-reduced-motion` todo el texto aparece completo y estático, sin precarga ni 3D animado.

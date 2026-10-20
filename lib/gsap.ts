@@ -19,6 +19,9 @@ export function initGSAP() {
   // The site's one easing: a quick start that settles slowly, like a pen stroke.
   CustomEase.create('stroke', 'M0,0 C0.18,0.7 0.24,1 1,1');
   gsap.defaults({ ease: 'stroke', duration: 0.9 });
+  // Phones show and hide their address bar while scrolling; re-measuring every time would
+  // make pinned scenes jump.
+  ScrollTrigger.config({ ignoreMobileResize: true });
   isRegistered = true;
   return gsap;
 }

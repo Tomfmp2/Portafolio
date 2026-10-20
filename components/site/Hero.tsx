@@ -5,7 +5,7 @@ import { useLanguage } from "@/hooks/use-language";
 import { links } from "@/lib/content";
 import { gsap, initGSAP, MEDIA, SplitText } from "@/lib/gsap";
 import { onIntro } from "@/lib/intro";
-import { PEN_APPROACH, penAlong, penHold, penWrite } from "@/lib/pen";
+import { scene, settle } from "@/lib/scene";
 import HighlighterCanvas from "./HighlighterCanvas";
 import Marked from "./Marked";
 import Note from "./Note";
@@ -45,83 +45,25 @@ export default function Hero() {
       offIntro = onIntro(() => {
         const tl = gsap.timeline({ delay: 0.15 });
         tl.to(split.chars, { yPercent: 0, duration: 1.2, ease: "expo.out", stagger: { each: 0.045, from: "start" } });
-        // The 3D pen comes down and draws: first a wide stroke under the surname, then the key phrase.
-        if (swipe)
-          tl.to({}, {
-            duration: PEN_APPROACH + 0.2,
-            onUpdate: () => {
-              const r = swipe.getBoundingClientRect();
-              penWrite(r.left, r.top + r.height * 0.5);
-            },
-          }, "-=0.5").to(swipe, {
-            scaleX: 1,
-            duration: 1.7,
-            ease: "power1.inOut",
-            onUpdate() {
-              // It grows with scaleX, so its right edge is exactly where the tip is.
-              const r = swipe.getBoundingClientRect();
-              penWrite(r.right, r.top + r.height * 0.5);
-            },
-          });
+        // A wide highlighter stroke under the surname, then the key phrase.
+        if (swipe) tl.to(swipe, { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, "-=0.4");
         tl.to(rest, { opacity: 1, y: 0, duration: 0.8, stagger: 0.08 }, "-=0.4");
-        if (mark)
-          tl.to({}, { duration: PEN_APPROACH, onUpdate: () => penAlong(mark, 0) }, "-=0.2").to(mark, {
-            "--hl": "100%",
-            duration: 1.6,
-            ease: "power1.inOut",
-            onUpdate() {
-              penAlong(mark, this.progress());
-            },
-          }, "-=0.3");
+        if (mark) tl.to(mark, { "--hl": "100%", duration: 1.1, ease: "power2.inOut" }, "-=0.3");
       });
 
-      // First stretch of scroll: the hero holds still (desktop) while the pen travels to the CV
-      // button and circles it, in step with the scroll. Scrolling back erases the ring.
+      // First stretch of scroll: the hero holds still while the scroll draws a hand-drawn ring
+      // around the CV button. Scrolling back erases it.
       const ring = el.querySelector<SVGPathElement>("[data-ring] path");
-      const owner = {};
       if (ring) {
-        const svg = ring.ownerSVGElement!;
-        const length = ring.getTotalLength();
-        const proxy = { p: 0 };
-        const tipAt = (d: number) => {
-          const pt = ring.getPointAtLength(d * length);
-          const box = svg.getBoundingClientRect();
-          const vb = svg.viewBox.baseVal;
-          penWrite(box.left + (pt.x / vb.width) * box.width, box.top + (pt.y / vb.height) * box.height);
-        };
-        const tl = gsap.timeline({
-          defaults: { ease: "none" },
-          scrollTrigger: {
-            trigger: el,
-            start: "top top",
-            end: desktop ? "+=90%" : "+=50%",
-            pin: desktop,
-            scrub: 1,
-            // Held only once the visitor has actually started this stretch, not while resting at the top.
-            onUpdate: (self) => penHold(owner, self.progress > 0.001 && self.progress < 0.999),
-            onLeave: () => penHold(owner, false),
-            onLeaveBack: () => penHold(owner, false),
-          },
-        });
-        // A fifth of the range to reach the button, the rest to draw around it.
-        tl.to(proxy, {
-          p: 1,
-          duration: 1,
-          onUpdate: () => {
-            const d = Math.max(0, (proxy.p - 0.2) / 0.8);
-            gsap.set(ring, { drawSVG: `${d * 100}%` });
-            tipAt(d);
-          },
-        });
+        const tl = scene(el, desktop ? 90 : 70, { start: "top top" });
+        tl.fromTo(ring, { drawSVG: "0%" }, { drawSVG: "100%", duration: 1 });
         // While pinned, the two rows of the name drift apart, as if the page turns.
         if (desktop) {
           tl.to(rows[0], { xPercent: -6, duration: 1 }, 0).to(rows[1], { xPercent: 8, duration: 1 }, 0);
         }
+        settle(tl);
       }
-      return () => {
-        penHold(owner, false);
-        split.revert();
-      };
+      return () => split.revert();
     });
 
     return () => {
@@ -142,7 +84,7 @@ export default function Hero() {
             <span data-name-row className="relative z-[1] block">
               {h.name[1]}
             </span>
-            {/* The stroke the pen draws under the surname on arrival */}
+            {/* The highlighter stroke drawn under the surname on arrival */}
             <span data-swipe className="hero-swipe" aria-hidden="true" />
           </span>
         </h1>
