@@ -24,8 +24,7 @@
 - [Estructura del Proyecto](#-estructura-del-proyecto)
 - [Instalación y Uso Local](#-instalación-y-uso-local)
 - [Despliegue](#-despliegue)
-- [Secciones del Portafolio](#-secciones-del-portafolio)
-- [Experiencia de partículas](#-experiencia-de-partículas)
+- [Diseño y experiencia](#-diseño-y-experiencia)
 - [Autor](#-autor)
 - [Licencia](#-licencia)
 
@@ -43,7 +42,6 @@ El sitio combina un diseño limpio y moderno con un stack tecnológico de alto r
 - 🎨 Interfaz completamente responsiva con **Tailwind CSS v4**
 - 🧩 Componentes accesibles y reutilizables con **Radix UI / shadcn/ui**
 - 📊 Analíticas de visitas integradas con **Vercel Analytics**
-- 🌙 Soporte para modo claro/oscuro con `next-themes`
 - 💯 Código 100% tipado en **TypeScript**
 
 ---
@@ -172,67 +170,42 @@ Para desplegar tu propia instancia:
 
 ---
 
-## 🗂️ Secciones del Portafolio
+## ✨ Diseño y experiencia
 
-Cada sección es un capítulo del scroll. Una sola nube de partículas se reensambla en la forma de cada capítulo:
+**Concepto: una hoja de vida subrayada.** El sitio se lee como un documento que alguien ya repasó con fosforito: lo que un reclutador debe recordar se subraya en lima mientras se hace scroll, y las notas a mano del margen comentan cada dato. El marcador es el único elemento llamativo; todo lo demás es papel y tinta.
 
-| Sección (`id`) | Forma de las partículas | Contenido |
+| Token | Valor | Uso |
 |---|---|---|
-| Inicio (`#inicio`) | Commodore 64 | Nombre, rol, CV y acceso a proyectos |
-| Cómo trabajo (`#habilidades`) | Cuatro anillos concéntricos | Clean Architecture capa por capa, con el stack de cada una |
-| OCAP (`#proyectos`) | Grafo de servicios sobre una esfera | Proyecto destacado .NET |
-| Feria Mágica (`#feria-magica`) | Bola de nieve | Web y API en producción para un cliente |
-| Más proyectos (`#mas-proyectos`) | Pantalla en modo texto | Proyectos de formación y demos en terminal |
-| Sobre mí (`#sobre-mi`) | Nube dispersa | Formación y datos personales |
-| Contacto (`#contacto`) | Monograma `tfm` | Correo, CV y formulario |
+| Papel | `#F2EFE6` | Fondo |
+| Tinta | `#111111` | Texto y trazos |
+| Marcador | `#D4FF3A` | Solo como fondo de subrayado o relleno, nunca como texto sobre papel (no pasa contraste) |
+| Noche | `#141414` | La sección de OCAP |
 
----
+Tipografía: **Bricolage Grotesque** (títulos y texto, con sus ejes de ancho y tamaño óptico), **Reenie Beanie** solo para las notas a mano y **JetBrains Mono** solo en la terminal.
 
-## ✨ Experiencia de partículas
+**Recorrido** (`app/page.tsx`, componentes en `components/site/`):
 
-**Cómo funciona.** `components/experience/` dibuja un único `THREE.Points` fijo detrás de la página. La geometría guarda las siete formas como atributos (`a_c64`, `a_layers`, …) y el vertex shader las mezcla con pesos, así que cambiar de forma no copia datos en la CPU.
+| Sección | Qué ocurre |
+|---|---|
+| Precarga | Cortina de tinta con contador. Una vez por sesión; un script en `<head>` evita destellos y la omite con movimiento reducido. |
+| Portada | El nombre entra letra a letra. Con ratón se puede subrayar arrastrando (`HighlighterCanvas`). Un marcador 3D sigue al puntero y gira con el scroll. |
+| Si tienes 30 segundos | Sección fija en escritorio: tres afirmaciones se leen palabra a palabra, se subrayan y se anotan. |
+| Verbos | Aprender, construir, probar, entregar, en dos filas que se deslizan en sentidos opuestos. |
+| Proyectos | Cada caso cuenta qué aprendí, con una línea que avanza con el scroll. OCAP va en una hoja nocturna que se desliza sobre el papel. |
+| Cómo pienso un sistema | Las capas de la arquitectura como placas en CSS 3D que se separan con el scroll. |
+| Sobre mí y contacto | Línea de tiempo que se dibuja, correo que se copia con un clic y teclas 3D cuyo Enter también lo copia. |
 
-**Una sola fuente de verdad.** `lib/experience/chapters.ts` define el orden de los capítulos y la pose de cámara y objeto de cada uno (escritorio y móvil). `Experience.tsx` traduce el scroll a un número, `scrollState.chapter` (2.4 = 40 % del camino entre el capítulo 2 y el 3), mediante un `ScrollTrigger` por sección. La forma, la cámara y la turbulencia se derivan de ese número en `useFrame`. No hay timelines paralelos que puedan desincronizarse.
+**Cómo está organizado el movimiento.** `lib/gsap.ts` registra GSAP y sus plugins una sola vez. `components/site/Motion.tsx` aplica los comportamientos comunes por atributo (`data-hl`, `data-note`, `data-lines`, `data-count`, `data-parallax`); cada sección con coreografía propia se marca con `data-motion-owned`. El contenido se vuelve a montar al cambiar de idioma (`key={lang}`) para que SplitText nunca choque con React.
 
-**Un viaje, no diapositivas.** Cada capítulo es una estación más al fondo de la escena (`stationAt`, separadas por `STATION_GAP` y con una trayectoria que serpentea). Mientras la nube cambia de forma, la cámara vuela a la siguiente estación y atraviesa un portal con el número y el nombre del nivel. La velocidad del vuelo (`journey.warp`) abre el campo de visión, estira las partículas y las estrellas en estelas y aumenta la aberración cromática. El decorado vive en `components/experience/World.tsx`: rejilla retro en el suelo, polvo, bloques de píxeles y portales. Solo aporta profundidad; no contiene información.
+**3D.** `components/site/three/` contiene el marcador y las teclas, modelados en código (sin modelos ni HDR descargados). Se cargan solo en el cliente y solo renderizan mientras están en pantalla.
 
 **Accesibilidad y rendimiento.**
-- El scroll es nativo (Lenis solo lo suaviza en escritorio); nada se fija con pin ni secuestra el desplazamiento.
-- `prefers-reduced-motion`: la escena salta a cada forma sin animar, sin turbulencia, parallax ni estelas, y renderiza bajo demanda. Los textos aparecen completos y sin efectos.
-- Postproducción (bloom, aberración cromática y viñeta) solo en equipos que no son de bajo consumo.
-- Sin WebGL se muestra un fondo estático; todo el contenido está en el DOM.
-- Partículas: 36 000 en escritorio, 22 000 en equipos de bajo consumo y 14 000 en móvil.
-- Medido con Chrome y GPU real (Intel UHD): 60 fps durante el scroll, también con la CPU estrangulada ×4.
+- Con `prefers-reduced-motion` todo el texto aparece completo y estático, sin precarga ni 3D animado.
+- El cursor lima acompaña al puntero del sistema, que nunca se oculta.
+- Las notas que repiten un dato del texto se ocultan a los lectores de pantalla; las cintas animadas tienen su texto equivalente.
+- Medido en Chrome headless con GPU: unos 50 fps durante el scroll continuo con todos los efectos activos.
 
-**Capa de juego.** El portafolio se recorre como un juego, con el C64 como hilo conductor:
-
-| Pieza | Archivo | Qué hace |
-|---|---|---|
-| Pantalla de arranque | `components/experience/BootScreen.tsx` | Arranque de C64 que pide elegir con o sin sonido; al entrar se encoge dentro del monitor de partículas. Se muestra una vez por sesión, se cierra con Escape y no aparece sin JavaScript. |
-| Partículas interactivas | `components/experience/ParticleCloud.tsx` | El cursor las empuja, un clic o un toque lanza una onda y arrastrar gira el objeto. Mover el ratón rápido agita la bola de nieve. Pasar el cursor (o el foco) por una capa de «Cómo trabajo» levanta su anillo. |
-| Disquetes | `components/experience/Floppies.tsx` | Un disquete de 5¼" por proyecto: al hacer clic carga la demo de terminal o abre el repositorio. La lista del DOM ofrece las mismas acciones con teclado. |
-| HUD | `components/experience/Hud.tsx` | Niveles 1–7 (clicables), una pista de control por nivel, sonido y consola. |
-| Consola | `components/experience/Console.tsx` | Se abre con `/`. Comandos como `AYUDA`, `LISTA`, `IR 3`, `CARGAR "OCAP"`, `DEMO BANCO`, `CV`, `SONIDO` e `IDIOMA`. |
-| Tipografía | `components/experience/TextFx.tsx`, `SplitChars.tsx` | Los títulos se arman letra a letra y las etiquetas se descifran como en la pantalla del C64. En escritorio, el texto de cada capítulo llega desde el fondo y pasa junto a la cámara al salir. Las letras del nombre reaccionan al cursor. `SplitChars` genera las letras con React, así que el cambio de idioma no rompe nada. |
-| Sonido | `lib/experience/sound.ts` | Efectos tipo chip SID sintetizados con WebAudio, sin archivos. Solo suenan si el visitante lo elige. |
-
-El DOM y la escena se comunican mediante `lib/experience/store.ts` (estado mutable que la escena lee en cada frame, más eventos para React). La capa de la página (`.page-ui`) deja pasar los eventos del puntero al canvas, salvo en el texto, la navegación y los diálogos.
-
-**Modelos.** Los modelos originales no se descargan en el sitio (el C64 pesa unos 100 MB por sus texturas 4K). `scripts/bake-particles.mjs` muestrea su superficie una sola vez y guarda 40 000 puntos en `public/particles/*.bin` (234 KB cada uno). Para regenerarlos:
-
-```bash
-node scripts/bake-particles.mjs commodore_64__computer_full_pack.glb public/particles/c64.bin \
-  --count 40000 --weight cable=0 --weight connector=0 --weight peripherals=0 \
-  --weight monitor_plug=0 --weight monitor_screen=2.5
-node scripts/bake-particles.mjs snow_globe.glb public/particles/globe.bin \
-  --count 40000 --weight material_0=0.15 --weight Material.003=0.2 --weight sneg=0.7
-```
-
-Las formas restantes (anillos, grafo, pantalla, nube y monograma) son procedurales a propósito: son diagramas, no sustitutos de modelos.
-
-**Créditos (CC BY 4.0, atribución obligatoria, visible en el footer):**
-- [Commodore 64 || Computer (Full Pack)](https://sketchfab.com/3d-models/commodore-64-full-pack-1f43612fa2d54041bbe2bdff8164c2cd) de dark_igorek.
-- [Snow Globe](https://sketchfab.com/3d-models/none-090bfce9ce394b11bcef261636827b94) de celestial fox.
+**Contenido.** Todo el texto, en español e inglés, está en `lib/content.ts`. Las frases entre `==así==` se subrayan.
 
 ---
 
