@@ -1,61 +1,72 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
-
 /*
- * Palette taken from the Commodore 64 the story starts on: its night-blue
- * border, the boot-screen blue, the phosphor lavender of its text, plus one
- * amber "signal" reserved for actions and highlights.
+ * "A CV someone already went over with a highlighter."
+ * Paper and ink for everything; the lime marker is reserved for the facts a
+ * recruiter should remember. Lime is only ever a background behind ink (or
+ * ink-coloured text on night), never text on paper: it fails contrast there.
  */
 :root {
-  --void: #07061a;
-  --c64: #352879;
-  --c64-deep: #1c1650;
-  --phosphor: #9c92f0;
-  --signal: #f4b942;
-  --paper: #edebf7;
-  --dim: #a3a0c2;
-  --line: rgb(156 146 240 / 0.22);
+  --paper: #f2efe6;
+  --paper-deep: #e8e4d8;
+  --ink: #111111;
+  --ink-soft: #57554d;
+  --rule: #d6d1c3;
+  --marker: #d4ff3a;
+  --night: #141414;
+  --night-soft: #a3a097;
+  --night-rule: #34332f;
+
+  --page-max: 1440px;
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+  --ease-stroke: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Type scale: a fourth (1.333) from a 17px body, display sizes fluid. */
+  --step--1: 0.8125rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.4167rem;
+  --step-2: clamp(1.6rem, 2.4vw, 1.9rem);
+  --step-3: clamp(2.2rem, 4.4vw, 3.6rem);
+  --step-4: clamp(2.6rem, 6.2vw, 5.6rem);
+  --step-display: clamp(4.2rem, 17.5vw, 19rem);
 
   /* shadcn tokens (components/ui) mapped onto the palette */
-  --background: var(--void);
-  --foreground: var(--paper);
-  --card: var(--c64-deep);
-  --card-foreground: var(--paper);
-  --popover: var(--c64-deep);
-  --popover-foreground: var(--paper);
-  --primary: var(--signal);
-  --primary-foreground: var(--void);
-  --secondary: var(--c64);
-  --secondary-foreground: var(--paper);
-  --muted: var(--c64-deep);
-  --muted-foreground: var(--dim);
-  --accent: var(--phosphor);
-  --accent-foreground: var(--void);
-  --destructive: #ff6b6b;
-  --destructive-foreground: var(--void);
-  --border: var(--line);
-  --input: var(--line);
-  --ring: var(--signal);
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper);
+  --card-foreground: var(--ink);
+  --popover: var(--paper);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--paper);
+  --secondary: var(--paper-deep);
+  --secondary-foreground: var(--ink);
+  --muted: var(--paper-deep);
+  --muted-foreground: var(--ink-soft);
+  --accent: var(--marker);
+  --accent-foreground: var(--ink);
+  --destructive: #b42318;
+  --destructive-foreground: #b42318;
+  --border: var(--rule);
+  --input: var(--rule);
+  --ring: var(--ink);
   --radius: 0.5rem;
-
-  --page-max: 1360px;
-  --page-px: clamp(1rem, 5vw, 4.5rem);
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
-  --font-sans: var(--font-archivo), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
-  --color-void: var(--void);
-  --color-c64: var(--c64);
-  --color-c64-deep: var(--c64-deep);
-  --color-phosphor: var(--phosphor);
-  --color-signal: var(--signal);
+  --font-sans: var(--font-bricolage), system-ui, sans-serif;
+  --font-hand: var(--font-hand), cursive;
+  --font-mono: var(--font-mono-code), ui-monospace, monospace;
   --color-paper: var(--paper);
-  --color-dim: var(--dim);
-  --color-line: var(--line);
+  --color-paper-deep: var(--paper-deep);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-rule: var(--rule);
+  --color-marker: var(--marker);
+  --color-night: var(--night);
+  --color-night-soft: var(--night-soft);
+  --color-night-rule: var(--night-rule);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -86,511 +97,568 @@
     @apply border-border;
   }
   html {
-    background: var(--void);
-    color-scheme: dark;
+    background: var(--paper);
+    color-scheme: light;
   }
   body {
-    background: var(--void);
-    color: var(--paper);
+    background: var(--paper);
+    color: var(--ink);
     font-family: var(--font-sans);
-    font-variation-settings: 'wdth' 100;
+    font-size: var(--step-0);
+    line-height: 1.55;
+    font-variation-settings: 'opsz' 14;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
   ::selection {
-    background: var(--signal);
-    color: var(--void);
+    background: var(--marker);
+    color: var(--ink);
   }
   :focus-visible {
-    outline: 2px solid var(--signal);
+    outline: 2px solid var(--ink);
     outline-offset: 3px;
     border-radius: 2px;
   }
-}
-
-/* ---------- Layout ---------- */
-
-.page-container {
-  width: 100%;
-  max-width: var(--page-max);
-  margin-inline: auto;
-  padding-inline: var(--page-px);
+  .on-night :focus-visible {
+    outline-color: var(--marker);
+  }
 }
 
 /*
- * A chapter is a tall scroll span whose copy stays pinned (sticky, not
- * scroll-jacked) while the particles hold, then lets go as they morph.
- * svh keeps the composition stable when mobile browser bars show and hide.
+ * Component classes live in a layer so Tailwind utilities on the same
+ * element (min-h-11, px-5, absolute…) can still adjust them.
  */
-.chapter {
-  position: relative;
-  min-height: 170svh;
-}
-.chapter-copy {
-  position: relative;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-block: 6rem 4rem;
-}
-.chapter-text {
-  max-width: 34rem;
-}
-/* Pin only when the copy fits: a sticky block taller than the viewport hides its own end. */
-@media (min-width: 768px) and (min-height: 900px) {
-  .chapter-copy {
-    position: sticky;
-    top: 0;
-  }
-}
+@layer components {
+  /* ---------- Layout ---------- */
 
-@media (max-width: 767px) {
-  .chapter {
-    min-height: auto;
-    /* Room at the top for the shape, which sits in the upper half on phones. */
-    padding-top: 52svh;
+  .wrap {
+    width: 100%;
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
   }
-  .chapter-copy {
+  .section {
     position: relative;
-    min-height: 0;
-    padding-block: 0 5rem;
+    padding-block: clamp(6rem, 14vw, 11rem);
   }
-  /* Scrim so copy stays legible where it overlaps the particles. */
-  .chapter-text {
-    background: linear-gradient(to bottom, rgb(7 6 26 / 0), rgb(7 6 26 / 0.86) 3rem);
-    padding-top: 3rem;
-    margin-top: -3rem;
+
+  /* Paper grain: a fixed, very faint noise so the cream reads as paper, not as a flat fill. */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    pointer-events: none;
+    opacity: 0.07;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- Type ---------- */
+
+  .display {
+    font-size: var(--step-display);
+    font-weight: 800;
+    font-variation-settings: 'opsz' 96, 'wdth' 75;
+    line-height: 0.8;
+    letter-spacing: -0.045em;
+  }
+  .headline {
+    font-size: var(--step-4);
+    font-weight: 700;
+    font-variation-settings: 'opsz' 96, 'wdth' 80;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  .title {
+    font-size: var(--step-3);
+    font-weight: 700;
+    font-variation-settings: 'opsz' 72, 'wdth' 85;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  .statement {
+    font-size: var(--step-3);
+    font-weight: 600;
+    font-variation-settings: 'opsz' 60, 'wdth' 90;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .lead {
+    font-size: var(--step-1);
+    line-height: 1.4;
+    font-variation-settings: 'opsz' 24;
+    text-wrap: pretty;
+  }
+  .body-copy {
+    max-width: 62ch;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+  .on-night .body-copy {
+    color: var(--night-soft);
+  }
+  .small {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .on-night .small {
+    color: var(--night-soft);
+  }
+
+  /* SplitText line masks: room for descenders so the mask doesn't crop them. */
+  .line-mask-inner-mask {
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+
+  /* ---------- Highlighter ---------- */
+
+  /*
+   * The marker is a background whose width GSAP animates through --hl. With the
+   * default box-decoration-break (slice) a wrapped phrase is one continuous strip,
+   * so the sweep runs line by line in reading order, like a real pen.
+   */
+  .hl {
+    --hl: 100%;
+    color: inherit;
+    background-color: transparent;
+    background-image: linear-gradient(100deg, transparent 0.15em, var(--marker) 0.3em, var(--marker) calc(100% - 0.25em), transparent calc(100% - 0.05em));
+    background-repeat: no-repeat;
+    background-position: 0 62%;
+    background-size: var(--hl) 0.82em;
+    padding-inline: 0.1em;
+    margin-inline: -0.1em;
+  }
+  .on-night .hl {
+    color: var(--ink);
+    background-size: var(--hl) 1.05em;
+    background-position: 0 55%;
+  }
+
+  /* ---------- Margin notes ---------- */
+
+  .note {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    font-family: var(--font-hand);
+    font-size: clamp(1.5rem, 2.2vw, 1.9rem);
+    line-height: 1;
+    color: var(--ink-soft);
+    transform: rotate(-3deg);
+  }
+  .on-night .note {
+    color: var(--night-soft);
+  }
+  .note svg {
+    flex: none;
+    overflow: visible;
+  }
+
+  /* ---------- Controls ---------- */
+
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3.25rem;
+    padding: 0 1.6rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-variation-settings: 'opsz' 18;
+    transition: background-color 0.25s, color 0.25s, transform 0.4s var(--ease-stroke);
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .btn-ink {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  /* The marker swipes in behind the label on hover. */
+  .btn-ink::before,
+  .btn-line::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--marker);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s var(--ease-stroke);
+  }
+  .btn-ink:hover,
+  .btn-line:hover {
+    color: var(--ink);
+  }
+  .btn-ink:hover::before,
+  .btn-line:hover::before {
+    transform: scaleX(1);
+  }
+  .btn-line {
+    border: 1.5px solid currentColor;
+    color: var(--ink);
+  }
+  .on-night .btn-line {
+    color: var(--paper);
+  }
+  .btn:active {
+    transform: scale(0.97);
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: progress;
+  }
+
+  .link {
+    background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1.5px no-repeat;
+    transition: background-size 0.4s var(--ease-stroke);
+  }
+  .link:hover {
+    background-size: 0 1.5px;
+    background-position: 100% 100%;
+  }
+
+  /* ---------- Header ---------- */
+
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 60;
+    transition: transform 0.5s var(--ease-stroke), background-color 0.3s;
+  }
+  .site-header.is-hidden {
+    transform: translateY(-110%);
+  }
+  .site-header.is-solid {
+    background: rgb(242 239 230 / 0.88);
+    backdrop-filter: blur(10px);
+  }
+
+  /* The wordmark's own detail: the acute on the á is a stroke of the highlighter. */
+  .wordmark {
+    position: relative;
+    display: inline-block;
+    isolation: isolate;
+    font-weight: 800;
+    font-variation-settings: 'opsz' 48, 'wdth' 75;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+  .wordmark .accent {
+    position: relative;
+    display: inline-block;
+  }
+  .wordmark .accent::after {
+    content: '';
+    position: absolute;
+    left: 0.1em;
+    top: 0.08em;
+    width: 0.4em;
+    height: 0.15em;
+    background: var(--marker);
+    border-radius: 0.05em;
+    transform: rotate(-24deg) scaleX(var(--accent-scale, 1));
+    transform-origin: left center;
+    z-index: -1;
+  }
+
+  .menu-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: var(--ink);
+    color: var(--paper);
+    clip-path: inset(0 0 100% 0);
+  }
+  .menu-link {
+    display: inline-block;
+    font-size: clamp(2.6rem, 8vw, 6.5rem);
+    font-weight: 700;
+    font-variation-settings: 'opsz' 96, 'wdth' 78;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .menu-link:hover .hl,
+  .menu-link:focus-visible .hl {
+    --hl: 100%;
+    color: var(--ink);
+  }
+  .menu-link .hl {
+    --hl: 0%;
+    background-size: var(--hl) 1em;
+    transition: background-size 0.45s var(--ease-stroke), color 0.2s;
+  }
+
+  /* ---------- Preloader ---------- */
+
+  /* Hidden unless the head script says JS runs and this session hasn't seen it. */
+  .preloader {
+    display: none;
+  }
+  html.js:not(.intro-seen) .preloader {
+    display: grid;
+  }
+  .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    place-items: end start;
+    padding: var(--gutter);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  /* ---------- Cursor ---------- */
+
+  .cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 95;
+    width: 3.4rem;
+    height: 3.4rem;
+    margin: -1.7rem 0 0 -1.7rem;
+    border-radius: 50%;
+    background: var(--marker);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    transform: scale(0.18);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .cursor-dot.is-visible {
+    opacity: 1;
+  }
+
+  /* ---------- Hero ---------- */
+
+  .hero-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    touch-action: pan-y;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .hero-content :where(a, button) {
+    pointer-events: auto;
+  }
+
+  /* ---------- Highlights (pinned statements) ---------- */
+
+  /* Statements stack in one cell on desktop (they replace each other while pinned) and flow on phones. */
+  .hl-stage {
+    display: grid;
+    gap: 4rem;
+  }
+  /* Only when animated: with reduced motion all three are simply listed. */
+  @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+    .hl-stage > * {
+      grid-area: 1 / 1;
+    }
+  }
+  /* The "draw on the hero" hint only makes sense with a mouse or pen. */
+  @media not ((hover: hover) and (pointer: fine)) {
+    .pointer-hint {
+      display: none !important;
+    }
+  }
+
+  /* ---------- Work ---------- */
+
+  .stat-value {
+    font-size: var(--step-4);
+    font-weight: 700;
+    font-variation-settings: 'opsz' 96, 'wdth' 80;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .on-night {
+    background: var(--night);
+    color: var(--paper);
+  }
+
+  .code-panel {
+    font-family: var(--font-mono);
+    font-size: clamp(0.72rem, 0.95vw, 0.85rem);
+    line-height: 1.7;
+    border: 1px solid var(--night-rule);
+    border-radius: 0.75rem;
+    background: #0c0c0c;
+    overflow: auto;
+  }
+  .tok-kw { color: #c9a8ff; }
+  .tok-type { color: var(--marker); }
+  .tok-str { color: #f2c48d; }
+  .tok-com { color: #6f6d66; }
+  .tok-num { color: #8fd6ff; }
+
+  .module-tile {
+    position: relative;
+    padding: 0.9rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
+  .module-tile svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .project-row {
+    border-top: 1.5px solid var(--ink);
+  }
+  .project-row:last-child {
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .project-row .hl {
+    --hl: 0%;
+    transition: background-size 0.5s var(--ease-stroke);
+  }
+  .project-row:hover .hl,
+  .project-row:focus-within .hl {
+    --hl: 100%;
+  }
+
+  /* ---------- Layers (CSS 3D stack) ---------- */
+
+  .layer-scene {
+    perspective: 1600px;
+  }
+  .layer-stack {
+    transform-style: preserve-3d;
+    transform: rotateX(58deg) rotateZ(-38deg);
+  }
+  .layer-plate {
+    position: absolute;
+    inset: 0;
+    border: 1.5px solid var(--ink);
+    border-radius: 1.25rem;
+    background: var(--paper);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-variation-settings: 'opsz' 48, 'wdth' 80;
+    font-size: clamp(1.1rem, 2vw, 1.6rem);
+    box-shadow: 0 1.5rem 2.5rem -1.5rem rgb(17 17 17 / 0.35);
+  }
+  .layer-plate.is-core {
+    background: var(--marker);
+  }
+
+  .marquee {
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .marquee-track {
+    display: flex;
+    flex: none;
+    gap: 3rem;
+    padding-right: 3rem;
+  }
+
+  /* ---------- Contact ---------- */
+
+  .band {
+    background: var(--marker);
+    color: var(--ink);
   }
 }
 
-/* ---------- Experience layer ---------- */
-
-.experience-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  /* Soft blue horizon so the void is never flat black. */
-  background:
-    radial-gradient(120% 70% at 75% 110%, rgb(53 40 121 / 0.55), transparent 60%),
-    var(--void);
-}
-/* Veil behind the text column: copy stays legible whatever the particles do. */
-.experience-layer::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgb(7 6 26 / 0.78) 0%, rgb(7 6 26 / 0.5) 38%, transparent 58%);
-  pointer-events: none;
-}
-/* Vertical swipes over the scene must still scroll the page on touch screens. */
-.experience-layer canvas {
-  touch-action: pan-y !important;
-}
-
-/*
- * The page UI sits above the scene but lets pointer events fall through to it,
- * except where there is something to read or press.
- */
-.page-ui {
-  pointer-events: none;
-}
-.page-ui :where(header, footer, .chapter-text, .hud, [role='dialog'], .pointer-events-auto) {
-  pointer-events: auto;
-}
-@media (max-width: 767px) {
-  .experience-layer::after { content: none; }
-}
-.experience-fallback {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(1px 1px at 20% 30%, var(--paper) 50%, transparent 51%),
-    radial-gradient(1px 1px at 70% 20%, var(--phosphor) 50%, transparent 51%),
-    radial-gradient(1px 1px at 40% 80%, var(--paper) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 85% 60%, var(--signal) 50%, transparent 51%),
-    radial-gradient(60% 50% at 75% 45%, rgb(156 146 240 / 0.18), transparent 70%);
-  background-size: 240px 240px, 300px 300px, 200px 200px, 420px 420px, 100% 100%;
-}
-
-/* ---------- Type ---------- */
-
-/*
- * The name is the one loud element: Archivo at full width and weight, extruded
- * with stacked offsets in C64 blue — the boot-logo shadow, not a drop shadow.
- */
-.display-name {
-  font-size: clamp(3.4rem, 13vw, 11.5rem);
-  font-weight: 900;
-  font-variation-settings: 'wdth' 125;
-  line-height: 0.84;
-  letter-spacing: -0.02em;
-  color: var(--paper);
-  text-shadow:
-    1px 1px 0 var(--c64), 2px 2px 0 var(--c64), 3px 3px 0 var(--c64),
-    4px 4px 0 var(--c64), 5px 5px 0 var(--c64), 6px 6px 0 var(--c64),
-    7px 7px 0 var(--c64-deep), 8px 8px 0 var(--c64-deep), 9px 9px 0 var(--c64-deep);
-}
-.chapter-title {
-  font-size: clamp(2.2rem, 5.2vw, 4.4rem);
-  font-weight: 800;
-  font-variation-settings: 'wdth' 118;
-  line-height: 0.95;
-  letter-spacing: -0.015em;
-  text-wrap: balance;
-}
-.lede {
-  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
-  line-height: 1.55;
-  color: var(--dim);
-  text-wrap: pretty;
-}
-.prompt {
-  font-family: var(--font-mono);
-  color: var(--phosphor);
-}
-.cursor {
-  display: inline-block;
-  width: 0.6em;
-  height: 1.05em;
-  vertical-align: -0.15em;
-  background: var(--phosphor);
-  animation: blink 1.1s steps(1) infinite;
-}
-@keyframes blink {
-  50% { opacity: 0; }
-}
-
-/*
- * The page's one orchestrated entrance: the hero copy rises while the particles
- * assemble into the C64. Nothing else on the page animates in on its own.
- */
-.hero-rise {
-  animation: rise 0.9s var(--ease-out) both;
-  animation-delay: var(--rise-delay, 0ms);
-}
-@keyframes rise {
-  from { opacity: 0; transform: translateY(0.6em); }
-}
-.booting .hero-rise { animation-play-state: paused; }
-
-/* ---------- Boot screen ---------- */
-
-/*
- * The real C64 power-on palette: light-blue border, blue screen. Text is lifted
- * from the original #6C5EB5 to pass contrast on the blue.
- */
-.boot-screen {
-  --c64-border: #6c5eb5;
-  --c64-text: #b8b0fa;
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: grid;
-  place-items: center;
-  padding: clamp(1rem, 5vw, 4rem);
-  background: var(--c64-border);
-  transform-origin: 75% 48%;
-  transition:
-    transform 1.1s var(--ease-out),
-    opacity 0.5s ease 0.6s,
-    border-radius 1.1s var(--ease-out);
-}
-.boot-leaving {
-  transform: scale(0.16);
-  opacity: 0;
-  border-radius: 2.5rem;
-  pointer-events: none;
-}
-@media (max-width: 767px) {
-  .boot-screen { transform-origin: 50% 24%; }
-  .boot-leaving { transform: scale(0.3); }
-}
-.boot-inner {
-  width: min(100%, 64rem);
-  min-height: min(80svh, 40rem);
-  padding: clamp(1.25rem, 4vw, 3rem);
-  background:
-    repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.08) 0 1px, transparent 1px 3px),
-    var(--c64);
-  color: var(--c64-text);
-  font-family: var(--font-mono);
-  font-size: clamp(0.78rem, 1.7vw, 1.15rem);
-  line-height: 1.55;
-  text-transform: uppercase;
-}
-.boot-text {
-  white-space: pre-wrap;
-  font: inherit;
-}
-.boot-prompt {
-  margin-top: 1.5em;
-}
-.boot-button {
-  min-height: 2.75rem;
-  padding: 0 1.1rem;
-  border: 2px solid var(--c64-text);
-  color: var(--c64-text);
-  font: inherit;
-  text-transform: uppercase;
-}
-.boot-button:hover,
-.boot-button:focus-visible {
-  background: var(--c64-text);
-  color: var(--c64);
-  outline: none;
-}
-.boot-skip {
-  display: block;
-  margin-top: 1.75rem;
-  font: inherit;
-  font-size: 0.85em;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-@media (prefers-reduced-motion: reduce) {
-  .boot-screen { transition: opacity 0.2s; }
-  .boot-leaving { transform: none; }
-}
-
-/* ---------- HUD & console ---------- */
-
-.hud {
-  position: fixed;
-  inset-inline: 0;
-  bottom: 0;
-  z-index: 40;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem var(--page-px) max(1rem, env(safe-area-inset-bottom));
-  background: linear-gradient(to top, rgb(7 6 26 / 0.85), transparent);
-  pointer-events: none;
-}
-.hud > * { pointer-events: auto; }
-.hud-segment {
-  display: block;
-  width: 1.6rem;
-  height: 0.4rem;
-  border-radius: 999px;
-  background: var(--line);
-  transition: background-color 0.3s, width 0.3s var(--ease-out);
-}
-/* The button's hit area is larger than the bar it draws. */
-.hud-segment { position: relative; }
-.hud-segment::before { content: ''; position: absolute; inset: -0.6rem -0.15rem; }
-.hud-segment.is-done { background: var(--phosphor); }
-.hud-segment.is-active { width: 2.6rem; background: var(--signal); }
-.hud-segment:hover { background: var(--paper); }
-.hud-hint {
-  flex: 1;
-  max-width: 26rem;
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--dim);
-  pointer-events: none;
-}
-.hud-button {
-  display: grid;
-  place-items: center;
-  width: 2.6rem;
-  height: 2.6rem;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: rgb(7 6 26 / 0.6);
-  color: var(--paper);
-  font-size: 0.85rem;
-  transition: border-color 0.2s, color 0.2s;
-}
-.hud-button:hover { border-color: var(--phosphor); color: var(--phosphor); }
-.hud-button[aria-pressed='true'] { color: var(--signal); border-color: var(--signal); }
-@media (max-width: 767px) {
-  .hud-hint { display: none; }
-  .hud-segment { width: 0.9rem; }
-  .hud-segment.is-active { width: 1.6rem; }
-}
-
-.console {
-  --c64-border: #6c5eb5;
-  position: fixed;
-  z-index: 60;
-  right: var(--page-px);
-  bottom: 5.5rem;
-  width: min(34rem, calc(100vw - 2 * var(--page-px)));
-  border: 3px solid var(--c64-border);
-  background: var(--c64);
-  color: #b8b0fa;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  box-shadow: 0 24px 60px rgb(0 0 0 / 0.5);
-}
-.console-log {
-  height: 16rem;
-  overflow-y: auto;
-  padding: 0.75rem 1rem;
-  white-space: pre-wrap;
-  line-height: 1.5;
-}
-.console-input {
-  flex: 1;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-transform: uppercase;
-  caret-color: #b8b0fa;
-}
-.console-input:focus { outline: none; }
-.console:focus-within { border-color: #b8b0fa; }
-
-/* ---------- Controls ---------- */
-
-.btn-signal,
-.btn-quiet {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  min-height: 2.9rem;
-  padding: 0 1.35rem;
-  border-radius: 999px;
-  font-weight: 650;
-  font-size: 0.95rem;
-  transition: transform 0.25s var(--ease-out), background-color 0.25s, color 0.25s, border-color 0.25s;
-}
-.btn-signal {
-  background: var(--signal);
-  color: var(--void);
-}
-.btn-signal:hover { background: #ffd27a; }
-.btn-signal:active,
-.btn-quiet:active { transform: scale(0.97); }
-.btn-signal:disabled { opacity: 0.55; cursor: progress; }
-.btn-quiet {
-  border: 1px solid var(--line);
-  color: var(--paper);
-}
-.btn-quiet:hover { border-color: var(--phosphor); color: var(--phosphor); }
-
-.link-underline {
-  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
-  transition: background-size 0.3s var(--ease-out), color 0.2s;
-}
-.link-underline:hover { background-size: 100% 1px; color: var(--signal); }
+/* ---------- Reduced motion ---------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .cursor,
-  .hero-rise { animation: none; }
-  .btn-signal,
-  .btn-quiet,
-  .link-underline { transition: none; }
+  .btn,
+  .btn-ink::before,
+  .btn-line::before,
+  .link,
+  .site-header,
+  .menu-link .hl,
+  .project-row .hl {
+    transition: none;
+  }
+  .cursor-dot {
+    display: none;
+  }
 }
 
-/* ---------- Navbar ---------- */
-
-.nav-shell {
-  display: flex;
-  height: 3.5rem;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-inline: 0.6rem 0.5rem;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  transition: background-color 0.4s, border-color 0.4s, box-shadow 0.4s;
-}
-.nav-shell.is-solid {
-  background: rgb(7 6 26 / 0.72);
-  border-color: var(--line);
-  box-shadow: 0 10px 30px -12px rgb(0 0 0 / 0.6), inset 0 1px 0 rgb(237 235 247 / 0.04);
-  backdrop-filter: blur(14px) saturate(1.3);
-}
-.nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  border-radius: 6px;
-}
-.nav-brand svg { transition: transform 0.3s var(--ease-out), filter 0.3s; }
-.nav-brand:hover svg { transform: translateY(-1px); filter: drop-shadow(0 0 8px rgb(156 146 240 / 0.45)); }
-.logo-cursor { animation: logo-blink 1.1s steps(1) infinite; }
-@keyframes logo-blink { 50% { opacity: 0; } }
-
-.nav-link {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.45rem;
-  padding: 0.45rem 0.85rem;
-  border-radius: 999px;
-  font-size: 0.875rem;
-  color: var(--dim);
-  transition: color 0.2s, background-color 0.2s;
-}
-.nav-link:hover { color: var(--paper); background: rgb(156 146 240 / 0.08); }
-.nav-index {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--phosphor);
-  opacity: 0.7;
-}
-.nav-link[aria-current] { color: var(--paper); background: rgb(156 146 240 / 0.12); }
-.nav-link[aria-current] .nav-index { color: var(--signal); opacity: 1; }
-
-.lang-switch {
-  display: inline-flex;
-  padding: 0.2rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--dim);
-}
-.lang-switch span {
-  padding: 0.25rem 0.55rem;
-  border-radius: 999px;
-  transition: background-color 0.2s, color 0.2s;
-}
-.lang-switch .is-on { background: var(--c64); color: var(--paper); }
-.lang-switch:hover span:not(.is-on) { color: var(--paper); }
-
-@media (prefers-reduced-motion: reduce) {
-  .logo-cursor { animation: none; }
-  .nav-shell,
-  .nav-brand svg,
-  .nav-link { transition: none; }
+/* Feria Mágica: the stages a request passes through, on one rail. */
+@layer components {
+  .flow-steps {
+    display: grid;
+    gap: 2rem;
+  }
+  .flow-step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+  .flow-dot {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.2rem;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    background: var(--marker);
+  }
+  .flow-rail {
+    --rail: 1;
+    position: absolute;
+    left: calc(0.625rem - 0.75px);
+    top: 0.6rem;
+    bottom: 0.6rem;
+    width: 1.5px;
+    background: var(--ink);
+    transform: scaleY(var(--rail));
+    transform-origin: top;
+  }
+  @media (min-width: 900px) {
+    .flow-steps {
+      grid-template-columns: repeat(var(--flow-cols, 5), minmax(0, 1fr));
+    }
+    .flow-step {
+      grid-template-columns: 1fr;
+    }
+    .flow-rail {
+      left: 0.6rem;
+      right: 0.6rem;
+      top: calc(0.825rem - 0.75px);
+      bottom: auto;
+      width: auto;
+      height: 1.5px;
+      transform: scaleX(var(--rail));
+      transform-origin: left;
+    }
+  }
 }
 
-/* ---------- Text effects (TextFx) ---------- */
-
-.split-word {
-  display: inline-block;
-  white-space: nowrap;
-  perspective: 600px;
-}
-.split .char {
-  display: inline-block;
-  transform-origin: 50% 80%;
-  backface-visibility: hidden;
-}
-/* Letters of the name hop toward the cursor, with a smaller hop on their neighbours. */
-.display-name .char {
-  transition: transform 0.35s var(--ease-out), color 0.2s;
-}
-.display-name .char:hover {
-  transform: translateY(-0.09em) rotate(-4deg);
-  color: var(--signal);
-}
-.display-name .char:hover + .char,
-.display-name .char:has(+ .char:hover) {
-  transform: translateY(-0.04em);
-}
-/* Chapter copy flies in from the depth of the scene (desktop, see TextFx). */
-@media (min-width: 768px) {
-  .chapter-copy { perspective: 1100px; }
-  .chapter-text { transform-style: preserve-3d; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .display-name .char { transition: none; }
-  .display-name .char:hover,
-  .display-name .char:hover + .char,
-  .display-name .char:has(+ .char:hover) { transform: none; }
+@layer components {
+  .verb {
+    margin-right: 0.3em;
+    font-size: clamp(4rem, 13vw, 14rem);
+    font-weight: 800;
+    font-variation-settings: 'opsz' 96, 'wdth' 75;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+  }
+  .verb-outline .verb {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--ink);
+  }
 }

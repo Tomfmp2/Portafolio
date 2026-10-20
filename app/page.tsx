@@ -1,36 +1,45 @@
-import Experience from "@/components/experience/Experience";
-import BootScreen from "@/components/experience/BootScreen";
-import Hud from "@/components/experience/Hud";
-import Console from "@/components/experience/Console";
-import TextFx from "@/components/experience/TextFx";
-import Navbar from "@/components/portfolio/Navbar";
-import Hero from "@/components/portfolio/Hero";
-import Build from "@/components/portfolio/Build";
-import Projects from "@/components/portfolio/Projects";
-import About from "@/components/portfolio/About";
-import Contact from "@/components/portfolio/Contact";
-import Footer from "@/components/portfolio/Footer";
+"use client";
+
+import { useLanguage } from "@/hooks/use-language";
+import Preloader from "@/components/site/Preloader";
+import Header from "@/components/site/Header";
+import Cursor from "@/components/site/Cursor";
+import Motion from "@/components/site/Motion";
+import Hero from "@/components/site/Hero";
+import Highlights from "@/components/site/Highlights";
+import Verbs from "@/components/site/Verbs";
+import Work from "@/components/site/Work";
+import Layers from "@/components/site/Layers";
+import About from "@/components/site/About";
+import Contact from "@/components/site/Contact";
+import Footer from "@/components/site/Footer";
 
 export default function Home() {
+  const { lang } = useLanguage();
   return (
     <>
-      {/* One fixed WebGL layer for the whole page; sections scroll over it. */}
-      <Experience />
-      <div className="page-ui relative z-10">
-        <Navbar />
+      <Preloader />
+      <Header />
+      {/*
+        Keyed by language: switching remounts the content, so text that GSAP
+        split into lines and words is rebuilt from the new strings instead of
+        React patching a DOM that SplitText rewrote.
+      */}
+      <div key={lang}>
         <main id="contenido">
           <Hero />
-          <Build />
-          <Projects />
+          <Highlights />
+          <Verbs />
+          <Work />
+          <Layers />
           <About />
           <Contact />
         </main>
         <Footer />
-        <Hud />
-        <Console />
+        <Motion />
       </div>
-      <BootScreen />
-      <TextFx />
+      <Cursor />
+      <div className="grain" aria-hidden="true" />
     </>
   );
 }

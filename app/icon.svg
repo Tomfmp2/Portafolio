@@ -1,7 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" shape-rendering="crispEdges">
-  <rect width="28" height="28" rx="5" fill="#352879"/>
-  <g transform="translate(0 10)">
-    <path fill="#9c92f0" d="M3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM7 0h1v1h-1zM5 1h1v1h-1zM5 2h1v1h-1zM5 3h1v1h-1zM5 4h1v1h-1zM5 5h1v1h-1zM5 6h1v1h-1zM9 0h1v1h-1zM10 0h1v1h-1zM11 0h1v1h-1zM12 0h1v1h-1zM13 0h1v1h-1zM9 1h1v1h-1zM9 2h1v1h-1zM9 3h1v1h-1zM10 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM9 4h1v1h-1zM9 5h1v1h-1zM9 6h1v1h-1zM15 0h1v1h-1zM19 0h1v1h-1zM15 1h1v1h-1zM16 1h1v1h-1zM18 1h1v1h-1zM19 1h1v1h-1zM15 2h1v1h-1zM17 2h1v1h-1zM19 2h1v1h-1zM15 3h1v1h-1zM19 3h1v1h-1zM15 4h1v1h-1zM19 4h1v1h-1zM15 5h1v1h-1zM19 5h1v1h-1zM15 6h1v1h-1zM19 6h1v1h-1z"/>
-  </g>
-  <rect x="3" y="19" width="22" height="2" fill="#f4b942"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#111111"/>
+  <path d="M5 22.5 L27 17.5 L27.6 21.8 L5.6 26.8 Z" fill="#d4ff3a"/>
+  <path d="M8 6.5 H24 V10.5 H18.2 V25.5 H13.8 V10.5 H8 Z" fill="#f2efe6"/>
 </svg>

@@ -1,0 +1,322 @@
+/*
+ * All copy for the site, in both languages. Text wrapped in ==double equals==
+ * is drawn with the highlighter (see components/site/Marked.tsx): use it only
+ * for the facts a recruiter should take away, so the highlights stay meaningful.
+ */
+
+export const links = {
+  email: "tom.pradamd@gmail.com",
+  cv: "/CV/Tomas_Medina_CV.pdf",
+  github: "https://github.com/Tomfmp2",
+  linkedin: "https://www.linkedin.com/in/tomasmedinadev/",
+  telegram: "https://t.me/TomasMedinaDev",
+  ocap: "https://github.com/Tomfmp2/OCAP-Open-Conversational-Automation-Platform",
+  feria: "https://festivalmagico.vercel.app",
+  autotaller: "https://github.com/Tomfmp2/AutoTallerManager-",
+  tiquetes: "https://github.com/Tomfmp2/Sistema-de-Gesti-n-de-Tiquetes-A-reos",
+  betplay: "https://github.com/Tomfmp2/ligaBetplay_C-",
+  banking: "https://github.com/Tomfmp2/banking-system-Python",
+  techdistrib: "https://github.com/Tomfmp2/MySQL-2-final-project",
+};
+
+const es = {
+  meta: {
+    skip: "Saltar al contenido",
+    menu: "Menú",
+    closeMenu: "Cerrar menú",
+    switchLang: "Read in English",
+    switchLangShort: "EN",
+    home: "Tomás Medina, inicio",
+    loading: "Cargando",
+  },
+  nav: [
+    { label: "Lo importante", href: "#lo-importante" },
+    { label: "Proyectos", href: "#proyectos" },
+    { label: "Cómo pienso", href: "#como-trabajo" },
+    { label: "Sobre mí", href: "#sobre-mi" },
+    { label: "Contacto", href: "#contacto" },
+  ],
+  hero: {
+    name: ["Tomás", "Medina"],
+    lead: "Desarrollador backend junior. ==Aprendo rápido, termino lo que empiezo== y entrego código que otros pueden mantener.",
+    where: "Bucaramanga, Colombia. Disponible para trabajar en remoto.",
+    cv: "Descargar CV",
+    work: "Ver proyectos",
+    drawHint: "arrastra el cursor y subraya tú también",
+  },
+  highlights: {
+    title: "Si tienes 30 segundos",
+    items: [
+      { text: "Termino lo que empiezo: llevé ==dos proyectos completos== desde la idea hasta que funcionan de verdad.", note: "uno lo usa hoy un cliente real" },
+      { text: "Pruebo lo que construyo, así ==los cambios no dan miedo== ni al equipo ni a mí.", note: "más de 400 pruebas entre los dos" },
+      { text: "Aprendo rápido: en un año pasé de ==programas de consola a una plataforma completa==.", note: "y en 2027 empiezo Ingeniería en IA" },
+    ],
+    cv: "Descargar CV en PDF",
+  },
+  verbs: ["Aprender", "Construir", "Probar", "Entregar"],
+  work: {
+    title: "Proyectos",
+    live: "Abrir la web",
+    code: "Ver el código",
+    learnedTitle: "Lo que me dejó",
+    feria: {
+      name: "La Feria Mágica del Juguete",
+      when: "Sep – oct 2026",
+      role: "Mi primer cliente real",
+      summary: "La web del evento navideño del Centro Cultural del Oriente y el sistema con el que el equipo organizador inscribe a los participantes de la rifa.",
+      stats: [
+        { value: 174, label: "pruebas automatizadas" },
+        { value: 3, label: "escenas 3D en la web" },
+      ],
+      learned: [
+        { name: "Trabajar para alguien", text: "Entender lo que necesitaba el equipo organizador y ajustarme a sus tiempos." },
+        { name: "Cuidar los datos", text: "Proteger las cuentas y las inscripciones desde el principio, no como un extra." },
+        { name: "Llegar a producción", text: "Publicar algo que la gente usa de verdad y mantenerlo funcionando." },
+      ],
+      privateNote: "El código es privado del cliente.",
+      note: "en producción ahora mismo",
+    },
+    ocap: {
+      name: "OCAP",
+      when: "Jul 2026",
+      role: "Proyecto propio, open source",
+      summary: "Una plataforma open source para crear asistentes con IA que atienden conversaciones en varios canales. La construí por mi cuenta para aprender a diseñar un sistema grande de principio a fin.",
+      stats: [
+        { value: 255, label: "pruebas automatizadas" },
+        { value: 4, label: "proveedores de IA intercambiables" },
+      ],
+      learned: [
+        { name: "Pensar antes de programar", text: "Dividir un sistema grande en partes que se entienden y se pueden cambiar sin romper el resto." },
+        { name: "Automatizar la confianza", text: "Cada cambio pasa por las pruebas automáticas en integración continua." },
+        { name: "Usar la IA con criterio", text: "Integrar varios proveedores y poder cambiar de uno a otro sin reescribir nada." },
+      ],
+      note: "hecho por iniciativa propia",
+    },
+    more: {
+      title: "Otros proyectos",
+      lede: "Proyectos de mi formación. Tres de ellos puedes probarlos aquí mismo, en una terminal.",
+      demo: "Probar en la terminal",
+      all: "Todo mi código en GitHub",
+      items: [
+        { name: "AutoTallerManager", text: "La gestión de un taller automotriz: clientes, vehículos, órdenes y facturación.", stack: "C#, ASP.NET Core", href: links.autotaller },
+        { name: "Tiquetes aéreos", text: "Vuelos, reservas y un programa de millas.", stack: "C#, MySQL", href: links.tiquetes, demoId: "airline" },
+        { name: "Liga BetPlay", text: "Un simulador de torneo con calendario y tabla de posiciones.", stack: "C#", href: links.betplay, demoId: "betplay" },
+        { name: "Sistema bancario", text: "Cuentas, depósitos y retiros con sus validaciones.", stack: "Python", href: links.banking, demoId: "banking" },
+        { name: "TechDistrib", text: "La base de datos de un comercio, con su lógica dentro.", stack: "MySQL", href: links.techdistrib },
+      ],
+    },
+  },
+  layers: {
+    title: "Cómo pienso un sistema",
+    lede: "Por capas, de dentro hacia fuera. El núcleo, donde están las reglas del negocio, no depende de nada; todo lo demás se puede cambiar sin tocarlo.",
+    items: [
+      { name: "API", text: "La puerta de entrada: clara, segura y documentada." },
+      { name: "Infraestructura", text: "Bases de datos, mensajes y servicios externos: piezas reemplazables." },
+      { name: "Aplicación", text: "Lo que el sistema hace por quien lo usa, paso a paso." },
+      { name: "Dominio", text: "Las reglas del negocio: lo más importante y lo más protegido." },
+    ],
+    around: "Herramientas con las que trabajo",
+    tools: ["C#", ".NET", "ASP.NET Core", "Entity Framework", "SQL", "PostgreSQL", "Docker", "GitHub Actions", "xUnit", "Redis", "RabbitMQ", "React", "TypeScript", "Next.js", "Linux", "IA generativa"],
+  },
+  about: {
+    title: "Sobre mí",
+    paragraphs: [
+      "Soy Tomás Felipe Medina Prada, de Bucaramanga. Me formé como técnico en desarrollo de software en Campuslands, en un programa intensivo con proyectos en equipo.",
+      "Lo que más me define es ==cómo aprendo==: entiendo el problema, construyo una primera versión, la pruebo y la mejoro. Así pasé de mis primeros programas a proyectos completos en un año.",
+      "Busco un equipo donde aportar desde el primer día y seguir creciendo.",
+    ],
+    timelineTitle: "Trayectoria",
+    timeline: [
+      { when: "2025 – 2026", what: "Técnico en Desarrollo de Software", where: "Campuslands, Bucaramanga" },
+      { when: "Jul 2026", what: "Publico OCAP como proyecto open source", where: "GitHub" },
+      { when: "Sep – oct 2026", what: "Mi primer proyecto para un cliente", where: "Centro Cultural del Oriente" },
+      { when: "2027", what: "Ingeniería en Inteligencia Artificial y Ciencia de Datos", where: "UTS, inicio previsto" },
+    ],
+    facts: [
+      { term: "Ubicación", value: "Bucaramanga, Colombia" },
+      { term: "Modalidad", value: "Remoto o híbrido" },
+      { term: "Idiomas", value: "Español nativo, inglés intermedio (B1)" },
+    ],
+  },
+  contact: {
+    title: "Hablemos",
+    lede: "Busco mi primer rol como desarrollador backend o full-stack junior. También tomo proyectos freelance.",
+    copy: "Copiar correo",
+    copied: "Correo copiado",
+    elsewhere: "También estoy en",
+    formTitle: "O escríbeme aquí",
+    nameLabel: "Nombre",
+    emailLabel: "Tu correo",
+    messageLabel: "Mensaje",
+    messagePlaceholder: "Cuéntame de la vacante o del proyecto",
+    send: "Enviar mensaje",
+    sending: "Enviando…",
+    success: "Mensaje enviado. Te respondo a tu correo.",
+    failure: "No se pudo enviar el mensaje. Escríbeme directamente a tom.pradamd@gmail.com.",
+    errors: {
+      nameRequired: "Escribe tu nombre.",
+      emailRequired: "Escribe tu correo.",
+      emailInvalid: "Revisa el correo: falta algo, por ejemplo nombre@dominio.com.",
+      messageRequired: "Escribe un mensaje.",
+      messageMin: "El mensaje necesita al menos 10 caracteres.",
+    },
+  },
+  footer: {
+    band: "Código que se prueba, se despliega y se mantiene",
+    made: "Diseñado y programado por Tomás Medina.",
+    top: "Volver arriba",
+  },
+};
+
+export type Content = typeof es;
+
+const en: Content = {
+  meta: {
+    skip: "Skip to content",
+    menu: "Menu",
+    closeMenu: "Close menu",
+    switchLang: "Leer en español",
+    switchLangShort: "ES",
+    home: "Tomás Medina, home",
+    loading: "Loading",
+  },
+  nav: [
+    { label: "The short version", href: "#lo-importante" },
+    { label: "Projects", href: "#proyectos" },
+    { label: "How I work", href: "#como-trabajo" },
+    { label: "About", href: "#sobre-mi" },
+    { label: "Contact", href: "#contacto" },
+  ],
+  hero: {
+    name: ["Tomás", "Medina"],
+    lead: "Junior backend developer. ==I learn fast, I finish what I start== and I ship code other people can maintain.",
+    where: "Bucaramanga, Colombia. Available to work remotely.",
+    cv: "Download CV",
+    work: "See projects",
+    drawHint: "drag the cursor and highlight something yourself",
+  },
+  highlights: {
+    title: "If you have 30 seconds",
+    items: [
+      { text: "I finish what I start: I took ==two complete projects== from the idea to running in the real world.", note: "a real client uses one of them today" },
+      { text: "I test what I build, so ==changes aren't scary==, for the team or for me.", note: "over 400 tests across the two" },
+      { text: "I learn fast: in one year I went from ==console programs to a full platform==.", note: "and in 2027 I start a degree in AI" },
+    ],
+    cv: "Download CV as PDF",
+  },
+  verbs: ["Learn", "Build", "Test", "Ship"],
+  work: {
+    title: "Projects",
+    live: "Open the website",
+    code: "Read the code",
+    learnedTitle: "What it taught me",
+    feria: {
+      name: "La Feria Mágica del Juguete",
+      when: "Sep – Oct 2026",
+      role: "My first real client",
+      summary: "The website for the Centro Cultural del Oriente's Christmas fair, and the system the organising team uses to register raffle participants.",
+      stats: [
+        { value: 174, label: "automated tests" },
+        { value: 3, label: "3D scenes on the website" },
+      ],
+      learned: [
+        { name: "Working for someone", text: "Understanding what the organisers needed and fitting their deadlines." },
+        { name: "Taking care of data", text: "Protecting accounts and registrations from the start, not as an extra." },
+        { name: "Getting to production", text: "Shipping something people actually use and keeping it running." },
+      ],
+      privateNote: "The code belongs to the client and is private.",
+      note: "live right now",
+    },
+    ocap: {
+      name: "OCAP",
+      when: "Jul 2026",
+      role: "Personal project, open source",
+      summary: "An open-source platform for building AI assistants that handle conversations across several channels. I built it on my own to learn how to design a large system end to end.",
+      stats: [
+        { value: 255, label: "automated tests" },
+        { value: 4, label: "swappable AI providers" },
+      ],
+      learned: [
+        { name: "Thinking before coding", text: "Splitting a large system into parts you can understand and change without breaking the rest." },
+        { name: "Automating trust", text: "Every change goes through the automated tests in continuous integration." },
+        { name: "Using AI with judgement", text: "Integrating several providers and switching between them without rewriting anything." },
+      ],
+      note: "built on my own initiative",
+    },
+    more: {
+      title: "Other projects",
+      lede: "Projects from my training. You can try three of them right here, in a terminal.",
+      demo: "Try it in the terminal",
+      all: "All my code on GitHub",
+      items: [
+        { name: "AutoTallerManager", text: "Running a car repair shop: customers, vehicles, orders and invoicing.", stack: "C#, ASP.NET Core", href: links.autotaller },
+        { name: "Airline tickets", text: "Flights, bookings and a miles programme.", stack: "C#, MySQL", href: links.tiquetes, demoId: "airline" },
+        { name: "BetPlay League", text: "A tournament simulator with fixtures and a league table.", stack: "C#", href: links.betplay, demoId: "betplay" },
+        { name: "Banking system", text: "Accounts, deposits and withdrawals with their validation.", stack: "Python", href: links.banking, demoId: "banking" },
+        { name: "TechDistrib", text: "A retailer's database, with its logic built in.", stack: "MySQL", href: links.techdistrib },
+      ],
+    },
+  },
+  layers: {
+    title: "How I think about a system",
+    lede: "In layers, from the inside out. The core, where the business rules live, depends on nothing; everything else can change without touching it.",
+    items: [
+      { name: "API", text: "The front door: clear, secure and documented." },
+      { name: "Infrastructure", text: "Databases, messaging and external services: replaceable parts." },
+      { name: "Application", text: "What the system does for the people using it, step by step." },
+      { name: "Domain", text: "The business rules: the most important and best protected part." },
+    ],
+    around: "Tools I work with",
+    tools: es.layers.tools,
+  },
+  about: {
+    title: "About me",
+    paragraphs: [
+      "I'm Tomás Felipe Medina Prada, from Bucaramanga, Colombia. I trained as a software development technician at Campuslands, an intensive programme built around team projects.",
+      "What defines me most is ==how I learn==: I understand the problem, build a first version, test it and improve it. That's how I went from my first programs to complete projects in one year.",
+      "I'm looking for a team where I can contribute from day one and keep growing.",
+    ],
+    timelineTitle: "Timeline",
+    timeline: [
+      { when: "2025 – 2026", what: "Software Development Technician", where: "Campuslands, Bucaramanga" },
+      { when: "Jul 2026", what: "Released OCAP as open source", where: "GitHub" },
+      { when: "Sep – Oct 2026", what: "My first project for a client", where: "Centro Cultural del Oriente" },
+      { when: "2027", what: "BEng in Artificial Intelligence and Data Science", where: "UTS, planned start" },
+    ],
+    facts: [
+      { term: "Location", value: "Bucaramanga, Colombia" },
+      { term: "Work mode", value: "Remote or hybrid" },
+      { term: "Languages", value: "Native Spanish, intermediate English (B1)" },
+    ],
+  },
+  contact: {
+    title: "Let's talk",
+    lede: "I'm looking for my first role as a junior backend or full-stack developer. I also take freelance projects.",
+    copy: "Copy email",
+    copied: "Email copied",
+    elsewhere: "Also on",
+    formTitle: "Or write to me here",
+    nameLabel: "Name",
+    emailLabel: "Your email",
+    messageLabel: "Message",
+    messagePlaceholder: "Tell me about the role or the project",
+    send: "Send message",
+    sending: "Sending…",
+    success: "Message sent. I'll reply to your email.",
+    failure: "The message couldn't be sent. Write to me directly at tom.pradamd@gmail.com.",
+    errors: {
+      nameRequired: "Enter your name.",
+      emailRequired: "Enter your email.",
+      emailInvalid: "Check the email: something is missing, for example name@domain.com.",
+      messageRequired: "Write a message.",
+      messageMin: "The message needs at least 10 characters.",
+    },
+  },
+  footer: {
+    band: "Code that's tested, deployed and maintained",
+    made: "Designed and built by Tomás Medina.",
+    top: "Back to top",
+  },
+};
+
+export const content = { es, en };
