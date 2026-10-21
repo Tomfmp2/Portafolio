@@ -60,7 +60,7 @@ const es = {
     title: "Resumen técnico",
     items: [
       { text: "==Dos sistemas== desarrollados desde el análisis de requisitos hasta el despliegue en producción.", note: "uno en producción para el Centro Cultural del Oriente" },
-      { text: "==429 pruebas unitarias y de integración== se ejecutan en el pipeline de integración continua en cada cambio.", note: "174 en Feria Mágica, 255 en OCAP" },
+      { text: "Valido ==cada cambio con pruebas automatizadas== en el pipeline de integración continua antes de fusionarlo con la rama principal.", note: "pruebas unitarias y de integración" },
       { text: "Integración de IA: ==plataforma multicanal== con cuatro proveedores de modelos detrás de una interfaz común.", note: "OCAP, código abierto" },
     ],
     cv: "Descargar CV en PDF",
@@ -223,7 +223,7 @@ const en: Content = {
     title: "Technical summary",
     items: [
       { text: "==Two systems== built from requirements analysis through to production deployment.", note: "one in production for the Centro Cultural del Oriente" },
-      { text: "==429 unit and integration tests== run in the continuous integration pipeline on every change.", note: "174 in Feria Mágica, 255 in OCAP" },
+      { text: "I validate ==every change with automated tests== in the continuous integration pipeline before it reaches the main branch.", note: "unit and integration tests" },
       { text: "AI integration: ==a multichannel platform== with four model providers behind a common interface.", note: "OCAP, open source" },
     ],
     cv: "Download CV as PDF",
