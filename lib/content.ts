@@ -28,7 +28,9 @@ const es = {
     switchLangShort: "EN",
     home: "Tomás Medina, inicio",
     mainNav: "Principal",
-    headerNav: ["#proyectos", "#sobre-mi", "#contacto"],
+    headerNav: ["#lo-importante", "#proyectos", "#como-trabajo", "#sobre-mi"],
+    available: "Disponible para trabajar",
+    cta: "Hablemos",
     loading: "Cargando",
   },
   deck: {
@@ -190,7 +192,9 @@ const en: Content = {
     switchLangShort: "ES",
     home: "Tomás Medina, home",
     mainNav: "Main",
-    headerNav: ["#proyectos", "#sobre-mi", "#contacto"],
+    headerNav: ["#lo-importante", "#proyectos", "#como-trabajo", "#sobre-mi"],
+    available: "Open to work",
+    cta: "Let's talk",
     loading: "Loading",
   },
   deck: {

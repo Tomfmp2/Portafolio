@@ -15,6 +15,15 @@ export default function Header() {
   const [deckOn, setDeckOn] = useState(false);
   const scene = useSyncExternalStore(subscribeDeck, () => deckState.index, () => 0);
   const home = deckOn && scene === 0;
+  // The section the visitor is in: the last header link whose scene is at or before the current one
+  // (a project's own scenes still count as "Proyectos").
+  const [current, setCurrent] = useState<string | null>(null);
+  useEffect(() => {
+    if (!deckOn) return setCurrent(null);
+    const sceneOf = (href: string) => Number(document.querySelector<HTMLElement>(href)?.dataset.scene ?? -1);
+    const reached = [...t.meta.headerNav, "#contacto"].filter((href) => sceneOf(href) >= 0 && sceneOf(href) <= scene);
+    setCurrent(reached.at(-1) ?? null);
+  }, [deckOn, scene, t.meta.headerNav]);
   // Over a dark scene (OCAP) the header turns light so it stays readable.
   const [night, setNight] = useState(false);
   useEffect(() => {
@@ -99,12 +108,16 @@ export default function Header() {
               aria-expanded={open}
               aria-controls="menu"
               aria-label={open ? t.meta.closeMenu : t.meta.menu}
-              className="header-icon"
+              className="header-icon header-toggle"
             >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
               </svg>
             </button>
+            <p className={`header-status ${open ? "invisible" : ""}`}>
+              <span className="hero-live" aria-hidden="true" />
+              {t.meta.available}
+            </p>
           </div>
           <nav aria-label={t.meta.mainNav} className={`header-nav ${open ? "invisible" : ""}`}>
             <ul>
@@ -114,6 +127,7 @@ export default function Header() {
                   <li key={item.href}>
                     <a
                       href={item.href}
+                      aria-current={current === item.href ? "location" : undefined}
                       onClick={(e) => {
                         e.preventDefault();
                         location.hash = item.href;
@@ -133,6 +147,17 @@ export default function Header() {
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 4v11M7 10l5 5 5-5M5 20h14" />
               </svg>
+            </a>
+            <a
+              href="#contacto"
+              className="header-cta"
+              aria-current={current === "#contacto" ? "location" : undefined}
+              onClick={(e) => {
+                e.preventDefault();
+                location.hash = "#contacto";
+              }}
+            >
+              {t.meta.cta}
             </a>
           </div>
         </div>

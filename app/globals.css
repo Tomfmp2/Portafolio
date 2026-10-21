@@ -1217,7 +1217,7 @@
   }
   .header-nav ul {
     display: flex;
-    gap: clamp(2rem, 5vw, 5rem);
+    gap: clamp(1.5rem, 3vw, 3rem);
     font-family: var(--font-geo);
     font-size: 0.7rem;
     font-weight: 700;
@@ -1231,12 +1231,91 @@
     transition: background-size 0.4s var(--ease-stroke);
   }
   .header-nav a:hover,
-  .header-nav a:focus-visible {
+  .header-nav a:focus-visible,
+  .header-nav a[aria-current] {
     background-size: 100% 2px;
   }
-  @media (max-width: 767px) {
+  .header-nav a[aria-current] {
+    color: var(--ink);
+  }
+  .header-nav a:not([aria-current]) {
+    color: var(--ink-soft);
+  }
+  .site-header.is-night .header-nav a:not([aria-current]) {
+    color: var(--night-soft);
+  }
+  .site-header.is-night .header-nav a[aria-current] {
+    color: var(--paper);
+  }
+  /* Availability, always in view: a dot with a ring that keeps pulsing out of it. */
+  .header-status {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--font-geo);
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .hero-live {
+    position: relative;
+    width: 0.55rem;
+    height: 0.55rem;
+    flex: none;
+    border-radius: 50%;
+    background: #1f9d55;
+  }
+  .hero-live::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #1f9d55;
+    animation: live-pulse 2s var(--ease-stroke) infinite;
+  }
+  @keyframes live-pulse {
+    to { transform: scale(2.8); opacity: 0; }
+  }
+  /* The one action the header asks for. */
+  .header-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding-inline: 1.1rem;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-geo);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  .header-cta:hover,
+  .header-cta:focus-visible,
+  .header-cta[aria-current] {
+    background: var(--marker);
+    color: var(--ink);
+  }
+  .site-header.is-night .header-cta:not(:hover) {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  /* Wide screens show every section, so the menu button is for narrower ones only (NN/g: hidden
+     navigation is found less and used later on desktop). */
+  @media (min-width: 1024px) {
+    .header-icon.header-toggle { display: none; }
+  }
+  @media (max-width: 1023px) {
     .header-row { grid-template-columns: minmax(0, 1fr) auto; }
-    .header-nav { display: none; }
+    .header-nav,
+    .header-cta { display: none; }
+  }
+  @media (max-width: 1279px) {
+    .header-status { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-live::after { animation: none; }
   }
   .header-lang {
     min-height: 2.75rem;
