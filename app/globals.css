@@ -961,14 +961,18 @@
     gap: 0.35rem;
   }
   .deck-rail a {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 0.7rem;
     min-height: 1.6rem;
     padding: 0 0.2rem;
   }
+  /* Out of the link's box: a hidden label must not widen the hover area over the scene. */
   .deck-rail-label {
+    position: absolute;
+    right: calc(100% + 0.5rem);
+    pointer-events: none;
     font-size: 0.8rem;
     font-weight: 600;
     white-space: nowrap;
