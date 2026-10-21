@@ -76,8 +76,6 @@ export async function POST(request: Request) {
     return json(503, { error: "not_configured" });
   }
 
-  if (throttled(clientIp(request))) return json(429, { error: "too_many_requests" });
-
   let body: Body;
   try {
     body = await request.json();
@@ -89,6 +87,8 @@ export async function POST(request: Request) {
 
   const fields = parse(body);
   if (!fields) return json(400, { error: "invalid_fields" });
+  // Counted only now, so malformed or bot requests can't use up the cap that real messages need.
+  if (throttled(clientIp(request))) return json(429, { error: "too_many_requests" });
 
   const transport = nodemailer.createTransport({ service: "gmail", auth: { user: GMAIL_USER, pass: GMAIL_APP_PASSWORD } });
   try {
