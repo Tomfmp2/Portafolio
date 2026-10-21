@@ -59,9 +59,9 @@ const es = {
   highlights: {
     title: "Resumen técnico",
     items: [
-      { text: "Entrega de extremo a extremo: ==dos sistemas completos==, desde los requisitos hasta producción.", note: "uno en producción para un cliente" },
-      { text: "Calidad verificable: ==429 pruebas automatizadas== validan el comportamiento antes de cada cambio.", note: "ejecutadas en integración continua" },
-      { text: "Curva de adopción corta: en un año, de ==aplicaciones de consola a una plataforma multicanal con IA==.", note: "Ingeniería en IA desde 2027" },
+      { text: "==Dos sistemas== desarrollados desde el análisis de requisitos hasta el despliegue en producción.", note: "uno en producción para el Centro Cultural del Oriente" },
+      { text: "==429 pruebas unitarias y de integración== se ejecutan en el pipeline de integración continua en cada cambio.", note: "174 en Feria Mágica, 255 en OCAP" },
+      { text: "Integración de IA: ==plataforma multicanal== con cuatro proveedores de modelos detrás de una interfaz común.", note: "OCAP, código abierto" },
     ],
     cv: "Descargar CV en PDF",
   },
@@ -135,7 +135,7 @@ const es = {
     paragraphs: [
       "Desarrollador backend especializado en ==APIs en C# y ASP.NET Core==: arquitectura por capas, persistencia con Entity Framework y SQL, y despliegue en contenedores con Docker.",
       "Código verificable: diseño pruebas unitarias y de integración desde el inicio y automatizo su ejecución en pipelines de integración continua, de modo que cada cambio se valida antes de integrarse.",
-      "Entrega de extremo a extremo: requisitos, diseño, implementación, despliegue y mantenimiento, con un sistema en producción para un cliente.",
+      "Ciclo de desarrollo completo: análisis de requisitos, diseño, implementación, despliegue y mantenimiento, con un sistema en producción para un cliente.",
     ],
     timelineTitle: "Trayectoria",
     timeline: [
@@ -222,9 +222,9 @@ const en: Content = {
   highlights: {
     title: "Technical summary",
     items: [
-      { text: "End-to-end delivery: ==two complete systems==, from requirements to production.", note: "one in production for a client" },
-      { text: "Verifiable quality: ==429 automated tests== check behaviour before every change.", note: "run in continuous integration" },
-      { text: "Short ramp-up: in one year, from ==console applications to a multichannel AI platform==.", note: "AI engineering degree from 2027" },
+      { text: "==Two systems== built from requirements analysis through to production deployment.", note: "one in production for the Centro Cultural del Oriente" },
+      { text: "==429 unit and integration tests== run in the continuous integration pipeline on every change.", note: "174 in Feria Mágica, 255 in OCAP" },
+      { text: "AI integration: ==a multichannel platform== with four model providers behind a common interface.", note: "OCAP, open source" },
     ],
     cv: "Download CV as PDF",
   },
@@ -298,7 +298,7 @@ const en: Content = {
     paragraphs: [
       "Backend developer specialised in ==C# and ASP.NET Core APIs==: layered architecture, persistence with Entity Framework and SQL, and container deployment with Docker.",
       "Verifiable code: I design unit and integration tests from the start and automate them in continuous integration pipelines, so every change is validated before it is merged.",
-      "End-to-end delivery: requirements, design, implementation, deployment and maintenance, with a system in production for a client.",
+      "Full development cycle: requirements analysis, design, implementation, deployment and maintenance, with a system in production for a client.",
     ],
     timelineTitle: "Timeline",
     timeline: [
