@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/hooks/use-language";
 import { links } from "@/lib/content";
-import type { StageChange } from "@/lib/deck";
+import type { SceneMeta } from "@/lib/deck";
 import Preloader from "@/components/site/Preloader";
 import Header from "@/components/site/Header";
 import Cursor from "@/components/site/Cursor";
@@ -20,13 +20,13 @@ import Contact from "@/components/site/Contact";
 import Footer from "@/components/site/Footer";
 
 /** The journey, in order. `stage` is how the screen changes on the way into each scene. */
-const SCENES: { id: string; stage: StageChange }[] = [
+const SCENES: SceneMeta[] = [
   { id: "inicio", stage: "push" },
   { id: "lo-importante", stage: "sweep" },
   { id: "verbos", stage: "push" },
   { id: "proyectos", stage: "sweep" },
   { id: "feria", stage: "push" },
-  { id: "ocap", stage: "iris" },
+  { id: "ocap", stage: "iris", night: true },
   { id: "otros-proyectos", stage: "push" },
   { id: "como-trabajo", stage: "push" },
   { id: "sobre-mi", stage: "push" },

@@ -36,7 +36,6 @@ const es = {
     labels: ["Inicio", "Lo importante", "Cómo trabajo", "Proyectos", "Feria Mágica", "OCAP", "Otros proyectos", "Cómo pienso", "Sobre mí", "Contacto"],
     prev: "Escena anterior",
     next: "Escena siguiente",
-    hint: "Rueda, desliza o usa las flechas",
     announce: "Escena {n} de {total}: {label}",
   },
   nav: [
@@ -200,7 +199,6 @@ const en: Content = {
     labels: ["Home", "The short version", "How I work", "Projects", "Feria Mágica", "OCAP", "Other projects", "How I think", "About", "Contact"],
     prev: "Previous scene",
     next: "Next scene",
-    hint: "Scroll, swipe or use the arrow keys",
     announce: "Scene {n} of {total}: {label}",
   },
   nav: [

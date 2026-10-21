@@ -29,6 +29,8 @@ export interface SceneHandle {
 export interface SceneMeta {
   id: string;
   stage: StageChange;
+  /** A dark scene: the fixed controls switch to light on it. */
+  night?: boolean;
 }
 
 type Listener = () => void;

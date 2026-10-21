@@ -936,58 +936,7 @@
     margin-top: 0;
   }
 
-  /* Controls */
-  .deck-rail {
-    position: fixed;
-    right: clamp(0.75rem, 2vw, 1.75rem);
-    top: 50%;
-    z-index: 50;
-    transform: translateY(-50%);
-  }
-  .deck-rail ol {
-    display: grid;
-    gap: 0.35rem;
-  }
-  .deck-rail a {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    min-height: 1.6rem;
-    padding: 0 0.2rem;
-  }
-  /* Out of the link's box: a hidden label must not widen the hover area over the scene. */
-  .deck-rail-label {
-    position: absolute;
-    right: calc(100% + 0.5rem);
-    pointer-events: none;
-    font-size: 0.8rem;
-    font-weight: 600;
-    white-space: nowrap;
-    opacity: 0;
-    transform: translateX(8px);
-    transition: opacity 0.25s, transform 0.35s var(--ease-stroke);
-    background: var(--paper);
-    padding: 0.15rem 0.5rem;
-    border-radius: 999px;
-  }
-  .deck-rail a:hover .deck-rail-label,
-  .deck-rail a:focus-visible .deck-rail-label {
-    opacity: 1;
-    transform: none;
-  }
-  .deck-rail-dot {
-    width: 0.55rem;
-    height: 0.55rem;
-    border-radius: 999px;
-    border: 1.5px solid var(--ink);
-    background: var(--paper);
-    transition: height 0.4s var(--ease-stroke), background-color 0.3s;
-  }
-  .deck-rail a[aria-current] .deck-rail-dot {
-    height: 1.8rem;
-    background: var(--marker);
-  }
+  /* Controls: numbered pagination with a magenta rule after the current scene, and square arrows. */
   .deck-bar {
     position: fixed;
     left: var(--gutter);
@@ -1003,7 +952,16 @@
   .deck-bar > * {
     pointer-events: auto;
   }
-  .deck-count {
+  @media (min-width: 1024px) {
+    .deck-bar {
+      padding-left: calc(40vw - var(--gutter));
+    }
+    /* On the home the bar sits above the magenta block, as in a print's caption line. */
+    .deck-bar.is-home {
+      bottom: calc(7.5vh + 1.4rem);
+    }
+  }
+  .deck-pages ol {
     display: flex;
     align-items: baseline;
     gap: 0.6rem;
@@ -1013,9 +971,53 @@
     border-radius: 999px;
     border: 1.5px solid var(--ink);
   }
-  .deck-count-label {
-    font-size: 0.85rem;
+  .deck-pages a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 2.25rem;
+    padding-inline: 0.3rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
     color: var(--ink-soft);
+    transition: color 0.2s;
+  }
+  .deck-pages a:hover,
+  .deck-pages a[aria-current] {
+    color: var(--ink);
+  }
+  .deck-pages a::after {
+    content: '';
+    width: 0;
+    height: 1.5px;
+    margin-left: 0;
+    background: var(--marker);
+    transition: width 0.7s var(--ease-stroke), margin 0.7s var(--ease-stroke);
+  }
+  .deck-pages a[aria-current]::after {
+    width: clamp(1.5rem, 9vw, 8.5rem);
+    margin-inline: 0.6rem 0.3rem;
+  }
+  .deck-page-label {
+    position: absolute;
+    bottom: calc(100% + 0.4rem);
+    left: 0;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 0.7rem;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.2s, transform 0.3s var(--ease-stroke);
+  }
+  .deck-pages a:hover .deck-page-label,
+  .deck-pages a:focus-visible .deck-page-label {
+    opacity: 1;
+    transform: none;
   }
   .deck-arrow {
     display: grid;
@@ -1025,7 +1027,12 @@
     border-radius: 999px;
     border: 1.5px solid var(--ink);
     background: var(--paper);
-    transition: background-color 0.25s, transform 0.3s var(--ease-stroke);
+    color: var(--ink);
+    transition: background-color 0.2s, color 0.2s, transform 0.3s var(--ease-stroke);
+  }
+  .deck-arrow.is-next {
+    background: var(--ink);
+    color: var(--paper);
   }
   .deck-arrow svg {
     width: 1.15rem;
@@ -1045,25 +1052,17 @@
   .deck-arrow:disabled {
     opacity: 0.3;
   }
-  .deck-hint {
-    position: fixed;
-    left: 50%;
-    bottom: clamp(1.2rem, 3vh, 2rem);
-    z-index: 50;
-    transform: translateX(-50%);
-    font-family: var(--font-hand);
-    font-size: 1.5rem;
-    color: var(--ink-soft);
-    animation: hint-bob 2s var(--ease-stroke) infinite;
-    pointer-events: none;
-  }
-  @keyframes hint-bob {
-    50% { transform: translate(-50%, -6px); }
-  }
-  @media (max-width: 899px) {
-    .deck-rail { display: none; }
-    .deck-hint { display: none; }
-    .deck-count-label { display: none; }
+  /* Over a dark scene the controls invert, like the header. */
+  .deck-bar.is-night .deck-pages ol { background: var(--night); }
+  .deck-bar.is-night .deck-pages a { color: var(--night-soft); }
+  .deck-bar.is-night .deck-pages a:hover,
+  .deck-bar.is-night .deck-pages a[aria-current] { color: var(--paper); }
+  .deck-bar.is-night .deck-arrow { border-color: var(--paper); background: var(--night); color: var(--paper); }
+  .deck-bar.is-night .deck-arrow.is-next { background: var(--paper); color: var(--ink); }
+  @media (max-width: 639px) {
+    .deck-arrow:not(.is-next) { display: none; }
+    .deck-pages a { padding-inline: 0.18rem; font-size: 0.7rem; }
+    .deck-page-label { display: none; }
   }
 }
 

@@ -311,36 +311,29 @@ export default function Deck({ scenes }: { scenes: DeckScene[] }) {
 
       {on && (
         <>
-          <nav className="deck-rail" aria-label={d.scenes}>
-            <ol>
-              {scenes.map((scene, i) => (
-                <li key={scene.id}>
-                  <a href={`#${scene.id}`} aria-current={i === index ? "step" : undefined} onClick={() => (live.current.fromKeyboard = true)}>
-                    <span className="deck-rail-label">{scene.label}</span>
-                    <span className="deck-rail-dot" aria-hidden="true" />
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
-
-          <div className="deck-bar">
-            <p className="deck-count" aria-hidden="true">
-              <span className="font-semibold">{pad(index + 1)}</span>
-              <span className="text-ink-soft">/{pad(total)}</span>
-              <span className="deck-count-label">{scenes[index]?.label}</span>
-            </p>
+          {/* The pagination of a print series: every scene's number, with a magenta rule running after the current one. */}
+          <div className={`deck-bar ${index === 0 ? "is-home" : ""} ${scenes[index]?.night ? "is-night" : ""}`}>
+            <nav className="deck-pages" aria-label={d.scenes}>
+              <ol>
+                {scenes.map((scene, i) => (
+                  <li key={scene.id}>
+                    <a href={`#${scene.id}`} aria-current={i === index ? "step" : undefined} onClick={() => (live.current.fromKeyboard = true)}>
+                      <span aria-hidden="true">{pad(i + 1)}</span>
+                      <span className="deck-page-label">{scene.label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
             <div className="flex items-center gap-2">
               <button type="button" className="deck-arrow" onClick={() => move(-1)} disabled={index === 0 && deckState.step === 0} aria-label={d.prev}>
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
               </button>
-              <button type="button" className="deck-arrow" onClick={() => move(1)} disabled={index === total - 1} aria-label={d.next}>
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7" /></svg>
+              <button type="button" className="deck-arrow is-next" onClick={() => move(1)} disabled={index === total - 1} aria-label={d.next}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
               </button>
             </div>
           </div>
-
-          {index === 0 && <p className="deck-hint" aria-hidden="true">{d.hint}</p>}
 
           {/* Announces where the visitor is after each move. */}
           <p className="sr-only" aria-live="polite">
