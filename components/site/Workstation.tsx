@@ -1,6 +1,6 @@
 /**
  * The hero's illustration: a retro workstation in black line work with
- * magenta details, the portfolio's answer to the reference's car. Drawn in
+ * orange details, the portfolio's answer to the reference's car. Drawn in
  * one oblique projection (every depth edge runs up-right at the same slope),
  * so the pieces read as one scene. It only draws; Hero animates it through
  * the data attributes:
@@ -16,7 +16,7 @@ const deck = (u: number, v: number) => [96 + 360 * u + 80 * v, 446 - 47 * v] as 
 const quad = (u0: number, v0: number, u1: number, v1: number) =>
   [deck(u0, v0), deck(u1, v0), deck(u1, v1), deck(u0, v1)].map((p) => p.join(",")).join(" ");
 
-/** Key widths per row, in key units (14 per row), front row first. The magenta one is Enter. */
+/** Key widths per row, in key units (14 per row), front row first. The orange one is Enter. */
 const ROWS = [
   [2, 2, 6, 2, 2],
   [2.25, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.75],

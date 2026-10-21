@@ -2,8 +2,8 @@
 @import 'tw-animate-css';
 
 /*
- * A gallery print: cool grey paper, black ink and one hot magenta. Pure
- * magenta is a surface or a stroke behind ink (4.7:1 with ink on it); as
+ * A gallery print: cool grey paper, black ink and one signal orange. Pure
+ * orange is a surface or a stroke behind ink (5.6:1 with ink on it); as
  * small text on the grey it fails contrast, so text uses --marker-ink.
  */
 :root {
@@ -12,8 +12,8 @@
   --ink: #1a1a1a;
   --ink-soft: #555555;
   --rule: #c4c4c4;
-  --marker: #ff018f;
-  --marker-ink: #c2006f;
+  --marker: #ff5a1f;
+  --marker-ink: #b0360a;
   --night: #141414;
   --night-soft: #a3a3a3;
   --night-rule: #343434;
@@ -571,7 +571,7 @@
       font-weight: 600;
     }
   }
-  /* The magenta block rising from the bottom edge under the drawing (wide screens only). */
+  /* The orange block rising from the bottom edge under the drawing (wide screens only). */
   .hero-block {
     display: none;
   }
@@ -965,7 +965,7 @@
     margin-top: 0;
   }
 
-  /* Controls: numbered pagination with a magenta rule after the current scene, and square arrows. */
+  /* Controls: numbered pagination with an orange rule after the current scene, and square arrows. */
   .deck-bar {
     position: fixed;
     left: var(--gutter);
@@ -987,7 +987,7 @@
     .deck-bar {
       padding-left: calc(40vw - var(--gutter));
     }
-    /* On the home the bar sits above the magenta block, as in a print's caption line. */
+    /* On the home the bar sits above the orange block, as in a print's caption line. */
     .deck-bar.is-home {
       bottom: calc(7.5vh + 1.4rem);
     }

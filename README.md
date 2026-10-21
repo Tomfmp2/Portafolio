@@ -157,14 +157,14 @@ Para desplegar tu propia instancia:
 
 ## ✨ Diseño y experiencia
 
-**Concepto: una lámina de galería.** Papel gris frío, tinta negra y un solo magenta. La portada se compone como un cartel: una columna corta de texto a la izquierda y una ilustración de línea a la derecha (`components/site/Workstation.tsx`), con un bloque magenta que sale por el borde inferior. Lo que un reclutador debe recordar se subraya en magenta y las notas a mano del margen comentan cada dato.
+**Concepto: una lámina de galería.** Papel gris frío, tinta negra y un solo naranja. La portada se compone como un cartel: una columna corta de texto a la izquierda y una ilustración de línea a la derecha (`components/site/Workstation.tsx`), con un bloque naranja que sale por el borde inferior. Lo que un reclutador debe recordar se subraya en naranja y las notas a mano del margen comentan cada dato.
 
 | Token | Valor | Uso |
 |---|---|---|
 | Papel | `#E3E3E3` | Fondo |
 | Tinta | `#1A1A1A` | Texto y trazos |
-| Marcador | `#FF018F` | Superficies, trazos y subrayado detrás de tinta (4,7:1); nunca como texto pequeño sobre el papel (2,9:1) |
-| Marcador para texto | `#C2006F` | Texto en magenta sobre el papel (4,6:1) |
+| Marcador | `#FF5A1F` | Superficies, trazos y subrayado detrás de tinta (5,6:1); nunca como texto pequeño sobre el papel (2,4:1) |
+| Marcador para texto | `#B0360A` | Texto en naranja sobre el papel (4,8:1) |
 | Noche | `#141414` | La escena de OCAP |
 
 Los colores que el código necesita fuera de CSS (canvas, WebGL, tweens de GSAP) salen de `lib/palette.ts`.
@@ -179,13 +179,13 @@ La ventana no hace scroll. El sitio es una baraja de 10 escenas a pantalla compl
 2. Si la escena tiene pasos (las tres afirmaciones, las dos composiciones de cada proyecto, las cuatro capas), avanza un paso.
 3. Si no, transiciona a la escena siguiente.
 
-Cada transición es una sola línea de tiempo de GSAP en tres tiempos: sale el contenido de la escena actual, cambia el escenario y entra el contenido de la siguiente (`changeStage`, `enterContent` y `leaveContent` en `lib/reveal.ts`). Hay tres cambios de escenario: **empuje en profundidad** (la escena se aleja y se inclina mientras la nueva llega por debajo), **barrido** (una franja magenta inclinada cubre la pantalla y la descubre ya cambiada) e **iris** (la noche de OCAP se abre en círculo). Cada escena declara cuál usa al entrar en `app/page.tsx`.
+Cada transición es una sola línea de tiempo de GSAP en tres tiempos: sale el contenido de la escena actual, cambia el escenario y entra el contenido de la siguiente (`changeStage`, `enterContent` y `leaveContent` en `lib/reveal.ts`). Hay tres cambios de escenario: **empuje en profundidad** (la escena se aleja y se inclina mientras la nueva llega por debajo), **barrido** (una franja naranja inclinada cubre la pantalla y la descubre ya cambiada) e **iris** (la noche de OCAP se abre en círculo). Cada escena declara cuál usa al entrar en `app/page.tsx`.
 
 Cada escena registra con `useScene` su entrada, su salida y sus pasos. Lo común se marca con atributos y lo resuelve `lib/reveal.ts`: `data-lines` (un bloque de marcador pasa sobre cada línea de un título), `data-reveal` (cortinilla con sesgo, `"x"` de lado), `data-hl` (subrayado), `data-note` (nota a mano) y `data-count` (contador). Lo que una escena anima por su cuenta va dentro de `data-motion-owned`.
 
 **Reglas del controlador.** Los gestos (rueda, tacto) se descartan durante una transición y en los 420 ms siguientes, para que la inercia del trackpad no se convierta en pasos de más; las teclas, los controles y los enlaces sí se guardan y se ejecutan al terminar. La entrada vuelve a aceptarse en cuanto el escenario ha cambiado, aunque el contenido siga animándose: si llega otra orden, esa animación se completa al instante. Con el menú o un diálogo abiertos, la baraja no se mueve.
 
-**Controles y enlaces.** Una paginación numerada "01 —— 02 03 …" con todas las escenas: tras la actual corre una línea magenta, cada número es un enlace y al pasar el cursor muestra el nombre de la escena; a la derecha, flechas cuadradas de anterior y siguiente (en móvil solo la de siguiente). En la portada la barra sube sobre el bloque magenta y en la escena oscura se invierte. La cabecera lleva el logotipo y el menú completo a la izquierda, tres secciones centradas y, a la derecha, el idioma y la descarga del CV. Cada escena tiene su hash (`#proyectos`, `#ocap`, `#contacto`…): el menú, los botones internos, los enlaces directos y el botón Atrás del navegador llevan a ella. El cambio de idioma conserva la escena. Un aviso para lectores de pantalla anuncia cada cambio, y con teclado el foco pasa a la escena nueva.
+**Controles y enlaces.** Una paginación numerada "01 —— 02 03 …" con todas las escenas: tras la actual corre una línea naranja, cada número es un enlace y al pasar el cursor muestra el nombre de la escena; a la derecha, flechas cuadradas de anterior y siguiente (en móvil solo la de siguiente). En la portada la barra sube sobre el bloque naranja y en la escena oscura se invierte. La cabecera lleva el logotipo y el menú completo a la izquierda, tres secciones centradas y, a la derecha, el idioma y la descarga del CV. Cada escena tiene su hash (`#proyectos`, `#ocap`, `#contacto`…): el menú, los botones internos, los enlaces directos y el botón Atrás del navegador llevan a ella. El cambio de idioma conserva la escena. Un aviso para lectores de pantalla anuncia cada cambio, y con teclado el foco pasa a la escena nueva.
 
 **Sin animación.** Con `prefers-reduced-motion` (o sin JavaScript) la baraja no se activa: la página es un documento normal con scroll nativo, todas las escenas en orden y su contenido completo. El script del `<head>` decide el modo antes del primer pintado.
 
@@ -193,7 +193,7 @@ Cada escena registra con `useScene` su entrada, su salida y sus pasos. Lo común
 
 | Escena | Entrada, pasos y salida |
 |---|---|
-| Inicio | Lámina: sube el bloque magenta, el nombre y el lema se descubren línea a línea y el puesto de trabajo se coloca pieza a pieza; caen las teclas y el CRT se enciende. Después la terminal escribe y ejecuta comandos de verdad (`dotnet test`, `docker compose`, `git push`), parpadean las luces del servidor y sale vapor de la taza. Con ratón, las piezas se separan en paralaje. Salida: el texto sube, las piezas bajan y el bloque se hunde. |
+| Inicio | Lámina: sube el bloque naranja, el nombre y el lema se descubren línea a línea y el puesto de trabajo se coloca pieza a pieza; caen las teclas y el CRT se enciende. Después la terminal escribe y ejecuta comandos de verdad (`dotnet test`, `docker compose`, `git push`), parpadean las luces del servidor y sale vapor de la taza. Con ratón, las piezas se separan en paralaje. Salida: el texto sube, las piezas bajan y el bloque se hunde. |
 | Lo importante | Tres pasos: cada afirmación entra palabra a palabra girando en 3D, se subraya y se anota; la anterior se dispersa. |
 | Cómo trabajo | Las filas de verbos cruzan la pantalla en sentidos opuestos y los verbos en contorno se entintan. |
 | Proyectos | Las letras caen desde distintas alturas y tamaños y se traza la franja; salen estallando. |
@@ -208,7 +208,7 @@ Cada escena registra con `useScene` su entrada, su salida y sus pasos. Lo común
 **3D.** Las teclas del contacto (`three/Keycaps.tsx`) están modeladas en código, sin modelos ni HDR descargados. three.js se descarga la primera vez que se llega al contacto y solo se renderiza mientras esa escena está activa (en modo documento, al acercarse).
 
 **Accesibilidad y rendimiento.**
-- El cursor magenta acompaña al puntero del sistema, que nunca se oculta.
+- El cursor naranja acompaña al puntero del sistema, que nunca se oculta.
 - Las notas que repiten un dato se ocultan a los lectores de pantalla; las cintas animadas tienen su texto equivalente.
 - Medido con el build de producción en Chrome headless con GPU: 205 KB de JavaScript al cargar, transiciones a 60 fps y unos 80 ms de bloqueo del hilo principal en escritorio (unos 330 ms con la CPU 4 veces más lenta).
 

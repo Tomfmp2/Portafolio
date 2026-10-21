@@ -5,4 +5,4 @@
 export const PAPER = "#e3e3e3";
 export const INK = "#1a1a1a";
 export const NIGHT = "#141414";
-export const MARKER = "#ff018f";
+export const MARKER = "#ff5a1f";

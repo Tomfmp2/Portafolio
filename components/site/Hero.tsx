@@ -24,9 +24,9 @@ const DRIFT = 12;
 
 /**
  * The opening scene, composed like a gallery print: a short stack of type on
- * the left (name, role in magenta, a three-line motto) and a line-art
+ * the left (name, role in orange, a three-line motto) and a line-art
  * workstation on the right whose terminal really runs, its lights blink and
- * its pieces drift apart with the pointer. A magenta block rises from the
+ * its pieces drift apart with the pointer. An orange block rises from the
  * bottom edge under it.
  */
 export default function Hero() {
@@ -144,7 +144,7 @@ export default function Hero() {
   }, [deck]);
 
   useScene({
-    // The print is laid out piece by piece: the magenta block rises, the type is pulled up line by
+    // The print is laid out piece by piece: the orange block rises, the type is pulled up line by
     // line, the workstation is set down object by object, its keys drop in and the CRT warms up.
     enter(tl, at) {
       live.current?.clear();

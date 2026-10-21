@@ -311,7 +311,7 @@ export default function Deck({ scenes }: { scenes: DeckScene[] }) {
 
       {on && (
         <>
-          {/* The pagination of a print series: every scene's number, with a magenta rule running after the current one. */}
+          {/* The pagination of a print series: every scene's number, with an orange rule running after the current one. */}
           <div className={`deck-bar ${index === 0 ? "is-home" : ""} ${scenes[index]?.night ? "is-night" : ""}`}>
             <nav className="deck-pages" aria-label={d.scenes}>
               <ol>
