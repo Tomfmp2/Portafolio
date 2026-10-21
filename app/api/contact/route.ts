@@ -13,17 +13,39 @@ export const runtime = "nodejs";
 const LIMITS = { name: 100, email: 200, message: 5000, minMessage: 10 };
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/** Best-effort throttle per IP: an instance's memory, enough to blunt a script hammering the form. */
+/**
+ * Best-effort throttle, per instance: at most 5 messages per IP and 30 in total every 10 minutes,
+ * which keeps a script from turning the owner's Gmail into a relay. Old entries are pruned so the
+ * map can't grow without bound.
+ */
 const WINDOW_MS = 10 * 60 * 1000;
-const MAX_PER_WINDOW = 5;
+const MAX_PER_IP = 5;
+const MAX_TOTAL = 30;
 const recent = new Map<string, number[]>();
 
 function throttled(ip: string) {
   const now = Date.now();
-  const hits = (recent.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  hits.push(now);
-  recent.set(ip, hits);
-  return hits.length > MAX_PER_WINDOW;
+  let total = 0;
+  for (const [key, hits] of recent) {
+    const live = hits.filter((t) => now - t < WINDOW_MS);
+    if (live.length) recent.set(key, live);
+    else recent.delete(key);
+    total += live.length;
+  }
+  const hits = recent.get(ip) ?? [];
+  if (hits.length >= MAX_PER_IP || total >= MAX_TOTAL) return true;
+  recent.set(ip, [...hits, now]);
+  return false;
+}
+
+/**
+ * The client's IP as the platform saw it. Vercel sets x-real-ip itself; otherwise the last
+ * x-forwarded-for entry is the one our own proxy appended (the first can be forged by the client).
+ */
+function clientIp(request: Request) {
+  const real = request.headers.get("x-real-ip")?.trim();
+  if (real) return real;
+  return request.headers.get("x-forwarded-for")?.split(",").at(-1)?.trim() || "unknown";
 }
 
 const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
@@ -54,8 +76,7 @@ export async function POST(request: Request) {
     return json(503, { error: "not_configured" });
   }
 
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  if (throttled(ip)) return json(429, { error: "too_many_requests" });
+  if (throttled(clientIp(request))) return json(429, { error: "too_many_requests" });
 
   let body: Body;
   try {
