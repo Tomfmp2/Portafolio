@@ -48,6 +48,10 @@ export function useDeckOn() {
 
 /* ---------- Deck ---------- */
 
+/** The deck remounts on a language switch; only the page's first mount may treat a reload as a fresh start. */
+let firstMount = true;
+const isReload = () => (performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined)?.type === "reload";
+
 interface DeckScene extends SceneMeta {
   label: string;
   node: React.ReactNode;
@@ -206,6 +210,10 @@ export default function Deck({ scenes }: { scenes: DeckScene[] }) {
     const s = live.current;
 
     // Start where the URL (or the language switch) says, then play that scene's entrance after the intro.
+    // The deck keeps the current scene in the hash, so a reload would otherwise land mid-journey:
+    // reloading starts over at the home, while a shared link (#ocap) still opens its scene.
+    if (firstMount && isReload()) history.replaceState(null, "", location.pathname + location.search);
+    firstMount = false;
     const fromHash = scenes.findIndex((scene) => `#${scene.id}` === location.hash);
     const start = fromHash >= 0 ? fromHash : deckState.index;
     place(start, 0);
