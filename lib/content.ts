@@ -133,9 +133,9 @@ const es = {
   about: {
     title: "Perfil",
     paragraphs: [
-      "Tomás Felipe Medina Prada, Bucaramanga. Técnico en Desarrollo de Software (Campuslands), programa intensivo basado en proyectos en equipo.",
-      "Método de trabajo: ==analizar, implementar, probar e iterar==. Con ese ciclo pasé de aplicaciones de consola a sistemas completos en un año.",
-      "Objetivo: un rol backend junior en un equipo con revisión de código, pruebas automatizadas e integración continua.",
+      "Desarrollador backend especializado en ==APIs en C# y ASP.NET Core==: arquitectura por capas, persistencia con Entity Framework y SQL, y despliegue en contenedores con Docker.",
+      "Calidad medible: 429 pruebas automatizadas entre dos sistemas e integración continua con GitHub Actions, para que cada cambio llegue verificado.",
+      "Entrega de extremo a extremo: requisitos, diseño, implementación, despliegue y mantenimiento, con un sistema en producción para un cliente.",
     ],
     timelineTitle: "Trayectoria",
     timeline: [
@@ -296,9 +296,9 @@ const en: Content = {
   about: {
     title: "Profile",
     paragraphs: [
-      "Tomás Felipe Medina Prada, Bucaramanga, Colombia. Software Development Technician (Campuslands), an intensive programme built around team projects.",
-      "Working method: ==analyse, implement, test and iterate==. With that cycle I went from console applications to complete systems in one year.",
-      "Goal: a junior backend role in a team with code review, automated testing and continuous integration.",
+      "Backend developer specialised in ==C# and ASP.NET Core APIs==: layered architecture, persistence with Entity Framework and SQL, and container deployment with Docker.",
+      "Measurable quality: 429 automated tests across two systems and continuous integration with GitHub Actions, so every change arrives verified.",
+      "End-to-end delivery: requirements, design, implementation, deployment and maintenance, with a system in production for a client.",
     ],
     timelineTitle: "Timeline",
     timeline: [
