@@ -82,7 +82,7 @@ function EmailButton() {
 
   return (
     <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-      <button ref={ref} type="button" data-own-magnet onClick={copy} onPointerEnter={() => hover(true)} onPointerLeave={() => hover(false)} onFocus={() => hover(true)} onBlur={() => hover(false)} className="btn btn-ink min-h-16 px-8 text-[clamp(1.05rem,2.2vw,1.5rem)]" aria-describedby="copy-status">
+      <button ref={ref} type="button" data-own-magnet onClick={copy} onPointerEnter={() => hover(true)} onPointerLeave={() => hover(false)} onFocus={() => hover(true)} onBlur={() => hover(false)} className="btn btn-ink min-h-14 px-7 text-[clamp(1rem,1.6vw,1.25rem)]" aria-describedby="copy-status">
         {links.email}
       </button>
       <span className="small" id="copy-status" role="status">
@@ -211,18 +211,18 @@ export default function Contact() {
   );
 
   return (
-    <section className="scene-fill pb-16 pt-[clamp(5rem,10vh,7rem)]" aria-labelledby="contact-title">
+    <section className="scene-fill pb-16 pt-[clamp(5.5rem,11vh,7rem)]" aria-labelledby="contact-title">
       <div className="wrap">
-        <h2 id="contact-title" className="display" data-lines>
+        <h2 id="contact-title" className="headline" data-lines>
           {c.title}
         </h2>
-        <div className="mt-12 grid gap-16 lg:grid-cols-2">
+        <div className="mt-8 grid gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
             <p data-reveal className="lead max-w-[32ch]">{c.lede}</p>
-            <div data-reveal className="mt-10">
+            <div data-reveal className="mt-7">
               <EmailButton />
             </div>
-            <p data-reveal className="mt-10 text-ink-soft">
+            <p data-reveal className="mt-7 text-ink-soft">
               {c.elsewhere}{" "}
               {elsewhere.map((l, i) => (
                 <span key={l.name}>
@@ -233,17 +233,17 @@ export default function Contact() {
                 </span>
               ))}
             </p>
-            <div data-reveal className="mt-8">
+            <div data-reveal className="mt-6">
               <a href={links.cv} download className="btn btn-line">
                 {t.hero.cv}
               </a>
             </div>
-            <div data-parallax="0.1" className="mt-6 h-[clamp(14rem,30vw,22rem)] w-full max-w-[34rem]">
+            <div data-parallax="0.1" className="mt-4 h-[clamp(10rem,24vh,16rem)] w-full max-w-[28rem]">
               <KeycapsSlot />
             </div>
           </div>
 
-          <form onSubmit={onSubmit} noValidate className="space-y-7">
+          <form onSubmit={onSubmit} noValidate className="space-y-6">
             <h3 data-reveal className="title !text-[clamp(1.5rem,2.6vw,2.1rem)]">{c.formTitle}</h3>
             <div className="grid gap-7 sm:grid-cols-2">
               {field("name", c.nameLabel, "text", "name")}

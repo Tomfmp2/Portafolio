@@ -20,7 +20,7 @@ export default function MoreProjects() {
   };
 
   return (
-    <article className="scene-fill wrap flex flex-col justify-center py-[clamp(5rem,10vh,7rem)]" aria-labelledby="more-title">
+    <article className="scene-fill wrap flex flex-col justify-center pb-[clamp(5.5rem,11vh,7rem)] pt-[clamp(5rem,10vh,6.5rem)]" aria-labelledby="more-title">
       <div className="grid gap-6 md:grid-cols-2 md:items-end">
         <h3 id="more-title" className="headline" data-lines>
           {m.title}
@@ -28,11 +28,11 @@ export default function MoreProjects() {
         <p data-reveal className="body-copy">{m.lede}</p>
       </div>
 
-      <ul className="mt-12">
+      <ul className="mt-8">
         {m.items.map((item) => (
-          <li key={item.name} data-reveal="x" className="project-row grid gap-x-8 gap-y-3 py-7 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_auto] md:items-center">
+          <li key={item.name} data-reveal="x" className="project-row grid gap-x-8 gap-y-2 py-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto] md:items-center">
             <div>
-              <h4 className="title">
+              <h4 className="title !text-[clamp(1.35rem,2vw,1.85rem)]">
                 <mark className="hl">{item.name}</mark>
               </h4>
               <p className="small mt-2">{item.stack}</p>
@@ -52,7 +52,7 @@ export default function MoreProjects() {
         ))}
       </ul>
 
-      <a href={links.github} target="_blank" rel="noopener noreferrer" data-reveal className="link mt-8 inline-block font-medium">
+      <a href={links.github} target="_blank" rel="noopener noreferrer" data-reveal className="link mt-6 inline-block font-medium">
         {m.all}
       </a>
 
