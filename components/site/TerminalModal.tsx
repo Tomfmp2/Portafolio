@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, RotateCcw, FileCode2, Terminal as TerminalIcon, AlertTriangle } from "lucide-react";
+import { createPortal } from "react-dom";
+import { X, RotateCcw } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
 
 type LineType = 'cmd' | 'sys' | 'success' | 'error' | 'info' | 'input' | 'table' | 'user' | 'warning';
@@ -32,9 +33,14 @@ const FLIGHTS = [
 
 const LOCALES = {
   en: {
-    disclaimer: "This is a small-scale web simulation. To experience the full, complete project, please download the repository and run it locally.",
-    guideTitle: "Interactive Demo",
-    guideText: "This is a functional JavaScript mirror of the original logic. Type your commands below and press ENTER to interact.",
+    disclaimer: "Reduced simulation running in the browser. The complete project is in the repository.",
+    guideTitle: "Runnable demo",
+    guideText: "A JavaScript replica of the original project's logic. Type a command and press Enter.",
+    commandsLabel: "Try",
+    stackLabel: "Stack",
+    repo: "View repository",
+    restart: "Restart demo",
+    close: "Close (Esc)",
     booting: "Loading sandbox environment...",
     dbConnected: "Connected to DB (sqlite3)... [OK]",
     buildSuccess: "Build succeeded. Database loaded.",
@@ -82,9 +88,14 @@ const LOCALES = {
     betplayNotFound: "Command not found. Use 'sim', 'table', 'reset', or 'clear'."
   },
   es: {
-    disclaimer: "Esta es una simulación web a pequeña escala. Para ver el proyecto real y completo, por favor descarga el repositorio y ejecútalo localmente.",
-    guideTitle: "Demo Interactiva",
-    guideText: "Este es un espejo funcional en JavaScript de la lógica original. Escribe tus comandos abajo y presiona ENTER para interactuar.",
+    disclaimer: "Simulación reducida que se ejecuta en el navegador. El proyecto completo está en el repositorio.",
+    guideTitle: "Demo ejecutable",
+    guideText: "Réplica en JavaScript de la lógica del proyecto original. Escribe un comando y pulsa Enter.",
+    commandsLabel: "Prueba",
+    stackLabel: "Stack",
+    repo: "Ver repositorio",
+    restart: "Reiniciar demo",
+    close: "Cerrar (Esc)",
     booting: "Cargando entorno seguro...",
     dbConnected: "Conectado a BD (sqlite3)... [OK]",
     buildSuccess: "Compilación exitosa. Base de datos cargada.",
@@ -133,8 +144,15 @@ const LOCALES = {
   }
 };
 
+/** Suggested input per demo, shown as chips beside the screen. */
+const DEMO_COMMANDS: Record<string, string[]> = {
+  banking: ["1", "2", "3", "4"],
+  airline: ["help", "list", "book"],
+  betplay: ["sim", "table", "reset"],
+};
+
 export default function TerminalModal({ demoId, onClose }: { demoId: string | null, onClose: () => void }) {
-  const { lang } = useLanguage() as { lang: string };
+  const { lang, t: content } = useLanguage();
   const t = LOCALES[lang === 'es' ? 'es' : 'en'];
 
   // --- UI STATE ---
@@ -394,7 +412,7 @@ export default function TerminalModal({ demoId, onClose }: { demoId: string | nu
     if (e.key === "Enter") {
       const val = input.trim();
       if (appState !== "halted" && !isTyping) {
-        print(`➜ ${val}`, "user");
+        print(`$ ${val}`, "user");
         setInput("");
         
         if (demoId === 'banking') handleBankInput(val);
@@ -415,110 +433,116 @@ export default function TerminalModal({ demoId, onClose }: { demoId: string | nu
 
   if (!demoId) return null;
 
-  const projectTitle = demoId === 'banking' ? "Banking System" : demoId === 'airline' ? "Airline Tickets" : "BetPlay Simulator";
+  const project = content.work.more.items.find((item) => item.demoId === demoId);
+  const projectTitle = project?.name ?? demoId;
+  const commands = DEMO_COMMANDS[demoId] ?? [];
 
-  return (
+  // Rendered on <body>: the deck's scenes are transformed, which would trap a fixed overlay under the header.
+  return createPortal(
     <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="fixed inset-0 z-[100] p-4 md:p-8 flex items-center justify-center bg-black/80 backdrop-blur-md"
-        onClick={handleTerminalClick}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.25 }}
+        className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/60 p-3 backdrop-blur-sm md:p-8"
+        onClick={onClose}
         role="dialog"
         aria-modal="true"
-        aria-label={projectTitle}
+        aria-label={`${projectTitle}: ${t.guideTitle}`}
       >
-        <div className="w-full h-full max-w-4xl max-h-[700px] bg-[#09090b] rounded-xl border border-zinc-800 shadow-2xl flex flex-col overflow-hidden relative" onClick={e => e.stopPropagation()}>
-          
-          <div className="h-12 bg-[#121214] border-b border-zinc-800 flex items-center justify-between px-4 select-none relative z-10">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500/80" />
-              <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-              <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-            </div>
-            <div className="flex items-center gap-2 font-mono text-xs text-zinc-400">
-              <TerminalIcon className="w-4 h-4" />
-              <span>root@{demoId}-env ~ /run/{demoId}</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <button onClick={handleRestart} title="Restart Demo" aria-label="Restart demo" className="text-zinc-500 hover:text-white transition-colors">
-                <RotateCcw className="w-4 h-4" />
+        <motion.div
+          initial={{ y: 24, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ type: "spring", damping: 28, stiffness: 320 }}
+          className="demo-panel"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <header className="demo-head">
+            <p className="demo-kicker">
+              <span className="demo-dot" aria-hidden="true" />
+              {t.guideTitle}
+            </p>
+            <div className="flex items-center gap-1">
+              <button type="button" onClick={handleRestart} aria-label={t.restart} title={t.restart} className="demo-btn">
+                <RotateCcw className="h-4 w-4" />
               </button>
-              <button onClick={onClose} title="Close Terminal" aria-label="Close terminal" className="text-zinc-500 hover:text-rose-400 transition-colors">
-                <X className="w-5 h-5" />
+              <button type="button" onClick={onClose} aria-label={t.close} title={t.close} className="demo-btn">
+                <X className="h-5 w-5" />
               </button>
             </div>
-          </div>
+          </header>
 
-          <div className="flex-1 p-6 overflow-y-auto bg-transparent scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent relative z-10" onClick={handleTerminalClick}>
-            
-            <div className="font-mono text-sm mb-6 border border-zinc-800/80 bg-zinc-900/30 p-5 rounded-lg flex flex-col gap-4">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <FileCode2 className="w-5 h-5 text-emerald-400" />
-                  <h3 className="text-zinc-200 font-bold tracking-wider uppercase">{projectTitle} - {t.guideTitle}</h3>
-                </div>
-                <p className="text-zinc-500 text-xs leading-relaxed">
-                  {t.guideText}
-                </p>
-              </div>
-              
-              {/* STICKY DISCLAIMER BOX */}
-              <div className="flex items-start gap-3 p-3 bg-amber-500/10 border border-amber-500/20 rounded-md">
-                <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                <p className="text-amber-500/90 text-xs leading-relaxed">
-                  {t.disclaimer}
-                </p>
-              </div>
-            </div>
-            
-            <div className="space-y-1 pb-8">
-              {lines.map((line) => {
-                let colorClass = "text-zinc-300";
-                if (line.type === "success") colorClass = "text-emerald-400";
-                if (line.type === "sys") colorClass = "text-zinc-500";
-                if (line.type === "error") colorClass = "text-rose-500";
-                if (line.type === "info") colorClass = "text-sky-300";
-                if (line.type === "input") colorClass = "text-amber-300 font-bold";
-                if (line.type === "table") colorClass = "text-zinc-400 whitespace-pre";
-                if (line.type === "user") colorClass = "text-white font-bold";
+          <div className="demo-body">
+            <aside className="demo-aside">
+              <h3 className="demo-title">{projectTitle}</h3>
+              {project && <p className="demo-text">{project.text}</p>}
+              {project && (
+                <dl className="demo-meta">
+                  <dt>{t.stackLabel}</dt>
+                  <dd>{project.stack}</dd>
+                  <dt>{t.commandsLabel}</dt>
+                  <dd className="flex flex-wrap gap-1.5">
+                    {commands.map((cmd) => (
+                      <code key={cmd} className="demo-chip">
+                        {cmd}
+                      </code>
+                    ))}
+                  </dd>
+                </dl>
+              )}
+              <p className="demo-note">{t.guideText} {t.disclaimer}</p>
+              {project && (
+                <a href={project.href} target="_blank" rel="noopener noreferrer" className="demo-repo">
+                  {t.repo} →
+                </a>
+              )}
+            </aside>
 
-                return (
-                  <div key={line.id} className={`font-mono text-[13px] sm:text-sm leading-relaxed ${colorClass}`}>
+            <div className="demo-screen" onClick={handleTerminalClick}>
+              <p className="demo-path" aria-hidden="true">
+                ~/{demoId} <span>$ run</span>
+              </p>
+              <div className="demo-lines" aria-live="polite">
+                {lines.map((line) => (
+                  <div key={line.id} className={`demo-line is-${line.type}`}>
                     {line.text || "\u00A0"}
                   </div>
-                );
-              })}
-              
-              {appState !== "halted" && !isTyping && (
-                <div className="flex items-center font-mono text-sm text-zinc-300 mt-2 relative">
-                  <span className="mr-2 text-rose-500 font-bold">➜</span>
-                  <span className="text-zinc-300 whitespace-pre">{input}</span>
-                  <motion.div 
-                    animate={{ opacity: [1, 0] }}
-                    transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                    className="w-2.5 h-4 bg-zinc-400 ml-1"
-                  />
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    className="opacity-0 absolute top-0 left-0 w-full h-full cursor-default"
-                    autoFocus
-                    spellCheck="false"
-                    autoComplete="off"
-                  />
-                </div>
-              )}
-              <div ref={terminalEndRef} className="h-8" />
+                ))}
+
+                {appState !== "halted" && !isTyping && (
+                  <div className="demo-prompt">
+                    <span className="demo-caret-sign" aria-hidden="true">
+                      $
+                    </span>
+                    <span className="whitespace-pre">{input}</span>
+                    <motion.span
+                      animate={{ opacity: [1, 0] }}
+                      transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                      className="demo-cursor"
+                      aria-hidden="true"
+                    />
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      aria-label={t.commandsLabel}
+                      className="absolute inset-0 h-full w-full cursor-default opacity-0"
+                      autoFocus
+                      spellCheck="false"
+                      autoComplete="off"
+                    />
+                  </div>
+                )}
+                <div ref={terminalEndRef} className="h-4" />
+              </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </motion.div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
