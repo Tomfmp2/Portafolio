@@ -16,14 +16,31 @@ export const ENTER_PRESS = "contact:enter-press";
 
 type Key = { label: string; x: number; z: number; w: number; accent?: boolean };
 
-// A fragment of a keyboard: save (Ctrl + S) and send (Enter).
-const KEYS: Key[] = [
-  { label: "Tab", x: -1.55, z: -1.05, w: 1.5 },
-  { label: "Ctrl", x: -1.55, z: 1.05, w: 1.5 },
-  { label: "S", x: 0.05, z: 0, w: 1 },
-  { label: "Shift", x: -1.3, z: 0, w: 2 },
-  { label: "Enter", x: 1.55, z: -0.55, w: 2.1, accent: true },
+/** Key pitch: a 1u cap is 0.92 wide with a 0.14 gap, like a real board. */
+const U = 1;
+const GAP = 0.14;
+const CAP = 0.92;
+
+/**
+ * A two-row macropad: save (Ctrl + S) and send (Enter) on top, Esc, Shift and
+ * Tab under them. Rows are laid out from their widths, so every gap matches.
+ */
+const ROWS: { label: string; w: number; accent?: boolean }[][] = [
+  [{ label: "Ctrl", w: 1.5 }, { label: "S", w: 1 }, { label: "Enter", w: 2, accent: true }],
+  [{ label: "Esc", w: 1 }, { label: "Shift", w: 2.25 }, { label: "Tab", w: 1.25 }],
 ];
+const ROW_WIDTH = 4.5 * U + 2 * GAP;
+const KEYS: Key[] = ROWS.flatMap((row, r) => {
+  let x = -ROW_WIDTH / 2;
+  return row.map((k) => {
+    const w = k.w * U;
+    const key = { ...k, x: x + w / 2, z: (r - 0.5) * (CAP + GAP), w };
+    x += w + GAP;
+    return key;
+  });
+});
+/** The plate: the keys plus an even margin. */
+const PLATE = { w: ROW_WIDTH + 0.5, d: 2 * CAP + GAP + 0.5 };
 
 function useLegend(label: string, accent: boolean) {
   return useMemo(() => {
@@ -32,9 +49,9 @@ function useLegend(label: string, accent: boolean) {
     canvas.height = 256;
     const ctx = canvas.getContext("2d");
     if (ctx) {
-      const family = getComputedStyle(document.documentElement).getPropertyValue("--font-bricolage").trim() || "sans-serif";
+      const family = getComputedStyle(document.documentElement).getPropertyValue("--font-geo").trim() || "sans-serif";
       ctx.fillStyle = INK;
-      ctx.font = `700 ${label.length > 1 ? 70 : 110}px ${family}`;
+      ctx.font = `700 ${label.length > 1 ? 64 : 104}px ${family}`;
       ctx.textBaseline = "top";
       ctx.fillText(label, 28, 28);
       if (accent) ctx.fillRect(28, 200, 120, 10);
@@ -58,7 +75,7 @@ function Keycap({ k, externalPress }: { k: Key; externalPress: boolean }) {
     mesh.current.position.y = THREE.MathUtils.damp(mesh.current.position.y, pressed ? -0.18 : 0, 14, delta);
   });
 
-  const width = k.w * 0.92;
+  const width = k.w - GAP;
   return (
     <group
       ref={mesh}
@@ -70,11 +87,11 @@ function Keycap({ k, externalPress }: { k: Key; externalPress: boolean }) {
       onPointerOut={() => setHovered(false)}
       onClick={() => k.accent && window.dispatchEvent(new Event(ENTER_PRESS))}
     >
-      <RoundedBox args={[width, 0.6, 0.92]} radius={0.14} smoothness={4}>
+      <RoundedBox args={[width, 0.55, CAP]} radius={0.12} smoothness={4}>
         <meshPhysicalMaterial color={k.accent ? MARKER : PAPER} roughness={0.45} clearcoat={0.6} clearcoatRoughness={0.4} />
       </RoundedBox>
-      <mesh position={[0, 0.305, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[Math.min(width, 0.9) * 0.9, 0.8]} />
+      <mesh position={[-(width - CAP) / 2, 0.28, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[0.8, 0.8]} />
         <meshBasicMaterial map={legend} transparent depthWrite={false} />
       </mesh>
     </group>
@@ -91,18 +108,28 @@ function Keyboard() {
     return () => window.removeEventListener(ENTER_HOVER, onHover);
   }, []);
 
-  useFrame(({ gl }, delta) => {
+  // Tilts toward the pointer anywhere on the page, and drifts slowly on its own.
+  const pointer = useRef({ x: 0, y: 0 });
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      pointer.current = { x: e.clientX / window.innerWidth - 0.5, y: e.clientY / window.innerHeight - 0.5 };
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, []);
+
+  useFrame(({ clock }, delta) => {
     const g = group.current;
     if (!g) return;
-    // Turn with the scroll while the canvas crosses the viewport (0 entering, 1 leaving).
-    const r = gl.domElement.getBoundingClientRect();
-    const progress = THREE.MathUtils.clamp(1 - (r.top + r.height) / (window.innerHeight + r.height), 0, 1);
-    g.rotation.y = THREE.MathUtils.damp(g.rotation.y, -0.75 + progress * 0.9, 5, delta);
+    const t = clock.elapsedTime;
+    g.rotation.y = THREE.MathUtils.damp(g.rotation.y, -0.32 + pointer.current.x * 0.5 + Math.sin(t * 0.5) * 0.04, 4, delta);
+    g.rotation.x = THREE.MathUtils.damp(g.rotation.x, 0.5 + pointer.current.y * 0.25, 4, delta);
+    g.position.y = Math.sin(t * 0.8) * 0.06;
   });
 
   return (
-    <group ref={group} rotation={[0.62, -0.6, 0]}>
-      <RoundedBox args={[5.9, 0.35, 3.5]} radius={0.2} smoothness={4} position={[0, -0.42, 0]}>
+    <group ref={group} rotation={[0.5, -0.32, 0]}>
+      <RoundedBox args={[PLATE.w, 0.32, PLATE.d]} radius={0.16} smoothness={4} position={[0, -0.36, 0]}>
         <meshPhysicalMaterial color={INK} roughness={0.5} clearcoat={0.4} />
       </RoundedBox>
       {KEYS.map((k) => (
@@ -114,7 +141,7 @@ function Keyboard() {
 
 export default function Keycaps({ className = "", active = true }: { className?: string; active?: boolean }) {
   return (
-    <Stage className={className} active={active} camera={[0, 4.2, 7]} fov={36}>
+    <Stage className={className} active={active} camera={[0, 2.6, 7.4]} fov={30}>
       <Keyboard />
     </Stage>
   );

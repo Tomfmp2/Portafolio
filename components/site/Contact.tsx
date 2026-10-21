@@ -238,7 +238,7 @@ export default function Contact() {
                 {t.hero.cv}
               </a>
             </div>
-            <div data-parallax="0.1" className="mt-4 h-[clamp(10rem,24vh,16rem)] w-full max-w-[28rem]">
+            <div data-parallax="0.1" className="mt-6 aspect-[2/1] max-h-[30vh] w-full max-w-[30rem]">
               <KeycapsSlot />
             </div>
           </div>
