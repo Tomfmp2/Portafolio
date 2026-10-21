@@ -28,8 +28,8 @@
   --step-1: 1.4167rem;
   --step-2: clamp(1.6rem, 2.4vw, 1.9rem);
   --step-3: clamp(2.2rem, 4.4vw, 3.6rem);
-  --step-4: clamp(2.6rem, 6.2vw, 5.6rem);
-  --step-display: clamp(4.2rem, 17.5vw, 19rem);
+  --step-4: clamp(2.2rem, 4.8vw, 4.6rem);
+  --step-display: clamp(3rem, 9vw, 9.5rem);
 
   /* shadcn tokens (components/ui) mapped onto the palette */
   --background: var(--paper);
@@ -154,27 +154,32 @@
 
   /* ---------- Type ---------- */
 
+  /*
+   * Big type is set in Montserrat, like the home: the squeezed Bricolage cut it
+   * replaces made heavy letters collide at display sizes, worst while split
+   * letters animate. Tracking tightens only slightly as the size grows.
+   */
   .display {
+    font-family: var(--font-geo);
     font-size: var(--step-display);
     font-weight: 800;
-    font-variation-settings: 'opsz' 96, 'wdth' 75;
-    line-height: 0.8;
-    letter-spacing: -0.045em;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
   }
   .headline {
+    font-family: var(--font-geo);
     font-size: var(--step-4);
-    font-weight: 700;
-    font-variation-settings: 'opsz' 96, 'wdth' 80;
-    line-height: 0.95;
-    letter-spacing: -0.03em;
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
     text-wrap: balance;
   }
   .title {
+    font-family: var(--font-geo);
     font-size: var(--step-3);
     font-weight: 700;
-    font-variation-settings: 'opsz' 72, 'wdth' 85;
-    line-height: 1;
-    letter-spacing: -0.025em;
+    line-height: 1.08;
+    letter-spacing: -0.015em;
     text-wrap: balance;
   }
   .statement {
@@ -754,11 +759,11 @@
   /* ---------- Work ---------- */
 
   .stat-value {
+    font-family: var(--font-geo);
     font-size: var(--step-4);
-    font-weight: 700;
-    font-variation-settings: 'opsz' 96, 'wdth' 80;
-    line-height: 0.9;
-    letter-spacing: -0.03em;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
     font-variant-numeric: tabular-nums;
   }
 
@@ -903,11 +908,11 @@
 @layer components {
   .verb {
     margin-right: 0.3em;
-    font-size: clamp(4rem, 13vw, 14rem);
+    font-family: var(--font-geo);
+    font-size: clamp(2.8rem, 8vw, 8.5rem);
     font-weight: 800;
-    font-variation-settings: 'opsz' 96, 'wdth' 75;
-    line-height: 0.95;
-    letter-spacing: -0.04em;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
   }
   .verb-outline .verb {
     color: transparent;

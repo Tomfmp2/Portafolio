@@ -2,10 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
-import { gsap, initGSAP, SplitText } from "@/lib/gsap";
+import { initGSAP, SplitText } from "@/lib/gsap";
 import { useDeckOn, useScene } from "./Deck";
 
-const R = gsap.utils.random;
 
 /**
  * The doorway to the work: the title's letters fall in from different
@@ -34,7 +33,8 @@ export default function ProjectsTitle() {
       const chars = split.current?.chars;
       const swipe = root.current?.querySelector("[data-title-swipe]");
       if (!chars || !swipe) return;
-      tl.fromTo(chars, { yPercent: () => R(-180, 180), rotation: () => R(-45, 45), scale: () => R(0.4, 1.6), opacity: 0 }, { yPercent: 0, rotation: 0, scale: 1, opacity: 1, duration: 1, stagger: { each: 0.05, from: "center" }, ease: "back.out(1.4)" }, at);
+      // In reading order, rising into place: the word is readable from the first frames.
+      tl.fromTo(chars, { yPercent: 70, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.7, stagger: 0.04, ease: "power3.out" }, at);
       tl.fromTo(swipe, { "--swipe": 0, transformOrigin: "left center" }, { "--swipe": 1, duration: 0.7, ease: "power2.inOut" }, at + 0.9);
     },
     leave(tl, at) {
@@ -42,7 +42,7 @@ export default function ProjectsTitle() {
       const swipe = root.current?.querySelector("[data-title-swipe]");
       if (!chars || !swipe) return;
       tl.to(swipe, { "--swipe": 0, transformOrigin: "right center", duration: 0.4, ease: "power2.in" }, at);
-      tl.to(chars, { yPercent: () => R(-260, -120), xPercent: () => R(-120, 120), rotation: () => R(-90, 90), opacity: 0, duration: 0.7, stagger: { each: 0.03, from: "random" }, ease: "power3.in" }, at + 0.1);
+      tl.to(chars, { yPercent: -70, opacity: 0, duration: 0.45, stagger: 0.02, ease: "power2.in" }, at + 0.1);
     },
   });
 

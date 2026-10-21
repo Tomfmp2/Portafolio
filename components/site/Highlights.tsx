@@ -8,7 +8,6 @@ import { useDeckOn, useScene } from "./Deck";
 import Marked from "./Marked";
 import Note from "./Note";
 
-const R = gsap.utils.random;
 
 /**
  * The 30-second version of the CV, as a scene with one step per statement.
@@ -41,17 +40,17 @@ export default function Highlights() {
     const mark = item.querySelector("[data-hl]");
     const note = item.querySelector("[data-note]");
     tl.set(item, { opacity: 1 }, at);
-    tl.fromTo(words.current[i] ?? [], { opacity: 0, yPercent: 60, rotationX: -80, transformOrigin: "50% 100%" }, { opacity: 1, yPercent: 0, rotationX: 0, duration: 0.9, stagger: 0.035, ease: "back.out(1.6)" }, at);
+    tl.fromTo(words.current[i] ?? [], { opacity: 0, yPercent: 50 }, { opacity: 1, yPercent: 0, duration: 0.6, stagger: 0.03, ease: "power3.out" }, at);
     if (mark) tl.fromTo(mark, { "--hl": "0%" }, { "--hl": "100%", duration: 0.7, ease: "power2.inOut" }, at + 0.7);
     if (note) tl.fromTo(note, { opacity: 0, x: 24, rotation: 5 }, { opacity: 1, x: 0, rotation: -3, duration: 0.5, ease: "back.out(2)" }, at + 1.1);
     tl.to(root.current?.querySelector("[data-progress]") ?? [], { scaleX: (i + 1) / hl.items.length, duration: 0.6, ease: "power2.out" }, at);
   };
 
-  /** Scatters statement `i`: words fly up in random order, the highlight and note leave with them. */
+  /** Clears statement `i`: words lift away in reading order, the highlight and note leave with them. */
   const hideStatement = (tl: gsap.core.Timeline, i: number, at: number, dir: number) => {
     const item = statement(i);
     if (!item) return;
-    tl.to(words.current[i] ?? [], { yPercent: () => R(-180, -60) * dir, rotationX: 80 * dir, rotation: () => R(-14, 14), opacity: 0, duration: 0.55, stagger: { each: 0.012, from: "random" }, ease: "power2.in" }, at);
+    tl.to(words.current[i] ?? [], { yPercent: -50 * dir, opacity: 0, duration: 0.4, stagger: 0.012, ease: "power2.in" }, at);
     tl.to(item.querySelector("[data-hl]"), { "--hl": "0%", duration: 0.35 }, at);
     tl.to(item.querySelector("[data-note]"), { opacity: 0, x: 30, duration: 0.3 }, at);
     tl.set(item, { opacity: 0 }, at + 0.7);

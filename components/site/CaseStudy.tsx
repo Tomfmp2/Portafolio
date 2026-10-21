@@ -82,7 +82,8 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
       tl.set(q("[data-flow]"), { opacity: 0, pointerEvents: "none" }, 0);
       tl.set(q("[data-name]"), { scale: 1, x: 0, y: 0 }, 0);
       tl.fromTo(q("[data-meta]"), { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.6, ease: "power3.out" }, at);
-      tl.fromTo(chars, { yPercent: () => R(-160, 160), rotation: () => R(-40, 40), opacity: 0 }, { yPercent: 0, rotation: 0, opacity: 1, duration: 0.9, stagger: { each: 0.025, from: "random" }, ease: "back.out(1.5)" }, at + 0.05);
+      // Letters rise into place in reading order, so the name stays legible the whole way in.
+      tl.fromTo(chars, { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, stagger: 0.018, ease: "power3.out" }, at + 0.05);
       qa("[data-head-rest]").forEach((block, i) =>
         tl.fromTo(block, { clipPath: "inset(100% 0% 0% 0%)", y: 50, skewY: 3 }, { clipPath: "inset(0% 0% 0% 0%)", y: 0, skewY: 0, duration: 0.7, ease: "power3.out" }, at + 0.55 + i * 0.12)
       );
@@ -108,7 +109,7 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
     },
     leave(tl, at, dir) {
       const chars = split.current?.chars ?? [];
-      tl.to(chars, { yPercent: () => R(-280, -120) * dir, xPercent: () => R(-80, 80), rotation: () => R(-60, 60), opacity: 0, duration: 0.65, stagger: { each: 0.012, from: "random" }, ease: "power3.in" }, at);
+      tl.to(chars, { yPercent: -60 * dir, opacity: 0, duration: 0.4, stagger: 0.008, ease: "power2.in" }, at);
       tl.to(q("[data-meta]"), { clipPath: "inset(0% 0% 0% 100%)", duration: 0.4, ease: "power2.in" }, at);
       if (shown.current === 1) lessonsOut(tl, at, dir);
       else tl.to(qa("[data-head-rest]"), { clipPath: "inset(0% 0% 100% 0%)", y: -50, duration: 0.45, stagger: 0.06, ease: "power2.in" }, at);
@@ -123,7 +124,7 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
           <p data-meta className="small">
             {project.when}. {project.role}
           </p>
-          <h3 id={`${id}-title`} data-name className="display mt-4 !text-[clamp(3.4rem,10vw,11rem)]">
+          <h3 id={`${id}-title`} data-name className="display mt-4 !text-[clamp(2.4rem,6vw,6.5rem)]">
             {project.name}
           </h3>
 
