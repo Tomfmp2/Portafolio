@@ -118,13 +118,15 @@ cd Portafolio
 npm install
 ```
 
-3. **Inicia el servidor de desarrollo:**
+3. **(Opcional) Configura el formulario de contacto:** copia `.env.example` a `.env.local` y rellena las variables (ver [Formulario de contacto](#formulario-de-contacto)). Sin ellas el sitio funciona, pero el formulario muestra un error al enviar.
+
+4. **Inicia el servidor de desarrollo:**
 
 ```bash
 npm run dev
 ```
 
-4. **Abre en el navegador:**
+5. **Abre en el navegador:**
 
 ```
 http://localhost:3000
@@ -152,6 +154,17 @@ Para desplegar tu propia instancia:
 1. Haz un **fork** de este repositorio.
 2. Conéctalo a tu cuenta de [Vercel](https://vercel.com/).
 3. Vercel detectará automáticamente la configuración de Next.js y desplegará el sitio.
+4. Añade en **Settings → Environment Variables** las variables del formulario de contacto.
+
+### Formulario de contacto
+
+El formulario envía a `app/api/contact/route.ts`, que valida los campos, descarta a los bots con un campo trampa, limita a 5 envíos cada 10 minutos por IP y manda el mensaje con Gmail a todos los destinatarios. El remitente del mensaje (Reply-To) es el visitante, así que basta con responder el correo.
+
+| Variable | Valor |
+|---|---|
+| `GMAIL_USER` | La cuenta de Gmail que envía |
+| `GMAIL_APP_PASSWORD` | Una [contraseña de aplicación](https://myaccount.google.com/apppasswords) de esa cuenta (requiere la verificación en dos pasos), nunca la contraseña normal |
+| `CONTACT_TO` | Destinatarios separados por comas |
 
 ---
 
@@ -201,7 +214,7 @@ Cada escena registra con `useScene` su entrada, su salida y sus pasos. Lo común
 | Otros proyectos | Las filas entran de lado; tres abren la terminal de demos. |
 | Cómo pienso | Cuatro pasos: la pila de placas en CSS 3D se abre y cada paso levanta una capa, del núcleo hacia fuera. Las placas salen volando. |
 | Sobre mí | La línea de tiempo se dibuja y cada etapa entra al alcanzarla. |
-| Contacto | Correo que se copia con un clic, formulario, teclas 3D (el Enter también copia el correo) y el pie. |
+| Contacto | Correo que se copia con un clic, formulario (llega por Gmail a los destinatarios configurados), teclas 3D (el Enter también copia el correo) y el pie. |
 
 **Interacción.** Botones magnéticos, letras del nombre que pasan a contorno bajo el cursor, verbos que se subrayan al pasar, capas cuya placa se levanta al señalar su descripción y puntos de las lecciones que laten.
 

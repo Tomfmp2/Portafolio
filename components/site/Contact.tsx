@@ -15,7 +15,8 @@ const Keycaps = dynamic(() => import("./three/Keycaps"), { ssr: false });
 const ENTER_HOVER = "contact:enter-hover";
 const ENTER_PRESS = "contact:enter-press";
 
-const FORM_ENDPOINT = `https://formsubmit.co/ajax/${links.email}`;
+/** Our own route: it emails the message to the owner (app/api/contact/route.ts). */
+const FORM_ENDPOINT = "/api/contact";
 
 const elsewhere = [
   { name: "GitHub", href: links.github },
@@ -123,6 +124,7 @@ export default function Contact() {
   const [values, setValues] = useState<Record<Field, string>>({ name: "", email: "", message: "" });
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
   const [status, setStatus] = useState<Status>("idle");
+  const honeypot = useRef<HTMLInputElement>(null);
 
   const validate = () => {
     const next: Partial<Record<Field, string>> = {};
@@ -155,7 +157,7 @@ export default function Contact() {
       const response = await fetch(FORM_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ ...values, _subject: "Nuevo mensaje desde el portafolio", _template: "table" }),
+        body: JSON.stringify({ ...values, company: honeypot.current?.value ?? "" }),
       });
       if (!response.ok) throw new Error(String(response.status));
       setValues({ name: "", email: "", message: "" });
@@ -248,6 +250,8 @@ export default function Contact() {
               {field("email", c.emailLabel, "email", "email")}
             </div>
             {field("message", c.messageLabel, "textarea")}
+            {/* Honeypot: hidden from people and assistive tech; only bots fill it in. */}
+            <input ref={honeypot} type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-px w-px opacity-0" />
             <div data-reveal className="flex flex-wrap items-center gap-4">
               <button type="submit" className="btn btn-ink" disabled={status === "sending"}>
                 {status === "sending" ? c.sending : c.send}

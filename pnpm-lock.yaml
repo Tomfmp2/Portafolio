@@ -32,6 +32,9 @@ importers:
       next:
         specifier: 16.2.0
         version: 16.2.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      nodemailer:
+        specifier: ~10.0.16
+        version: 10.0.16
       react:
         specifier: 19.2.4
         version: 19.2.4
@@ -48,6 +51,9 @@ importers:
       '@types/node':
         specifier: ^22
         version: 22.20.4
+      '@types/nodemailer':
+        specifier: ^8.0.2
+        version: 8.0.2
       '@types/react':
         specifier: 19.2.14
         version: 19.2.14
@@ -455,6 +461,9 @@ packages:
   '@types/node@22.20.4':
     resolution: {integrity: sha512-zJRE40jpHtKqE/C4fgHrAKQLJuSpzEnP9ff9Y7YtoR3Wd2pwqzlekDeEuUQXjRd+QCYnVnNwuJYmhdk9XV8gvA==}
 
+  '@types/nodemailer@8.0.2':
+    resolution: {integrity: sha512-c7M5ox8p0nEOfbJ2E9Qcmt8/QCu/VzsiAhzBiZbvky2PhKZDHpKB3sQHBM5MEZNkCfBOaS6S9//AGPRTNB7IaA==}
+
   '@types/offscreencanvas@2019.7.3':
     resolution: {integrity: sha512-ieXiYmgSRXUDeOntE1InxjWyvEelZGP63M+cGuquuRLuIKKT1osnkXjxev9B7d1nXSug5vpunx+gNlbVxMlC9A==}
 
@@ -749,6 +758,10 @@ packages:
         optional: true
       sass:
         optional: true
+
+  nodemailer@10.0.16:
+    resolution: {integrity: sha512-VL9xKErxN+el77o8eBOuYKUPMyEx7F9hfnDCuiUKJRp9v3wnWMOudYgP/SWbwSHy8rUL4cylobuXtki1LpQS7A==}
+    engines: {node: '>=20.0.0'}
 
   path-key@3.1.1:
     resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==}
@@ -1246,6 +1259,10 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  '@types/nodemailer@8.0.2':
+    dependencies:
+      '@types/node': 22.20.4
+
   '@types/offscreencanvas@2019.7.3': {}
 
   '@types/react-dom@19.2.3(@types/react@19.2.14)':
@@ -1472,6 +1489,8 @@ snapshots:
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
+
+  nodemailer@10.0.16: {}
 
   path-key@3.1.1: {}
 
