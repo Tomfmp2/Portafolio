@@ -445,6 +445,177 @@
     pointer-events: auto;
   }
 
+  /* The poster's header: four facts over a rule. */
+  .hero-meta {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem 1.5rem;
+    padding-bottom: 1rem;
+    font-size: var(--step--1);
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  @media (min-width: 768px) {
+    .hero-meta {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .hero-meta dt {
+    font-weight: 500;
+  }
+  .hero-rule {
+    position: absolute;
+    inset: auto 0 0;
+    height: 1.5px;
+    background: var(--ink);
+    transform-origin: left center;
+  }
+  /* Availability: a marker dot with a ring that keeps pulsing out of it. */
+  .hero-live {
+    position: relative;
+    width: 0.7rem;
+    height: 0.7rem;
+    flex: none;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    background: var(--marker);
+  }
+  .hero-live::after {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    animation: live-pulse 2s var(--ease-stroke) infinite;
+  }
+  @keyframes live-pulse {
+    to { transform: scale(2.6); opacity: 0; }
+  }
+
+  /* A short line, then the trait that keeps changing under the highlighter. */
+  .hero-lead {
+    font-size: var(--step-1);
+    font-weight: 500;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+  .hero-rotor {
+    display: grid;
+    margin-top: 0.15em;
+    font-size: clamp(2.3rem, 5.4vw, 5rem);
+    font-weight: 750;
+    font-variation-settings: 'opsz' 96, 'wdth' 85;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    perspective: 600px;
+  }
+  .hero-trait {
+    grid-area: 1 / 1;
+  }
+  /* Without the deck only the first trait shows; GSAP's inline opacity takes over in it. */
+  .hero-trait:not(:first-child) {
+    opacity: 0;
+  }
+
+  /* The name, edge to edge: on phones "Medina" fills the line; from tablets both names share one. */
+  .hero-name {
+    font-size: calc((100vw - 2 * var(--gutter)) / 2.7);
+    font-weight: 800;
+    font-variation-settings: 'opsz' 96, 'wdth' 85;
+    line-height: 0.84;
+    letter-spacing: -0.02em;
+    user-select: none;
+  }
+  @media (min-width: 768px) {
+    .hero-name {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      font-size: min(calc((min(100vw, var(--page-max)) - 2 * var(--gutter)) / 5.3), 28vh);
+    }
+  }
+  /* Letters rise out of (and sink back into) their baseline: clipped at the bottom only. */
+  .hero-name-row {
+    display: block;
+    clip-path: inset(-40% -10% 0 -10%);
+  }
+  /* --wg is the weight GSAP animates on entry; --wp and --xp are the pointer thinning and widening it. */
+  .hero-char {
+    text-align: center;
+    font-variation-settings: 'opsz' 96, 'wdth' calc(85 + var(--xp, 0)), 'wght' calc(var(--wg, 800) - var(--wp, 0));
+  }
+  .hero-swipe {
+    position: absolute;
+    left: -0.04em;
+    right: -0.06em;
+    bottom: 0.03em;
+    height: 0.28em;
+    background: var(--marker);
+    transform: skewX(-8deg);
+    transform-origin: left center;
+    border-radius: 0.04em;
+  }
+
+  .hero-sticker {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% - 1.2rem);
+    z-index: 2;
+    width: clamp(6.5rem, 11vw, 10.5rem);
+    aspect-ratio: 1;
+    pointer-events: auto;
+    rotate: -12deg;
+    filter: drop-shadow(0 0.6rem 0.9rem rgb(17 17 17 / 0.18));
+  }
+  @media (min-width: 768px) {
+    .hero-sticker {
+      bottom: calc(100% + 1.75rem);
+    }
+  }
+  .hero-sticker svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .hero-sticker-disc {
+    fill: var(--marker);
+    stroke: var(--ink);
+    stroke-width: 2.5px;
+  }
+  .hero-sticker text {
+    fill: var(--ink);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .hero-sticker-arrow {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  /* The drawing hint points down at the name, beside the sticker. */
+  .hero-hint {
+    position: absolute;
+    right: calc(clamp(6.5rem, 11vw, 10.5rem) + 2.5rem);
+    bottom: calc(100% + 1rem);
+  }
+  @media (max-width: 1023px) {
+    .hero-hint {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-live::after {
+      animation: none;
+    }
+  }
+
   /* ---------- Highlights (pinned statements) ---------- */
 
   /* Statements stack in one cell on desktop (they replace each other while pinned) and flow on phones. */
@@ -628,70 +799,6 @@
 }
 
 @layer components {
-  /* The highlighter stroke drawn under the surname on arrival. */
-  .hero-swipe {
-    position: absolute;
-    left: 0.75em;
-    right: -0.12em;
-    bottom: 0.04em;
-    height: 0.3em;
-    background: var(--marker);
-    transform-origin: left center;
-    transform: skewX(-8deg);
-    border-radius: 0.04em;
-  }
-  @media (min-width: 768px) {
-    .hero-swipe {
-      left: 1.45em;
-    }
-  }
-}
-
-@layer components {
-  .hero-ring {
-    position: absolute;
-    inset: -0.9rem -1.3rem;
-    width: calc(100% + 2.6rem);
-    height: calc(100% + 1.8rem);
-    overflow: visible;
-    pointer-events: none;
-    fill: none;
-    stroke: var(--marker);
-    stroke-width: 7px;
-    stroke-linecap: round;
-    vector-effect: non-scaling-stroke;
-  }
-  .hero-ring path {
-    vector-effect: non-scaling-stroke;
-    /* Undrawn until GSAP takes over, so it never flashes in fully formed. */
-    stroke-dasharray: 0 9999;
-  }
-  /* Without motion the ring isn't drawn: it only exists as a scroll gesture. */
-  @media (prefers-reduced-motion: reduce) {
-    .hero-ring { display: none; }
-  }
-}
-
-/*
- * Hero start state before GSAP takes over, so the finished highlights never
- * flash on load. Only with JS and motion; otherwise the hero renders complete.
- */
-@media (prefers-reduced-motion: no-preference) {
-  html.deck-on #inicio [data-name-row] {
-    visibility: hidden;
-  }
-  html.deck-on #inicio .hero-swipe {
-    transform: skewX(-8deg) scaleX(0);
-  }
-  html.deck-on #inicio [data-hl] {
-    --hl: 0%;
-  }
-  html.deck-on #inicio [data-hero-rest] {
-    opacity: 0;
-  }
-}
-
-@layer components {
   /* A highlighter stroke under a big title. */
   .title-swipe {
     position: absolute;
@@ -708,17 +815,6 @@
 }
 
 @layer components {
-  /* Letters of the name: hover one and it turns to outline. Only the letters take the pointer,
-     so dragging anywhere else on the hero still draws with the highlighter. */
-  .hero-char {
-    pointer-events: auto;
-    transition: color 0.25s, -webkit-text-stroke-color 0.25s;
-    -webkit-text-stroke: 2px transparent;
-  }
-  .hero-char:hover {
-    color: transparent;
-    -webkit-text-stroke-color: var(--ink);
-  }
   /* Verbs take a highlighter stroke under the pointer. */
   .verb {
     background: linear-gradient(var(--marker), var(--marker)) no-repeat 0 62% / 0 0.4em;
@@ -735,7 +831,6 @@
     50% { transform: scale(1.35); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .hero-char,
     .verb { transition: none; }
     .flow-step:hover .flow-dot { animation: none; }
   }
@@ -1000,5 +1095,21 @@
   .site-header.is-night .btn-ink {
     background: var(--paper);
     color: var(--ink);
+  }
+}
+
+/*
+ * Hero start state before GSAP takes over, so nothing finished flashes on load.
+ * Only with JS and motion; otherwise the hero renders complete.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html.deck-on #inicio :is([data-name-row], [data-meta-item], [data-hero-role], [data-trait], [data-hero-rest]) {
+    visibility: hidden;
+  }
+  html.deck-on #inicio .hero-swipe {
+    transform: skewX(-8deg) scaleX(0);
+  }
+  html.deck-on #inicio .hero-rule {
+    transform: scaleX(0);
   }
 }

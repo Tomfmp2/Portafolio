@@ -190,7 +190,7 @@ Cada escena registra con `useScene` su entrada, su salida y sus pasos. Lo común
 
 | Escena | Entrada, pasos y salida |
 |---|---|
-| Inicio | Las letras del nombre llegan con giros aleatorios, se pinta la franja bajo el apellido, se subraya la frase y se dibuja un anillo alrededor del CV. Con ratón se puede subrayar arrastrando. Salida: las letras estallan. |
+| Inicio | Cartel: el nombre ocupa todo el ancho y sus letras suben desde la línea base pasando de trazo fino a grueso; se dibujan la regla y la franja bajo el apellido, cae un sello giratorio y un rasgo rotativo se subraya. Con ratón, las letras cercanas al cursor se afinan y ensanchan (ejes `wght`/`wdth` de la fuente variable); en reposo o en táctil una ola las recorre sola. Hora local en vivo. Salida: las letras se hunden en su línea base. |
 | Lo importante | Tres pasos: cada afirmación entra palabra a palabra girando en 3D, se subraya y se anota; la anterior se dispersa. |
 | Cómo trabajo | Las filas de verbos cruzan la pantalla en sentidos opuestos y los verbos en contorno se entintan. |
 | Proyectos | Las letras caen desde distintas alturas y tamaños y se traza la franja; salen estallando. |
