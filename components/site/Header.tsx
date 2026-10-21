@@ -54,7 +54,10 @@ export default function Header() {
       gsap.set(el, { visibility: "visible" });
       const tl = gsap.timeline();
       tl.to(el, { clipPath: "inset(0 0 0% 0)", duration: reduced ? 0 : 0.8, ease: "expo.inOut" });
-      if (!reduced) tl.from(links, { yPercent: 100, opacity: 0, duration: 0.7, stagger: 0.06 }, "-=0.35");
+      if (!reduced) {
+        tl.from(links, { yPercent: 100, opacity: 0, duration: 0.7, stagger: 0.06 }, "-=0.35");
+        tl.from(el.querySelector("[data-menu-aside]"), { opacity: 0, y: 20, duration: 0.6 }, "-=0.5");
+      }
       el.querySelector<HTMLElement>("a")?.focus();
       const onKey = (e: KeyboardEvent) => {
         if (e.key === "Escape") setOpen(false);
@@ -136,28 +139,56 @@ export default function Header() {
       </header>
 
       <div ref={panel} id="menu" className="menu-panel invisible" role="dialog" aria-modal="true" aria-label={t.meta.menu}>
-        <nav className="wrap flex h-full flex-col justify-center gap-2 pt-16">
-          <ul className="flex flex-col gap-1">
-            {t.nav.map((item) => (
-              <li key={item.href} className="overflow-hidden">
-                <a
-                  href={item.href}
-                  data-menu-item
-                  className="menu-link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    close(false);
-                    // Once the menu has released the deck, the hash change takes the visitor there
-                    // (the deck listens for it; as a plain document the browser scrolls to it).
-                    window.setTimeout(() => (location.hash = item.href), 60);
-                  }}
-                >
-                  <mark className="hl">{item.label}</mark>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="menu-layout wrap">
+          <nav aria-label={t.meta.mainNav}>
+            <ol className="menu-list">
+              {t.nav.map((item, i) => (
+                <li key={item.href} className="overflow-hidden">
+                  <a
+                    href={item.href}
+                    data-menu-item
+                    className="menu-link"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      close(false);
+                      // Once the menu has released the deck, the hash change takes the visitor there
+                      // (the deck listens for it; as a plain document the browser scrolls to it).
+                      window.setTimeout(() => (location.hash = item.href), 60);
+                    }}
+                  >
+                    <span className="menu-index" aria-hidden="true">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <mark className="hl">{item.label}</mark>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+          <aside data-menu-aside className="menu-aside">
+            <p className="menu-aside-title">{t.contact.title}</p>
+            <a href={`mailto:${links.email}`} className="menu-aside-mail">
+              {links.email}
+            </a>
+            <p className="menu-aside-title mt-8">{t.contact.elsewhere}</p>
+            <ul className="menu-aside-links">
+              {[
+                ["GitHub", links.github],
+                ["LinkedIn", links.linkedin],
+                ["Telegram", links.telegram],
+              ].map(([label, href]) => (
+                <li key={label}>
+                  <a href={href} target="_blank" rel="noopener noreferrer">
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <a href={links.cv} download className="menu-aside-cv">
+              {t.hero.cv}
+            </a>
+          </aside>
+        </div>
       </div>
     </>
   );

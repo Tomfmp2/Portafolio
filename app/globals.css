@@ -353,13 +353,113 @@
     color: var(--paper);
     clip-path: inset(0 0 100% 0);
   }
+  /* The menu as an index: numbered sections over hairlines, contact details beside them. */
+  .menu-layout {
+    display: grid;
+    align-content: center;
+    gap: 3rem;
+    height: 100%;
+    padding-top: 6rem;
+    padding-bottom: 2.5rem;
+    overflow-y: auto;
+  }
+  @media (min-width: 1024px) {
+    .menu-layout {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      align-items: end;
+      column-gap: 6vw;
+      padding-left: calc(var(--gutter) + clamp(0rem, 9vw, 9rem));
+    }
+  }
+  .menu-list {
+    border-top: 1px solid var(--night-rule);
+  }
+  .menu-list li {
+    border-bottom: 1px solid var(--night-rule);
+  }
   .menu-link {
-    display: inline-block;
-    font-size: clamp(2.6rem, 8vw, 6.5rem);
+    display: flex;
+    align-items: baseline;
+    gap: clamp(1rem, 2.5vw, 2rem);
+    padding-block: clamp(0.55rem, 1.6vh, 0.9rem);
+    font-size: clamp(1.9rem, 4.2vw, 3.6rem);
     font-weight: 700;
-    font-variation-settings: 'opsz' 96, 'wdth' 78;
-    line-height: 1;
-    letter-spacing: -0.03em;
+    font-variation-settings: 'opsz' 96, 'wdth' 90;
+    line-height: 1.05;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+  .menu-index {
+    min-width: 1.6rem;
+    font-family: var(--font-geo);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--marker);
+    transform: translateY(-0.9em);
+  }
+  .menu-link .hl {
+    transition: background-size 0.45s var(--ease-stroke), color 0.2s, transform 0.45s var(--ease-stroke);
+  }
+  .menu-link:hover .hl,
+  .menu-link:focus-visible .hl {
+    transform: translateX(0.25em);
+  }
+  .menu-aside {
+    font-family: var(--font-geo);
+    color: var(--night-soft);
+  }
+  .menu-aside-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--marker);
+  }
+  .menu-aside-mail {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    font-weight: 600;
+    color: var(--paper);
+    word-break: break-all;
+  }
+  .menu-aside-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.75rem;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .menu-aside-links a,
+  .menu-aside-mail {
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.35em;
+    transition: color 0.2s, text-decoration-color 0.2s;
+  }
+  .menu-aside-links a:hover,
+  .menu-aside-mail:hover {
+    color: var(--paper);
+    text-decoration-color: var(--marker);
+  }
+  .menu-aside-cv {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    margin-top: 2rem;
+    padding-inline: 1.25rem;
+    background: var(--marker);
+    color: var(--ink);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background-color 0.2s;
+  }
+  .menu-aside-cv:hover {
+    background: var(--paper);
   }
   .menu-link:hover .hl,
   .menu-link:focus-visible .hl {
