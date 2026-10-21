@@ -134,7 +134,7 @@ const es = {
     title: "Perfil",
     paragraphs: [
       "Desarrollador backend especializado en ==APIs en C# y ASP.NET Core==: arquitectura por capas, persistencia con Entity Framework y SQL, y despliegue en contenedores con Docker.",
-      "Calidad medible: 429 pruebas automatizadas entre dos sistemas e integración continua con GitHub Actions, para que cada cambio llegue verificado.",
+      "Código verificable: diseño pruebas unitarias y de integración desde el inicio y automatizo su ejecución en pipelines de integración continua, de modo que cada cambio se valida antes de integrarse.",
       "Entrega de extremo a extremo: requisitos, diseño, implementación, despliegue y mantenimiento, con un sistema en producción para un cliente.",
     ],
     timelineTitle: "Trayectoria",
@@ -297,7 +297,7 @@ const en: Content = {
     title: "Profile",
     paragraphs: [
       "Backend developer specialised in ==C# and ASP.NET Core APIs==: layered architecture, persistence with Entity Framework and SQL, and container deployment with Docker.",
-      "Measurable quality: 429 automated tests across two systems and continuous integration with GitHub Actions, so every change arrives verified.",
+      "Verifiable code: I design unit and integration tests from the start and automate them in continuous integration pipelines, so every change is validated before it is merged.",
       "End-to-end delivery: requirements, design, implementation, deployment and maintenance, with a system in production for a client.",
     ],
     timelineTitle: "Timeline",
