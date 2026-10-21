@@ -337,12 +337,9 @@
 
   /* The logotype: a brush signature, set a touch large because script reads small. */
   .wordmark {
-    position: relative;
     display: inline-block;
-    isolation: isolate;
-    font-weight: 800;
-    font-variation-settings: 'opsz' 48, 'wdth' 75;
-    letter-spacing: -0.035em;
+    font-family: var(--font-script);
+    font-size: 1.25em;
     line-height: 1;
     letter-spacing: 0;
     rotate: -4deg;
@@ -416,192 +413,230 @@
     opacity: 1;
   }
 
-  /* ---------- Hero ---------- */
+  /* ---------- Hero: a gallery print ---------- */
 
-  .hero-canvas {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    touch-action: pan-y;
-  }
-  .hero-content {
-    position: relative;
-    z-index: 1;
-    pointer-events: none;
-  }
-  .hero-content :where(a, button) {
-    pointer-events: auto;
-  }
-
-  /* The poster's header: four facts over a rule. */
-  .hero-meta {
+  /*
+   * Phones: one column, the illustration between the name and the motto.
+   * From 1024px: the type stack on the left, centred on the drawing that fills
+   * the right, with the links and folio pinned low at the left like a caption.
+   */
+  .hero-layout {
     position: relative;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.9rem 1.5rem;
-    padding-bottom: 1rem;
-    font-size: var(--step--1);
-    font-weight: 600;
-    line-height: 1.35;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'title' 'kicker' 'art' 'tagline' 'actions' 'social';
+    align-content: center;
+    min-height: 100%;
+    padding-top: clamp(5rem, 11vh, 6.5rem);
+    padding-bottom: clamp(5.5rem, 12vh, 7rem);
   }
-  @media (min-width: 768px) {
-    .hero-meta {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+  @media (min-width: 1024px) {
+    .hero-layout {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.6fr);
+      grid-template-rows: 1fr auto auto auto auto 1fr;
+      grid-template-areas: '. art' 'title art' 'kicker art' 'tagline art' 'actions art' '. art';
+      column-gap: 3vw;
+      align-content: stretch;
+      min-height: 100dvh;
+      padding-left: calc(var(--gutter) + clamp(0rem, 9vw, 9rem));
+      padding-right: calc(var(--gutter) + clamp(0rem, 3vw, 4rem));
+      padding-bottom: calc(7.5vh + 6rem);
     }
   }
-  .hero-meta dt {
-    font-weight: 500;
+  .hero-mask {
+    display: block;
+    overflow: clip;
+    /* Room for the Á's accent and descenders inside the mask. */
+    padding-block: 0.08em;
+    margin-block: -0.08em;
   }
-  .hero-rule {
-    position: absolute;
-    inset: auto 0 0;
-    height: 1.5px;
-    background: var(--ink);
-    transform-origin: left center;
-  }
-  /* Availability: a marker dot with a ring that keeps pulsing out of it. */
-  .hero-live {
-    position: relative;
-    width: 0.7rem;
-    height: 0.7rem;
-    flex: none;
-    border: 1.5px solid var(--ink);
-    border-radius: 50%;
-    background: var(--marker);
-  }
-  .hero-live::after {
-    content: '';
-    position: absolute;
-    inset: -1.5px;
-    border: 1.5px solid var(--ink);
-    border-radius: 50%;
-    animation: live-pulse 2s var(--ease-stroke) infinite;
-  }
-  @keyframes live-pulse {
-    to { transform: scale(2.6); opacity: 0; }
-  }
-
-  /* A short line, then the trait that keeps changing under the highlighter. */
-  .hero-lead {
-    font-size: var(--step-1);
-    font-weight: 500;
-    line-height: 1.2;
-    text-wrap: balance;
-  }
-  .hero-rotor {
-    display: grid;
-    margin-top: 0.15em;
-    font-size: clamp(2.3rem, 5.4vw, 5rem);
-    font-weight: 750;
-    font-variation-settings: 'opsz' 96, 'wdth' 85;
-    line-height: 1.02;
-    letter-spacing: -0.025em;
-    perspective: 600px;
-  }
-  .hero-trait {
-    grid-area: 1 / 1;
-  }
-  /* Without the deck only the first trait shows; GSAP's inline opacity takes over in it. */
-  .hero-trait:not(:first-child) {
-    opacity: 0;
-  }
-
-  /* The name, edge to edge: on phones "Medina" fills the line; from tablets both names share one. */
-  .hero-name {
-    font-size: calc((100vw - 2 * var(--gutter)) / 2.7);
+  .hero-title {
+    grid-area: title;
+    font-family: var(--font-geo);
+    font-size: clamp(2.9rem, 6.1vw, 6rem);
     font-weight: 800;
-    font-variation-settings: 'opsz' 96, 'wdth' 85;
-    line-height: 0.84;
-    letter-spacing: -0.02em;
-    user-select: none;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
   }
-  @media (min-width: 768px) {
-    .hero-name {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      font-size: min(calc((min(100vw, var(--page-max)) - 2 * var(--gutter)) / 5.3), 28vh);
-    }
-  }
-  /* Letters rise out of (and sink back into) their baseline: clipped at the bottom only. */
-  .hero-name-row {
-    display: block;
-    clip-path: inset(-40% -10% 0 -10%);
-  }
-  /* --wg is the weight GSAP animates on entry; --wp and --xp are the pointer thinning and widening it. */
-  .hero-char {
-    text-align: center;
-    font-variation-settings: 'opsz' 96, 'wdth' calc(85 + var(--xp, 0)), 'wght' calc(var(--wg, 800) - var(--wp, 0));
-  }
-  .hero-swipe {
-    position: absolute;
-    left: -0.04em;
-    right: -0.06em;
-    bottom: 0.03em;
-    height: 0.28em;
-    background: var(--marker);
-    transform: skewX(-8deg);
-    transform-origin: left center;
-    border-radius: 0.04em;
-  }
-
-  .hero-sticker {
-    position: absolute;
-    right: 0;
-    bottom: calc(100% - 1.2rem);
-    z-index: 2;
-    width: clamp(6.5rem, 11vw, 10.5rem);
-    aspect-ratio: 1;
-    pointer-events: auto;
-    rotate: -12deg;
-    filter: drop-shadow(0 0.6rem 0.9rem rgb(17 17 17 / 0.18));
-  }
-  @media (min-width: 768px) {
-    .hero-sticker {
-      bottom: calc(100% + 1.75rem);
-    }
-  }
-  .hero-sticker svg {
-    display: block;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
-  .hero-sticker-disc {
-    fill: var(--marker);
-    stroke: var(--ink);
-    stroke-width: 2.5px;
-  }
-  .hero-sticker text {
-    fill: var(--ink);
-    font-size: 15px;
+  .hero-kicker {
+    grid-area: kicker;
+    margin-top: clamp(1.1rem, 3vh, 2rem);
+    font-family: var(--font-geo);
+    font-size: 0.875rem;
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+    color: var(--marker-ink);
   }
-  .hero-sticker-arrow {
-    fill: none;
-    stroke: var(--ink);
-    stroke-width: 7;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+  .hero-tagline {
+    grid-area: tagline;
+    margin-top: clamp(1.25rem, 3.5vh, 2.25rem);
+    font-family: var(--font-geo);
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
   }
-  /* The drawing hint points down at the name, beside the sticker. */
-  .hero-hint {
-    position: absolute;
-    right: calc(clamp(6.5rem, 11vw, 10.5rem) + 2.5rem);
-    bottom: calc(100% + 1rem);
+  .hero-actions {
+    grid-area: actions;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    margin-top: clamp(1.25rem, 3.5vh, 2.25rem);
   }
-  @media (max-width: 1023px) {
-    .hero-hint {
-      display: none;
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-family: var(--font-geo);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-decoration-color: var(--marker);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.45em;
+    transition: color 0.2s, text-underline-offset 0.3s var(--ease-stroke);
+  }
+  .hero-cta:hover {
+    text-underline-offset: 0.25em;
+  }
+  .hero-cta.is-solid {
+    padding-inline: 1.25rem;
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration: none;
+    transition: background-color 0.25s, color 0.25s;
+  }
+  .hero-cta.is-solid:hover {
+    background: var(--marker);
+    color: var(--ink);
+  }
+  .hero-art {
+    grid-area: art;
+    align-self: center;
+    margin-block: clamp(1rem, 3vh, 2rem);
+  }
+  @media (min-width: 1024px) {
+    .hero-art {
+      margin-block: 0;
+    }
+  }
+  .workstation {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 64vh;
+    overflow: visible;
+  }
+  .hero-social {
+    grid-area: social;
+    display: flex;
+    gap: 1.75rem;
+    margin-top: 1.5rem;
+    font-family: var(--font-geo);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .hero-social a {
+    display: inline-block;
+    padding-block: 0.4rem;
+    transition: color 0.2s;
+  }
+  .hero-social a:hover {
+    color: var(--marker-ink);
+  }
+  .hero-folio {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .hero-social {
+      position: absolute;
+      left: calc(var(--gutter) + clamp(0rem, 9vw, 9rem));
+      bottom: calc(7.5vh + 5.2rem);
+      margin-left: -0.1rem;
+      margin: 0;
+    }
+    .hero-folio {
+      display: block;
+      position: absolute;
+      left: calc(var(--gutter) + clamp(0rem, 9vw, 9rem));
+      bottom: calc(7.5vh + 1.75rem);
+      font-family: var(--font-geo);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+  }
+  /* The magenta block rising from the bottom edge under the drawing (wide screens only). */
+  .hero-block {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .hero-block {
+      display: block;
+      position: absolute;
+      left: 40%;
+      width: 42%;
+      bottom: 0;
+      height: 7.5vh;
+      background: var(--marker);
+      transform-origin: 50% 100%;
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .hero-live::after {
-      animation: none;
-    }
+  /* The workstation's line work. Fills stay on the palette, so the drawing follows the tokens. */
+  .workstation :is(rect, polygon, ellipse, circle, path, line) {
+    stroke: var(--ink);
+    stroke-width: 2.2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .workstation .ws-light { fill: #f6f6f6; }
+  .workstation .ws-top { fill: #ececec; }
+  .workstation .ws-shade { fill: #bdbdbd; }
+  .workstation .ws-bezel { fill: #e6e6e6; }
+  .workstation .ws-solid { fill: var(--ink); }
+  .workstation .ws-accent { fill: var(--marker); }
+  .workstation .ws-accent-fill { fill: var(--marker); stroke-width: 1.2; }
+  .workstation .ws-screen { fill: #151515; }
+  .workstation .ws-line { fill: none; }
+  .workstation .ws-hatch { fill: url(#ws-hatch); }
+  .workstation .ws-thin { stroke-width: 1.4; }
+  .workstation .ws-key { stroke-width: 1.1; }
+  .workstation .ws-ground { stroke: #b5b5b5; stroke-width: 1.2; }
+  .workstation .ws-hatch-line { stroke: var(--ink); stroke-width: 0.9; opacity: 0.32; }
+  .workstation .ws-cable { fill: none; stroke-width: 2.6; }
+  .workstation .ws-handle-outer { fill: none; stroke-width: 9; }
+  .workstation .ws-handle-inner { fill: none; stroke: #f6f6f6; stroke-width: 4.6; }
+  .workstation .ws-steam { fill: none; stroke-width: 1.6; opacity: 0.6; }
+  .workstation .ws-glare { fill: #ffffff; stroke: none; opacity: 0.07; }
+  .workstation .ws-cursor { fill: var(--marker); stroke: none; }
+  .workstation [data-led] { stroke-width: 1.2; }
+  .workstation text {
+    font-family: var(--font-mono-code), ui-monospace, monospace;
+    font-size: 10.5px;
+    fill: #e3e3e3;
+    white-space: pre;
+  }
+  .workstation .ws-prompt,
+  .workstation .ws-out-accent { fill: var(--marker); }
+  .workstation .ws-out { fill: #8f8f8f; }
+  .workstation .ws-sticker-text {
+    font-family: var(--font-geo);
+    font-size: 10px;
+    font-weight: 800;
+    fill: var(--ink);
+  }
+  .workstation .ws-spine {
+    font-family: var(--font-geo);
+    font-size: 6.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    fill: var(--ink);
   }
 
   /* ---------- Highlights (pinned statements) ---------- */
@@ -614,12 +649,6 @@
   /* Only in the deck: as a plain document all three are simply listed. */
   .deck-on .hl-stage > * {
     grid-area: 1 / 1;
-  }
-  /* The "draw on the hero" hint only makes sense with a mouse or pen. */
-  @media not ((hover: hover) and (pointer: fine)) {
-    .pointer-hint {
-      display: none !important;
-    }
   }
 
   /* ---------- Work ---------- */
@@ -948,6 +977,8 @@
     justify-content: space-between;
     gap: 1rem;
     pointer-events: none;
+    font-family: var(--font-geo);
+    transition: bottom 0.9s var(--ease-stroke);
   }
   .deck-bar > * {
     pointer-events: auto;
@@ -963,13 +994,11 @@
   }
   .deck-pages ol {
     display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    font-variant-numeric: tabular-nums;
-    background: var(--paper);
-    padding: 0.35rem 0.8rem;
+    align-items: center;
+    padding: 0.35rem 0.6rem;
+    margin-left: -0.6rem;
     border-radius: 999px;
-    border: 1.5px solid var(--ink);
+    background: var(--paper);
   }
   .deck-pages a {
     position: relative;
@@ -1022,9 +1051,8 @@
   .deck-arrow {
     display: grid;
     place-items: center;
-    width: 2.9rem;
-    height: 2.9rem;
-    border-radius: 999px;
+    width: 2.25rem;
+    height: 2.25rem;
     border: 1.5px solid var(--ink);
     background: var(--paper);
     color: var(--ink);
@@ -1035,16 +1063,18 @@
     color: var(--paper);
   }
   .deck-arrow svg {
-    width: 1.15rem;
-    height: 1.15rem;
+    width: 1rem;
+    height: 1rem;
     fill: none;
     stroke: currentColor;
-    stroke-width: 2;
+    stroke-width: 2.4;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
   .deck-arrow:hover:not(:disabled) {
     background: var(--marker);
+    border-color: var(--marker);
+    color: var(--ink);
   }
   .deck-arrow:active:not(:disabled) {
     transform: scale(0.93);
@@ -1146,13 +1176,7 @@
  * Only with JS and motion; otherwise the hero renders complete.
  */
 @media (prefers-reduced-motion: no-preference) {
-  html.deck-on #inicio :is([data-name-row], [data-meta-item], [data-hero-role], [data-trait], [data-hero-rest]) {
+  html.deck-on #inicio :is([data-line], [data-hero-in], [data-piece], [data-hero-block]) {
     visibility: hidden;
-  }
-  html.deck-on #inicio .hero-swipe {
-    transform: skewX(-8deg) scaleX(0);
-  }
-  html.deck-on #inicio .hero-rule {
-    transform: scaleX(0);
   }
 }
