@@ -83,7 +83,7 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
       tl.set(q("[data-name]"), { scale: 1, x: 0, y: 0 }, 0);
       tl.fromTo(q("[data-meta]"), { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.6, ease: "power3.out" }, at);
       // Letters rise into place in reading order, so the name stays legible the whole way in.
-      tl.fromTo(chars, { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, stagger: 0.018, ease: "power3.out" }, at + 0.05);
+      tl.fromTo(chars, { xPercent: 0, rotation: 0, rotationX: 0, scale: 1, yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, stagger: 0.018, ease: "power3.out" }, at + 0.05);
       qa("[data-head-rest]").forEach((block, i) =>
         tl.fromTo(block, { clipPath: "inset(100% 0% 0% 0%)", y: 50, skewY: 3 }, { clipPath: "inset(0% 0% 0% 0%)", y: 0, skewY: 0, duration: 0.7, ease: "power3.out" }, at + 0.55 + i * 0.12)
       );

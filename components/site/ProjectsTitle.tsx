@@ -33,8 +33,9 @@ export default function ProjectsTitle() {
       const chars = split.current?.chars;
       const swipe = root.current?.querySelector("[data-title-swipe]");
       if (!chars || !swipe) return;
-      // In reading order, rising into place: the word is readable from the first frames.
-      tl.fromTo(chars, { yPercent: 70, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.7, stagger: 0.04, ease: "power3.out" }, at);
+      // In reading order, rising into place: the word is readable from the first frames. Every transform
+      // is reset, so nothing left over from an earlier animation can tilt a letter.
+      tl.fromTo(chars, { xPercent: 0, rotation: 0, rotationX: 0, scale: 1, yPercent: 70, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.7, stagger: 0.04, ease: "power3.out" }, at);
       tl.fromTo(swipe, { "--swipe": 0, transformOrigin: "left center" }, { "--swipe": 1, duration: 0.7, ease: "power2.inOut" }, at + 0.9);
     },
     leave(tl, at) {

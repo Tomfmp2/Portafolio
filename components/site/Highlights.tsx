@@ -40,7 +40,7 @@ export default function Highlights() {
     const mark = item.querySelector("[data-hl]");
     const note = item.querySelector("[data-note]");
     tl.set(item, { opacity: 1 }, at);
-    tl.fromTo(words.current[i] ?? [], { opacity: 0, yPercent: 50 }, { opacity: 1, yPercent: 0, duration: 0.6, stagger: 0.03, ease: "power3.out" }, at);
+    tl.fromTo(words.current[i] ?? [], { xPercent: 0, rotation: 0, rotationX: 0, scale: 1, opacity: 0, yPercent: 50 }, { opacity: 1, yPercent: 0, duration: 0.6, stagger: 0.03, ease: "power3.out" }, at);
     if (mark) tl.fromTo(mark, { "--hl": "0%" }, { "--hl": "100%", duration: 0.7, ease: "power2.inOut" }, at + 0.7);
     if (note) tl.fromTo(note, { opacity: 0, x: 24, rotation: 5 }, { opacity: 1, x: 0, rotation: -3, duration: 0.5, ease: "back.out(2)" }, at + 1.1);
     tl.to(root.current?.querySelector("[data-progress]") ?? [], { scaleX: (i + 1) / hl.items.length, duration: 0.6, ease: "power2.out" }, at);
