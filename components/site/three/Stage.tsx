@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Environment, Lightformer } from "@react-three/drei";
+import { MARKER } from "@/lib/palette";
 
 /**
  * Shared canvas for the decorative 3D objects. It only renders while it is on
@@ -45,7 +46,7 @@ export default function Stage({ children, className = "", camera = [0, 0, 6] as 
         <Environment resolution={256} frames={1}>
           <Lightformer form="rect" intensity={3} position={[0, 4, 3]} scale={[6, 2, 1]} />
           <Lightformer form="rect" intensity={1.5} position={[-5, 1, 2]} rotation-y={Math.PI / 3} scale={[3, 5, 1]} />
-          <Lightformer form="rect" intensity={1} color="#d4ff3a" position={[5, -1, 1]} rotation-y={-Math.PI / 3} scale={[2, 4, 1]} />
+          <Lightformer form="rect" intensity={1} color={MARKER} position={[5, -1, 1]} rotation-y={-Math.PI / 3} scale={[2, 4, 1]} />
         </Environment>
         {children}
       </Canvas>

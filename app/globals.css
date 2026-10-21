@@ -2,21 +2,21 @@
 @import 'tw-animate-css';
 
 /*
- * "A CV someone already went over with a highlighter."
- * Paper and ink for everything; the lime marker is reserved for the facts a
- * recruiter should remember. Lime is only ever a background behind ink (or
- * ink-coloured text on night), never text on paper: it fails contrast there.
+ * A gallery print: cool grey paper, black ink and one hot magenta. Pure
+ * magenta is a surface or a stroke behind ink (4.7:1 with ink on it); as
+ * small text on the grey it fails contrast, so text uses --marker-ink.
  */
 :root {
-  --paper: #f2efe6;
-  --paper-deep: #e8e4d8;
-  --ink: #111111;
-  --ink-soft: #57554d;
-  --rule: #d6d1c3;
-  --marker: #d4ff3a;
+  --paper: #e3e3e3;
+  --paper-deep: #d6d6d6;
+  --ink: #1a1a1a;
+  --ink-soft: #555555;
+  --rule: #c4c4c4;
+  --marker: #ff018f;
+  --marker-ink: #c2006f;
   --night: #141414;
-  --night-soft: #a3a097;
-  --night-rule: #34332f;
+  --night-soft: #a3a3a3;
+  --night-rule: #343434;
 
   --page-max: 1440px;
   --gutter: clamp(1.25rem, 4vw, 4rem);
@@ -64,6 +64,7 @@
   --color-ink-soft: var(--ink-soft);
   --color-rule: var(--rule);
   --color-marker: var(--marker);
+  --color-marker-ink: var(--marker-ink);
   --color-night: var(--night);
   --color-night-soft: var(--night-soft);
   --color-night-rule: var(--night-rule);
@@ -328,7 +329,7 @@
     transition: transform 0.8s var(--ease-stroke), opacity 0.6s ease, background-color 0.4s;
   }
   .site-header.is-solid {
-    background: rgb(242 239 230 / 0.88);
+    background: rgb(227 227 227 / 0.88);
     backdrop-filter: blur(10px);
   }
 

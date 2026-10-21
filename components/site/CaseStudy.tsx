@@ -3,11 +3,11 @@
 import { useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { gsap, initGSAP, SplitText } from "@/lib/gsap";
+import { MARKER, NIGHT, PAPER } from "@/lib/palette";
 import { useDeckOn, useScene } from "./Deck";
 import Note from "./Note";
 
 const R = gsap.utils.random;
-const MARKER = "#d4ff3a";
 
 interface CaseStudyProps {
   id: string;
@@ -60,7 +60,7 @@ export default function CaseStudy({ id, project, link, night = false }: CaseStud
     if (rail) tl.fromTo(rail, { "--rail": 0 }, { "--rail": 1, duration: 1.4, ease: "power2.inOut" }, at + 0.3);
     qa("[data-step]").forEach((step, i) => {
       const t0 = at + 0.35 + i * 0.42;
-      tl.fromTo(step.querySelector("[data-dot]"), { scale: 0.3, backgroundColor: night ? "#141414" : "#f2efe6" }, { scale: 1, backgroundColor: MARKER, duration: 0.4, ease: "back.out(3)" }, t0);
+      tl.fromTo(step.querySelector("[data-dot]"), { scale: 0.3, backgroundColor: night ? NIGHT : PAPER }, { scale: 1, backgroundColor: MARKER, duration: 0.4, ease: "back.out(3)" }, t0);
       tl.fromTo(step.querySelector("[data-step-copy]"), { opacity: 0, y: 24, rotation: 2 }, { opacity: 1, y: 0, rotation: 0, duration: 0.5, ease: "power3.out" }, t0 + 0.05);
     });
   };

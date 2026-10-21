@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
+import { INK } from "@/lib/palette";
 import { useScene } from "./Deck";
 
 /**
@@ -23,7 +24,7 @@ export default function Verbs() {
         tl.fromTo(row, { xPercent: i % 2 ? -45 : 5, yPercent: 0, opacity: 1 }, { xPercent: i % 2 ? -5 : -40, duration: 2.4, ease: "power2.out" }, at)
       );
       const outlined = el.querySelectorAll<HTMLElement>(".verb-outline .verb");
-      outlined.forEach((verb, i) => tl.fromTo(verb, { color: "rgba(17,17,17,0)" }, { color: "#111111", duration: 0.25 }, at + 0.4 + i * 0.22));
+      outlined.forEach((verb, i) => tl.fromTo(verb, { color: "rgba(26,26,26,0)" }, { color: INK, duration: 0.25 }, at + 0.4 + i * 0.22));
     },
     leave(tl, at, dir) {
       const rows = root.current?.querySelectorAll<HTMLElement>("[data-row]") ?? [];

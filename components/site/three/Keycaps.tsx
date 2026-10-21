@@ -4,11 +4,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
+import { MARKER, PAPER } from "@/lib/palette";
 import Stage from "./Stage";
 
+// A shade under the page ink: lit plastic reads lighter than its colour.
 const INK = "#161616";
-const PAPER = "#f2efe6";
-const MARKER = "#d4ff3a";
 
 /** Events shared with the email button in Contact. */
 export const ENTER_HOVER = "contact:enter-hover";
