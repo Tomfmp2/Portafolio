@@ -1247,35 +1247,6 @@
   .site-header.is-night .header-nav a[aria-current] {
     color: var(--paper);
   }
-  /* Availability, always in view: a dot with a ring that keeps pulsing out of it. */
-  .header-status {
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
-    font-family: var(--font-geo);
-    font-size: 0.7rem;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .hero-live {
-    position: relative;
-    width: 0.55rem;
-    height: 0.55rem;
-    flex: none;
-    border-radius: 50%;
-    background: #1f9d55;
-  }
-  .hero-live::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: #1f9d55;
-    animation: live-pulse 2s var(--ease-stroke) infinite;
-  }
-  @keyframes live-pulse {
-    to { transform: scale(2.8); opacity: 0; }
-  }
   /* The one action the header asks for. */
   .header-cta {
     display: inline-flex;
@@ -1310,12 +1281,6 @@
     .header-row { grid-template-columns: minmax(0, 1fr) auto; }
     .header-nav,
     .header-cta { display: none; }
-  }
-  @media (max-width: 1279px) {
-    .header-status { display: none; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-live::after { animation: none; }
   }
   .header-lang {
     min-height: 2.75rem;

@@ -114,10 +114,6 @@ export default function Header() {
                 {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
               </svg>
             </button>
-            <p className={`header-status ${open ? "invisible" : ""}`}>
-              <span className="hero-live" aria-hidden="true" />
-              {t.meta.available}
-            </p>
           </div>
           <nav aria-label={t.meta.mainNav} className={`header-nav ${open ? "invisible" : ""}`}>
             <ul>
