@@ -57,6 +57,8 @@
 @theme inline {
   --font-sans: var(--font-bricolage), system-ui, sans-serif;
   --font-hand: var(--font-hand), cursive;
+  --font-geo: var(--font-geo), system-ui, sans-serif;
+  --font-script: var(--font-script), cursive;
   --font-mono: var(--font-mono-code), ui-monospace, monospace;
   --color-paper: var(--paper);
   --color-paper-deep: var(--paper-deep);
@@ -333,7 +335,7 @@
     backdrop-filter: blur(10px);
   }
 
-  /* The wordmark's own detail: the acute on the á is a stroke of the highlighter. */
+  /* The logotype: a brush signature, set a touch large because script reads small. */
   .wordmark {
     position: relative;
     display: inline-block;
@@ -342,23 +344,8 @@
     font-variation-settings: 'opsz' 48, 'wdth' 75;
     letter-spacing: -0.035em;
     line-height: 1;
-  }
-  .wordmark .accent {
-    position: relative;
-    display: inline-block;
-  }
-  .wordmark .accent::after {
-    content: '';
-    position: absolute;
-    left: 0.1em;
-    top: 0.08em;
-    width: 0.4em;
-    height: 0.15em;
-    background: var(--marker);
-    border-radius: 0.05em;
-    transform: rotate(-24deg) scaleX(var(--accent-scale, 1));
-    transform-origin: left center;
-    z-index: -1;
+    letter-spacing: 0;
+    rotate: -4deg;
   }
 
   .menu-panel {
@@ -1081,12 +1068,68 @@
 }
 
 @layer components {
-  .site-header .wordmark {
-    transition: opacity 0.4s, transform 0.5s var(--ease-stroke);
+  /* Header: signature and menu at the left, the main sections centred, language and CV at the right. */
+  .header-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    height: 4.5rem;
   }
-  .site-header.on-home .wordmark {
-    opacity: 0;
-    transform: translateY(-0.4em);
+  @media (min-width: 768px) {
+    .header-row {
+      height: 6rem;
+    }
+  }
+  .header-nav ul {
+    display: flex;
+    gap: clamp(2rem, 5vw, 5rem);
+    font-family: var(--font-geo);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .header-nav a {
+    display: inline-block;
+    padding-block: 0.6rem;
+    background: linear-gradient(var(--marker), var(--marker)) no-repeat 0 85% / 0 2px;
+    transition: background-size 0.4s var(--ease-stroke);
+  }
+  .header-nav a:hover,
+  .header-nav a:focus-visible {
+    background-size: 100% 2px;
+  }
+  @media (max-width: 767px) {
+    .header-row { grid-template-columns: minmax(0, 1fr) auto; }
+    .header-nav { display: none; }
+  }
+  .header-lang {
+    min-height: 2.75rem;
+    padding-inline: 0.25rem;
+    font-family: var(--font-geo);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .header-icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    transition: color 0.2s;
+  }
+  .header-icon svg {
+    width: 1.35rem;
+    height: 1.35rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .header-icon:hover,
+  .header-lang:hover {
+    color: var(--marker-ink);
   }
 }
 
@@ -1096,10 +1139,6 @@
   }
   .site-header.is-night.is-solid {
     background: rgb(20 20 20 / 0.86);
-  }
-  .site-header.is-night .btn-ink {
-    background: var(--paper);
-    color: var(--ink);
   }
 }
 

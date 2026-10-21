@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useLanguage } from "@/hooks/use-language";
+import { links } from "@/lib/content";
 import { deckState, subscribeDeck } from "@/lib/deck";
 import { gsap, initGSAP } from "@/lib/gsap";
 import { checkReducedMotion } from "@/lib/performance";
@@ -13,8 +14,6 @@ export default function Header() {
   const [solid, setSolid] = useState(false);
   const [deckOn, setDeckOn] = useState(false);
   const scene = useSyncExternalStore(subscribeDeck, () => deckState.index, () => 0);
-  // In the deck the hero's name is the logo, so the wordmark steps aside there; the language
-  // switch and the menu stay available on every scene.
   const home = deckOn && scene === 0;
   // Over a dark scene (OCAP) the header turns light so it stays readable.
   const [night, setNight] = useState(false);
@@ -81,28 +80,57 @@ export default function Header() {
 
   return (
     <>
-      <header className={`site-header ${home && !open ? "on-home" : ""} ${backed && !open ? "is-solid" : ""} ${night && !open ? "is-night" : ""}`}>
+      <header className={`site-header ${backed && !open ? "is-solid" : ""} ${night && !open ? "is-night" : ""}`}>
         <a href="#contenido" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-10 focus:rounded focus:bg-marker focus:px-3 focus:py-2">
           {t.meta.skip}
         </a>
-        <div className="wrap flex h-16 items-center justify-between md:h-20">
-          <a href="#inicio" aria-label={t.meta.home} className={`relative z-[70] text-2xl transition-colors md:text-[1.7rem] ${open ? "text-paper" : ""}`}>
-            <Wordmark />
-          </a>
-          <div className={`relative z-[70] flex items-center gap-2 md:gap-4 ${open ? "text-paper" : ""}`}>
-            <button type="button" onClick={toggleLang} className="link px-1 font-medium" aria-label={t.meta.switchLang} lang={t.meta.switchLangShort.toLowerCase()}>
-              {t.meta.switchLangShort}
-            </button>
+        <div className={`header-row wrap ${open ? "text-paper" : ""}`}>
+          <div className="relative z-[70] flex items-center gap-4 md:gap-6">
+            <a href="#inicio" aria-label={t.meta.home} className="text-[1.9rem] md:text-[2.3rem]">
+              <Wordmark />
+            </a>
             <button
               ref={toggle}
               type="button"
               onClick={() => (open ? close(true) : setOpen(true))}
               aria-expanded={open}
               aria-controls="menu"
-              className={`btn min-h-11 px-5 ${open ? "btn-line !text-paper" : "btn-ink"}`}
+              aria-label={open ? t.meta.closeMenu : t.meta.menu}
+              className="header-icon"
             >
-              {open ? t.meta.closeMenu : t.meta.menu}
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+              </svg>
             </button>
+          </div>
+          <nav aria-label={t.meta.mainNav} className={`header-nav ${open ? "invisible" : ""}`}>
+            <ul>
+              {t.nav
+                .filter((item) => t.meta.headerNav.includes(item.href))
+                .map((item) => (
+                  <li key={item.href}>
+                    <a
+                      href={item.href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        location.hash = item.href;
+                      }}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+            </ul>
+          </nav>
+          <div className="relative z-[70] flex items-center justify-end gap-3 md:gap-5">
+            <button type="button" onClick={toggleLang} className="header-lang" aria-label={t.meta.switchLang} lang={t.meta.switchLangShort.toLowerCase()}>
+              {t.meta.switchLangShort}
+            </button>
+            <a href={links.cv} download className="header-icon" aria-label={t.hero.cv}>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 4v11M7 10l5 5 5-5M5 20h14" />
+              </svg>
+            </a>
           </div>
         </div>
       </header>

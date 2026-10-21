@@ -27,6 +27,8 @@ const es = {
     switchLang: "Read in English",
     switchLangShort: "EN",
     home: "Tomás Medina, inicio",
+    mainNav: "Principal",
+    headerNav: ["#proyectos", "#sobre-mi", "#contacto"],
     loading: "Cargando",
   },
   deck: {
@@ -189,6 +191,8 @@ const en: Content = {
     switchLang: "Leer en español",
     switchLangShort: "ES",
     home: "Tomás Medina, home",
+    mainNav: "Main",
+    headerNav: ["#proyectos", "#sobre-mi", "#contacto"],
     loading: "Loading",
   },
   deck: {

@@ -33,7 +33,6 @@ export default function Preloader() {
       },
     });
     tl.from(el.querySelector(".wordmark"), { yPercent: 110, duration: 0.9 })
-      .from(el.querySelector(".wordmark .accent"), { "--accent-scale": 0, duration: 0.4 }, "-=0.2")
       .to(counter, {
         n: 100,
         duration: 1.3,

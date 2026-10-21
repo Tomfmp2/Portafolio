@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Bricolage_Grotesque, JetBrains_Mono, Reenie_Beanie } from 'next/font/google'
+import { Bricolage_Grotesque, JetBrains_Mono, Kaushan_Script, Montserrat, Reenie_Beanie } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { LanguageProvider } from '@/hooks/use-language'
 import { introScript } from '@/lib/intro'
@@ -11,6 +11,19 @@ const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
   axes: ['opsz', 'wdth'],
   variable: '--font-bricolage',
+})
+
+// Geometric caps for the poster-like chrome: the home's title, the header and the pagination.
+const geo = Montserrat({
+  subsets: ['latin'],
+  variable: '--font-geo',
+})
+
+// Brush script, only for the logotype.
+const script = Kaushan_Script({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-script',
 })
 
 // Handwriting, only for the margin notes next to highlighted facts.
@@ -65,7 +78,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className={`${bricolage.variable} ${hand.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="es" className={`${bricolage.variable} ${geo.variable} ${script.variable} ${hand.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: introScript }} />
       </head>
