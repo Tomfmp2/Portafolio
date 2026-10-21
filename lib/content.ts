@@ -39,6 +39,7 @@ const es = {
     announce: "Escena {n} de {total}: {label}",
   },
   nav: [
+    { label: "Inicio", href: "#inicio" },
     { label: "Lo importante", href: "#lo-importante" },
     { label: "Proyectos", href: "#proyectos" },
     { label: "Cómo pienso", href: "#como-trabajo" },
@@ -200,6 +201,7 @@ const en: Content = {
     announce: "Scene {n} of {total}: {label}",
   },
   nav: [
+    { label: "Home", href: "#inicio" },
     { label: "The short version", href: "#lo-importante" },
     { label: "Projects", href: "#proyectos" },
     { label: "How I work", href: "#como-trabajo" },
