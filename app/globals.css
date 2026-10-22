@@ -1,60 +1,75 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
-
+/*
+ * A gallery print: cool grey paper, black ink and one signal orange. Pure
+ * orange is a surface or a stroke behind ink (5.6:1 with ink on it); as
+ * small text on the grey it fails contrast, so text uses --marker-ink.
+ */
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --card: #ffffff;
-  --card-foreground: #0f172a;
-  --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  --primary: #FF3333;
-  --primary-foreground: #ffffff;
-  --secondary: #e02020;
-  --red-glow: rgba(255, 51, 51, 0.35);
-  --secondary-foreground: #ffffff;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --accent: #FF3333;
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #FF3333;
-  --radius: 0.75rem;
-  /* Layout tokens */
-  --page-max: 1400px;
-  --page-px: clamp(1.25rem, 5vw, 4rem);
-}
+  --paper: #e3e3e3;
+  --paper-deep: #d6d6d6;
+  --ink: #1a1a1a;
+  --ink-soft: #555555;
+  --rule: #c4c4c4;
+  --marker: #ff5a1f;
+  --marker-ink: #b0360a;
+  --night: #141414;
+  --night-soft: #a3a3a3;
+  --night-rule: #343434;
 
-.dark {
-  --background: #0B0B0F;
-  --foreground: #f1f5f9;
-  --card: #111114;
-  --card-foreground: #f1f5f9;
-  --popover: #111114;
-  --popover-foreground: #f1f5f9;
-  --primary: #FF3333;
-  --primary-foreground: #ffffff;
-  --secondary: #cc3333;
-  --secondary-foreground: #ffffff;
-  --muted: #1a1a1e;
-  --muted-foreground: #71717A;
-  --accent: #FF3333;
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --border: rgba(255, 255, 255, 0.05);
-  --input: #1a1a1e;
-  --ring: #FF3333;
+  --page-max: 1440px;
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+  --ease-stroke: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Type scale: a fourth (1.333) from a 17px body, display sizes fluid. */
+  --step--1: 0.8125rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.4167rem;
+  --step-2: clamp(1.6rem, 2.4vw, 1.9rem);
+  --step-3: clamp(2.2rem, 4.4vw, 3.6rem);
+  --step-4: clamp(2.2rem, 4.8vw, 4.6rem);
+  --step-display: clamp(3rem, 9vw, 9.5rem);
+
+  /* shadcn tokens (components/ui) mapped onto the palette */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper);
+  --card-foreground: var(--ink);
+  --popover: var(--paper);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--paper);
+  --secondary: var(--paper-deep);
+  --secondary-foreground: var(--ink);
+  --muted: var(--paper-deep);
+  --muted-foreground: var(--ink-soft);
+  --accent: var(--marker);
+  --accent-foreground: var(--ink);
+  --destructive: #b42318;
+  --destructive-foreground: #b42318;
+  --border: var(--rule);
+  --input: var(--rule);
+  --ring: var(--ink);
+  --radius: 0.5rem;
 }
 
 @theme inline {
-  --font-sans: 'Geist', 'Geist Fallback', system-ui, sans-serif;
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
+  --font-sans: var(--font-bricolage), system-ui, sans-serif;
+  --font-hand: var(--font-hand), cursive;
+  --font-geo: var(--font-geo), system-ui, sans-serif;
+  --font-script: var(--font-script), cursive;
+  --font-mono: var(--font-mono-code), ui-monospace, monospace;
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-rule: var(--rule);
+  --color-marker: var(--marker);
+  --color-marker-ink: var(--marker-ink);
+  --color-night: var(--night);
+  --color-night-soft: var(--night-soft);
+  --color-night-rule: var(--night-rule);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -78,194 +93,1433 @@
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) + 4px);
   --radius-xl: calc(var(--radius) + 10px);
-  --animate-marquee: marquee 55s linear infinite;
-  --animate-marquee-reverse: marquee-reverse 45s linear infinite;
 }
 
-/* ── Keyframes ─────────────────────────────────────────────── */
-@keyframes marquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-@keyframes marquee-reverse {
-  0%   { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
-}
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes red-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255,51,51,0); }
-  50%       { box-shadow: 0 0 28px 6px rgba(255,51,51,0.35); }
-}
-
-.animate-fade-up   { animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
-.animate-red-pulse { animation: red-pulse 3s ease-in-out infinite; }
-
-/* ── Red glow utility ──────────────────────────────────────── */
-/* Apply to any element that should emit the red aura */
-.red-glow {
-  box-shadow: 0 0 16px 2px rgba(255,51,51,0.4), 0 0 40px 6px rgba(255,51,51,0.15);
-}
-.red-glow-text {
-  text-shadow: 0 0 20px rgba(255,51,51,0.6), 0 0 40px rgba(255,51,51,0.3);
-}
-.red-glow-sm {
-  box-shadow: 0 0 8px 1px rgba(255,51,51,0.35), 0 0 20px 2px rgba(255,51,51,0.12);
-}
-
-/* ── Custom scrollbar ──────────────────────────────────────── */
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255,51,51,0.25) transparent;
-}
-
-/* Chromium / Safari */
-::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255,51,51,0.2);
-  border-radius: 99px;
-  transition: background 0.3s ease;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,51,51,0.55);
-}
-
-/* Auto-hide scrollbar when not scrolling (Chromium) */
-html {
-  overflow-y: scroll;
-}
-html:not(:hover) ::-webkit-scrollbar-thumb {
-  background: transparent;
-}
-
-/* ── Base ──────────────────────────────────────────────────── */
 @layer base {
-  * { border-color: var(--border); outline: none; }
-  html, body {
-    background: #09090B;
-    overflow-x: hidden;
-  }
-  body {
-    @apply text-foreground;
-    -webkit-font-smoothing: antialiased;
+  * {
+    @apply border-border;
   }
   html {
-    overflow-y: scroll;
+    background: var(--paper);
+    color-scheme: light;
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    line-height: 1.55;
+    font-variation-settings: 'opsz' 14;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--marker);
+    color: var(--ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  .on-night :focus-visible {
+    outline-color: var(--marker);
   }
 }
 
-/* ── Page layout helpers ───────────────────────────────────── */
-.page-container {
-  width: 100%;
-  max-width: var(--page-max);
-  margin-inline: auto;
-  padding-inline: var(--page-px);
+/*
+ * Component classes live in a layer so Tailwind utilities on the same
+ * element (min-h-11, px-5, absolute…) can still adjust them.
+ */
+@layer components {
+  /* ---------- Layout ---------- */
+
+  .wrap {
+    width: 100%;
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* Paper grain: a fixed, very faint noise so the cream reads as paper, not as a flat fill. */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    pointer-events: none;
+    opacity: 0.07;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- Type ---------- */
+
+  /*
+   * Big type is set in Montserrat, like the home: the squeezed Bricolage cut it
+   * replaces made heavy letters collide at display sizes, worst while split
+   * letters animate. Tracking tightens only slightly as the size grows.
+   */
+  .display {
+    font-family: var(--font-geo);
+    font-size: var(--step-display);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+  }
+  .headline {
+    font-family: var(--font-geo);
+    font-size: var(--step-4);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .title {
+    font-family: var(--font-geo);
+    font-size: var(--step-3);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  .statement {
+    font-size: var(--step-3);
+    font-weight: 600;
+    font-variation-settings: 'opsz' 60, 'wdth' 90;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .lead {
+    font-size: var(--step-1);
+    line-height: 1.4;
+    font-variation-settings: 'opsz' 24;
+    text-wrap: pretty;
+  }
+  .body-copy {
+    max-width: 62ch;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+  .on-night .body-copy {
+    color: var(--night-soft);
+  }
+  .small {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .on-night .small {
+    color: var(--night-soft);
+  }
+
+  /* SplitText line masks: room for descenders so the mask doesn't crop them. */
+  .line-mask-inner-mask {
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+
+  /* ---------- Highlighter ---------- */
+
+  /*
+   * The marker is a background whose width GSAP animates through --hl. With the
+   * default box-decoration-break (slice) a wrapped phrase is one continuous strip,
+   * so the sweep runs line by line in reading order, like a real pen.
+   */
+  .hl {
+    --hl: 100%;
+    color: inherit;
+    background-color: transparent;
+    background-image: linear-gradient(100deg, transparent 0.15em, var(--marker) 0.3em, var(--marker) calc(100% - 0.25em), transparent calc(100% - 0.05em));
+    background-repeat: no-repeat;
+    background-position: 0 62%;
+    background-size: var(--hl) 0.82em;
+    padding-inline: 0.1em;
+    margin-inline: -0.1em;
+  }
+  .on-night .hl {
+    color: var(--ink);
+    background-size: var(--hl) 1.05em;
+    background-position: 0 55%;
+  }
+
+  /* ---------- Margin notes ---------- */
+
+  .note {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    font-family: var(--font-hand);
+    font-size: clamp(1.5rem, 2.2vw, 1.9rem);
+    line-height: 1;
+    color: var(--ink-soft);
+    transform: rotate(-3deg);
+  }
+  .on-night .note {
+    color: var(--night-soft);
+  }
+  .note svg {
+    flex: none;
+    overflow: visible;
+  }
+
+  /* ---------- Controls ---------- */
+
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3.25rem;
+    padding: 0 1.6rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-variation-settings: 'opsz' 18;
+    transition: background-color 0.25s, color 0.25s, transform 0.4s var(--ease-stroke);
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .btn-ink {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  /* The marker swipes in behind the label on hover. */
+  .btn-ink::before,
+  .btn-line::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--marker);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s var(--ease-stroke);
+  }
+  .btn-ink:hover,
+  .btn-line:hover {
+    color: var(--ink);
+  }
+  .btn-ink:hover::before,
+  .btn-line:hover::before {
+    transform: scaleX(1);
+  }
+  .btn-line {
+    border: 1.5px solid currentColor;
+    color: var(--ink);
+  }
+  .on-night .btn-line {
+    color: var(--paper);
+  }
+  .btn:active {
+    transform: scale(0.97);
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: progress;
+  }
+
+  .link {
+    background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1.5px no-repeat;
+    transition: background-size 0.4s var(--ease-stroke);
+  }
+  .link:hover {
+    background-size: 0 1.5px;
+    background-position: 100% 100%;
+  }
+
+  /* ---------- Header ---------- */
+
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 60;
+    transition: transform 0.8s var(--ease-stroke), opacity 0.6s ease, background-color 0.4s;
+  }
+  .site-header.is-solid {
+    background: rgb(227 227 227 / 0.88);
+    backdrop-filter: blur(10px);
+  }
+
+  /* The logotype: a brush signature, set a touch large because script reads small. */
+  .wordmark {
+    display: inline-block;
+    font-family: var(--font-script);
+    font-size: 1.25em;
+    line-height: 1;
+    letter-spacing: 0;
+    rotate: -4deg;
+  }
+
+  .menu-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: var(--ink);
+    color: var(--paper);
+    clip-path: inset(0 0 100% 0);
+  }
+  /* The menu as an index: numbered sections over hairlines, contact details beside them. */
+  .menu-layout {
+    display: grid;
+    align-content: center;
+    gap: 3rem;
+    height: 100%;
+    padding-top: 6rem;
+    padding-bottom: 2.5rem;
+    overflow-y: auto;
+  }
+  @media (min-width: 1024px) {
+    .menu-layout {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      align-items: end;
+      column-gap: 6vw;
+      padding-left: calc(var(--gutter) + clamp(0rem, 9vw, 9rem));
+    }
+  }
+  .menu-list {
+    border-top: 1px solid var(--night-rule);
+  }
+  .menu-list li {
+    border-bottom: 1px solid var(--night-rule);
+  }
+  .menu-link {
+    display: flex;
+    align-items: baseline;
+    gap: clamp(1rem, 2.5vw, 2rem);
+    padding-block: clamp(0.55rem, 1.6vh, 0.9rem);
+    font-size: clamp(1.9rem, 4.2vw, 3.6rem);
+    font-weight: 700;
+    font-variation-settings: 'opsz' 96, 'wdth' 90;
+    line-height: 1.05;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+  .menu-index {
+    min-width: 1.6rem;
+    font-family: var(--font-geo);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--marker);
+    transform: translateY(-0.9em);
+  }
+  .menu-link .hl {
+    transition: background-size 0.45s var(--ease-stroke), color 0.2s, transform 0.45s var(--ease-stroke);
+  }
+  .menu-link:hover .hl,
+  .menu-link:focus-visible .hl {
+    transform: translateX(0.25em);
+  }
+  .menu-aside {
+    font-family: var(--font-geo);
+    color: var(--night-soft);
+  }
+  .menu-aside-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--marker);
+  }
+  .menu-aside-mail {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    font-weight: 600;
+    color: var(--paper);
+    word-break: break-all;
+  }
+  .menu-aside-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.75rem;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .menu-aside-links a,
+  .menu-aside-mail {
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.35em;
+    transition: color 0.2s, text-decoration-color 0.2s;
+  }
+  .menu-aside-links a:hover,
+  .menu-aside-mail:hover {
+    color: var(--paper);
+    text-decoration-color: var(--marker);
+  }
+  .menu-aside-cv {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    margin-top: 2rem;
+    padding-inline: 1.25rem;
+    background: var(--marker);
+    color: var(--ink);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background-color 0.2s;
+  }
+  .menu-aside-cv:hover {
+    background: var(--paper);
+  }
+  .menu-link:hover .hl,
+  .menu-link:focus-visible .hl {
+    --hl: 100%;
+    color: var(--ink);
+  }
+  .menu-link .hl {
+    --hl: 0%;
+    background-size: var(--hl) 1em;
+    transition: background-size 0.45s var(--ease-stroke), color 0.2s;
+  }
+
+  /* ---------- Preloader ---------- */
+
+  /* Hidden unless the head script says JS runs and this session hasn't seen it. */
+  .preloader {
+    display: none;
+  }
+  html.js:not(.intro-seen) .preloader {
+    display: grid;
+  }
+  .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    place-items: end start;
+    padding: var(--gutter);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  /* ---------- Cursor ---------- */
+
+  .cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 95;
+    width: 3.4rem;
+    height: 3.4rem;
+    margin: -1.7rem 0 0 -1.7rem;
+    border-radius: 50%;
+    background: var(--marker);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    transform: scale(0.18);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .cursor-dot.is-visible {
+    opacity: 1;
+  }
+
+  /* ---------- Hero: a gallery print ---------- */
+
+  /*
+   * Phones: one column, the illustration between the name and the motto.
+   * From 1024px: the type stack on the left, centred on the drawing that fills
+   * the right, with the links and folio pinned low at the left like a caption.
+   */
+  .hero-layout {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'title' 'kicker' 'art' 'tagline' 'actions' 'social';
+    align-content: center;
+    min-height: 100%;
+    padding-top: clamp(5rem, 11vh, 6.5rem);
+    padding-bottom: clamp(5.5rem, 12vh, 7rem);
+  }
+  @media (min-width: 1024px) {
+    .hero-layout {
+      /* The type column is as wide as the name, so the name is never cut; the drawing takes the rest. */
+      grid-template-columns: max-content minmax(0, 1fr);
+      grid-template-rows: 1fr auto auto auto auto 1fr;
+      grid-template-areas: '. art' 'title art' 'kicker art' 'tagline art' 'actions art' '. art';
+      column-gap: 3vw;
+      align-content: stretch;
+      min-height: 100dvh;
+      padding-left: calc(var(--gutter) + clamp(0rem, 9vw, 9rem));
+      padding-right: calc(var(--gutter) + clamp(0rem, 3vw, 4rem));
+      padding-bottom: calc(7.5vh + 6rem);
+    }
+  }
+  .hero-mask {
+    display: block;
+    overflow: clip;
+    /* Room for the Á's accent and descenders inside the mask. */
+    padding-block: 0.08em;
+    margin-block: -0.08em;
+  }
+  .hero-title {
+    grid-area: title;
+    font-family: var(--font-geo);
+    font-size: clamp(2.9rem, 6.1vw, 6rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+  .hero-kicker {
+    grid-area: kicker;
+    margin-top: clamp(1.1rem, 3vh, 2rem);
+    font-family: var(--font-geo);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--marker-ink);
+  }
+  .hero-tagline {
+    grid-area: tagline;
+    margin-top: clamp(1.25rem, 3.5vh, 2.25rem);
+    font-family: var(--font-geo);
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .hero-actions {
+    grid-area: actions;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    margin-top: clamp(1.25rem, 3.5vh, 2.25rem);
+  }
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-family: var(--font-geo);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-decoration-color: var(--marker);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.45em;
+    transition: color 0.2s, text-underline-offset 0.3s var(--ease-stroke);
+  }
+  .hero-cta:hover {
+    text-underline-offset: 0.25em;
+  }
+  .hero-cta.is-solid {
+    padding-inline: 1.25rem;
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration: none;
+    transition: background-color 0.25s, color 0.25s;
+  }
+  .hero-cta.is-solid:hover {
+    background: var(--marker);
+    color: var(--ink);
+  }
+  .hero-art {
+    grid-area: art;
+    align-self: center;
+    margin-block: clamp(1rem, 3vh, 2rem);
+  }
+  @media (min-width: 1024px) {
+    .hero-art {
+      margin-block: 0;
+    }
+  }
+  .workstation {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 64vh;
+    overflow: visible;
+  }
+  .hero-social {
+    grid-area: social;
+    display: flex;
+    gap: 1.75rem;
+    margin-top: 1.5rem;
+    font-family: var(--font-geo);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .hero-social a {
+    display: inline-block;
+    padding-block: 0.4rem;
+    transition: color 0.2s;
+  }
+  .hero-social a:hover {
+    color: var(--marker-ink);
+  }
+  .hero-folio {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .hero-social {
+      position: absolute;
+      left: calc(var(--gutter) + clamp(0rem, 9vw, 9rem));
+      bottom: calc(7.5vh + 5.2rem);
+      margin-left: -0.1rem;
+      margin: 0;
+    }
+    .hero-folio {
+      display: block;
+      position: absolute;
+      left: calc(var(--gutter) + clamp(0rem, 9vw, 9rem));
+      bottom: calc(7.5vh + 1.75rem);
+      font-family: var(--font-geo);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+  }
+  /* The orange block rising from the bottom edge under the drawing (wide screens only). */
+  .hero-block {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .hero-block {
+      display: block;
+      position: absolute;
+      left: 40%;
+      width: 42%;
+      bottom: 0;
+      height: 7.5vh;
+      background: var(--marker);
+      transform-origin: 50% 100%;
+    }
+  }
+
+  /* The workstation's line work. Fills stay on the palette, so the drawing follows the tokens. */
+  .workstation :is(rect, polygon, ellipse, circle, path, line) {
+    stroke: var(--ink);
+    stroke-width: 2.2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .workstation .ws-light { fill: #f6f6f6; }
+  .workstation .ws-top { fill: #ececec; }
+  .workstation .ws-shade { fill: #bdbdbd; }
+  .workstation .ws-bezel { fill: #e6e6e6; }
+  .workstation .ws-solid { fill: var(--ink); }
+  .workstation .ws-accent { fill: var(--marker); }
+  .workstation .ws-accent-fill { fill: var(--marker); stroke-width: 1.2; }
+  .workstation .ws-screen { fill: #151515; }
+  .workstation .ws-line { fill: none; }
+  .workstation .ws-hatch { fill: url(#ws-hatch); }
+  .workstation .ws-thin { stroke-width: 1.4; }
+  .workstation .ws-key { stroke-width: 1.1; }
+  .workstation .ws-ground { stroke: #b5b5b5; stroke-width: 1.2; }
+  .workstation .ws-hatch-line { stroke: var(--ink); stroke-width: 0.9; opacity: 0.32; }
+  .workstation .ws-cable { fill: none; stroke-width: 2.6; }
+  .workstation .ws-handle-outer { fill: none; stroke-width: 9; }
+  .workstation .ws-handle-inner { fill: none; stroke: #f6f6f6; stroke-width: 4.6; }
+  .workstation .ws-steam { fill: none; stroke-width: 1.6; opacity: 0.6; }
+  .workstation .ws-glare { fill: #ffffff; stroke: none; opacity: 0.07; }
+  .workstation .ws-cursor { fill: var(--marker); stroke: none; }
+  .workstation [data-led] { stroke-width: 1.2; }
+  .workstation text {
+    font-family: var(--font-mono-code), ui-monospace, monospace;
+    font-size: 10.5px;
+    fill: #e3e3e3;
+    white-space: pre;
+  }
+  .workstation .ws-prompt,
+  .workstation .ws-out-accent { fill: var(--marker); }
+  .workstation .ws-out { fill: #8f8f8f; }
+  .workstation .ws-sticker-text {
+    font-family: var(--font-geo);
+    font-size: 10px;
+    font-weight: 800;
+    fill: var(--ink);
+  }
+  .workstation .ws-spine {
+    font-family: var(--font-geo);
+    font-size: 6.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    fill: var(--ink);
+  }
+
+  /* ---------- Highlights (pinned statements) ---------- */
+
+  /* Statements stack in one cell on desktop (they replace each other while pinned) and flow on phones. */
+  .hl-stage {
+    display: grid;
+    gap: 4rem;
+  }
+  /* Only in the deck: as a plain document all three are simply listed. */
+  .deck-on .hl-stage > * {
+    grid-area: 1 / 1;
+  }
+
+  /* ---------- Work ---------- */
+
+  .stat-value {
+    font-family: var(--font-geo);
+    font-size: var(--step-4);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .on-night {
+    background: var(--night);
+    color: var(--paper);
+  }
+
+
+
+  .project-row {
+    border-top: 1.5px solid var(--ink);
+  }
+  .project-row:last-child {
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .project-row .hl {
+    --hl: 0%;
+    transition: background-size 0.5s var(--ease-stroke);
+  }
+  .project-row:hover .hl,
+  .project-row:focus-within .hl {
+    --hl: 100%;
+  }
+
+  /* ---------- Layers (CSS 3D stack) ---------- */
+
+  .layer-scene {
+    perspective: 1600px;
+  }
+  .layer-stack {
+    transform-style: preserve-3d;
+    transform: rotateX(58deg) rotateZ(-38deg);
+  }
+  .layer-plate {
+    position: absolute;
+    inset: 0;
+    border: 1.5px solid var(--ink);
+    border-radius: 1.25rem;
+    background: var(--paper);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-variation-settings: 'opsz' 48, 'wdth' 80;
+    font-size: clamp(1.1rem, 2vw, 1.6rem);
+    box-shadow: 0 1.5rem 2.5rem -1.5rem rgb(17 17 17 / 0.35);
+  }
+  .layer-plate.is-core {
+    background: var(--marker);
+  }
+
+  .marquee {
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .marquee-track {
+    display: flex;
+    flex: none;
+    gap: 3rem;
+    padding-right: 3rem;
+  }
+
+  /* ---------- Contact ---------- */
+
+  .band {
+    background: var(--marker);
+    color: var(--ink);
+  }
 }
 
-/* ── Section spacing ───────────────────────────────────────── */
-.section { padding-block: clamp(4rem, 8vw, 7rem); }
+/* ---------- Reduced motion ---------- */
 
-/* ── Platinum card ─────────────────────────────────────────── */
-.glass {
-  background: linear-gradient(
-    160deg,
-    rgba(255,255,255,0.12) 0%,
-    rgba(255,255,255,0.07) 15%,
-    rgba(255,255,255,0.04) 35%,
-    rgba(20,20,26,0.95) 70%,
-    rgba(14,14,18,1) 100%
-  );
-  border: 1px solid rgba(255,255,255,0.12);
-  border-top-color: rgba(255,255,255,0.2);
-  border-radius: 1.25rem;
-  box-shadow:
-    0 8px 24px rgba(0,0,0,0.25),
-    0 24px 48px rgba(0,0,0,0.2),
-    inset 0 1px 0 rgba(255,255,255,0.14),
-    inset 0 -1px 0 rgba(0,0,0,0.15);
-  position: relative;
-  overflow: hidden;
-}
-/* Top-edge reflective shine */
-.glass::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 3%;
-  right: 3%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255,255,255,0.18) 15%,
-    rgba(255,255,255,0.45) 50%,
-    rgba(255,255,255,0.18) 85%,
-    transparent 100%
-  );
-  pointer-events: none;
-  z-index: 1;
-}
-/* Diagonal metallic sheen */
-.glass::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 55%;
-  background: linear-gradient(
-    140deg,
-    rgba(255,255,255,0.06) 0%,
-    rgba(255,255,255,0.02) 40%,
-    transparent 70%
-  );
-  pointer-events: none;
-  z-index: 0;
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btn-ink::before,
+  .btn-line::before,
+  .link,
+  .site-header,
+  .menu-link .hl,
+  .project-row .hl {
+    transition: none;
+  }
+  .cursor-dot {
+    display: none;
+  }
 }
 
-/* ── Card hover ────────────────────────────────────────────── */
-.card-hover {
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-              box-shadow 0.35s ease,
-              border-color 0.35s ease,
-              background 0.35s ease;
-}
-.card-hover:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow:
-    0 32px 70px rgba(0,0,0,0.6),
-    inset 0 1px 0 rgba(255,255,255,0.15),
-    0 0 0 1px rgba(255,75,75,0.05);
+/* Feria Mágica: the stages a request passes through, on one rail. */
+@layer components {
+  .flow-steps {
+    display: grid;
+    gap: 2rem;
+  }
+  .flow-step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+  .flow-dot {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.2rem;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    background: var(--marker);
+  }
+  .flow-rail {
+    --rail: 1;
+    position: absolute;
+    left: calc(0.625rem - 0.75px);
+    top: 0.6rem;
+    bottom: 0.6rem;
+    width: 1.5px;
+    background: var(--ink);
+    transform: scaleY(var(--rail));
+    transform-origin: top;
+  }
+  @media (min-width: 900px) {
+    .flow-steps {
+      grid-template-columns: repeat(var(--flow-cols, 5), minmax(0, 1fr));
+    }
+    .flow-step {
+      grid-template-columns: 1fr;
+    }
+    .flow-rail {
+      left: 0.6rem;
+      right: 0.6rem;
+      top: calc(0.825rem - 0.75px);
+      bottom: auto;
+      width: auto;
+      height: 1.5px;
+      transform: scaleX(var(--rail));
+      transform-origin: left;
+    }
+  }
 }
 
-/* ── Thin rule ─────────────────────────────────────────────── */
-.rule {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+@layer components {
+  .verb {
+    margin-right: 0.3em;
+    font-family: var(--font-geo);
+    font-size: clamp(2.8rem, 8vw, 8.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+  }
+  .verb-outline .verb {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--ink);
+  }
 }
 
-/* ── Label above headings ──────────────────────────────────── */
-.section-label {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
+@layer components {
+  /* A highlighter stroke under a big title. */
+  .title-swipe {
+    position: absolute;
+    left: -0.04em;
+    right: -0.08em;
+    bottom: 0.02em;
+    height: 0.26em;
+    background: var(--marker);
+    transform: skewX(-8deg) scaleX(var(--swipe, 1));
+    transform-origin: left center;
+    border-radius: 0.04em;
+    z-index: -1;
+  }
 }
-.section-label .label-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #FF3333;
-  flex-shrink: 0;
-  box-shadow: 0 0 8px 2px rgba(255,51,51,0.5), 0 0 20px 4px rgba(255,51,51,0.2);
+
+@layer components {
+  /* Verbs take a highlighter stroke under the pointer. */
+  .verb {
+    background: linear-gradient(var(--marker), var(--marker)) no-repeat 0 62% / 0 0.4em;
+    transition: background-size 0.45s var(--ease-stroke);
+  }
+  .verb:hover {
+    background-size: 100% 0.4em;
+  }
+  /* A lesson's dot pulses under the pointer. */
+  .flow-step:hover .flow-dot {
+    animation: dot-pulse 0.9s var(--ease-stroke) infinite;
+  }
+  @keyframes dot-pulse {
+    50% { transform: scale(1.35); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .verb { transition: none; }
+    .flow-step:hover .flow-dot { animation: none; }
+  }
+}
+
+@layer components {
+  /* Full-screen highlighter sweep used between scenes (changeStage in lib/reveal.ts). */
+  .sweep-band {
+    position: fixed;
+    inset: 0;
+    z-index: 58;
+    background: var(--marker);
+    pointer-events: none;
+    clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+  }
+  /* The highlighter block that reveals and hides each line of a heading. */
+  .line-mask-inner-mask {
+    position: relative;
+  }
+  .line-cover {
+    position: absolute;
+    inset: 0.04em -0.05em 0.1em;
+    background: var(--marker);
+    transform: scaleX(0);
+    transform-origin: left center;
+    pointer-events: none;
+  }
+  .on-night .line-cover {
+    background: var(--marker);
+  }
+  /* Room for words turning in 3D. */
+  .statement {
+    perspective: 900px;
+  }
+}
+
+/* ---------- The deck (components/site/Deck.tsx) ---------- */
+
+/*
+ * With the deck on, the window never scrolls: scenes are stacked full-screen
+ * layers and only the active one (plus the one leaving, during a transition)
+ * is visible. Without it (reduced motion, no JS) everything below is ignored
+ * and the page reads as a normal document.
+ */
+@layer components {
+  .scene-fill {
+    min-height: 100svh;
+  }
+  html.deck-on,
+  html.deck-on body {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+  .deck-on .deck {
+    position: fixed;
+    inset: 0;
+    perspective: 1600px;
+    touch-action: none;
+  }
+  .deck-on .scene {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    visibility: hidden;
+    background: var(--paper);
+    transform-origin: 50% 50%;
+    touch-action: pan-y;
+  }
+  .deck-on .scene::-webkit-scrollbar {
+    display: none;
+  }
+  .deck-on .scene.is-active,
+  .deck-on .scene.is-leaving {
+    visibility: visible;
+  }
+  .deck-on .scene.is-active {
+    z-index: 2;
+  }
+  .deck-on .scene.is-leaving {
+    z-index: 1;
+  }
+  .deck-on .scene:focus {
+    outline: none;
+  }
+  /* A night scene (OCAP) paints the whole layer, not just its content box. */
+  .deck-on .scene:has(> .on-night) {
+    background: var(--night);
+  }
+  .deck-on .scene-fill {
+    min-height: 100%;
+  }
+
+  /* The case study: in the deck, the head and the lessons share the stage and swap. */
+  .deck-on .case-stage {
+    display: grid;
+    min-height: 100svh;
+  }
+  .deck-on .case-stage > * {
+    grid-area: 1 / 1;
+  }
+  .deck-on .case-head {
+    align-self: center;
+  }
+  .deck-on .case-flow {
+    align-self: end;
+    padding-bottom: clamp(1rem, 4vh, 3rem);
+  }
+  .case-flow {
+    margin-top: clamp(3rem, 7vw, 5rem);
+  }
+  .deck-on .case-flow {
+    margin-top: 0;
+  }
+
+  /* Controls: numbered pagination with an orange rule after the current scene, and square arrows. */
+  .deck-bar {
+    position: fixed;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: clamp(0.9rem, 2.5vh, 1.6rem);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    pointer-events: none;
+    font-family: var(--font-geo);
+    transition: bottom 0.9s var(--ease-stroke);
+  }
+  .deck-bar > * {
+    pointer-events: auto;
+  }
+  @media (min-width: 1024px) {
+    .deck-bar {
+      padding-left: calc(40vw - var(--gutter));
+    }
+    /* On the home the bar sits above the orange block, as in a print's caption line. */
+    .deck-bar.is-home {
+      bottom: calc(7.5vh + 1.4rem);
+    }
+  }
+  .deck-pages ol {
+    display: flex;
+    align-items: center;
+    padding: 0.35rem 0.6rem;
+    margin-left: -0.6rem;
+    border-radius: 999px;
+    background: var(--paper);
+  }
+  .deck-pages a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 2.25rem;
+    padding-inline: 0.3rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-soft);
+    transition: color 0.2s;
+  }
+  .deck-pages a:hover,
+  .deck-pages a[aria-current] {
+    color: var(--ink);
+  }
+  .deck-pages a::after {
+    content: '';
+    width: 0;
+    height: 1.5px;
+    margin-left: 0;
+    background: var(--marker);
+    transition: width 0.7s var(--ease-stroke), margin 0.7s var(--ease-stroke);
+  }
+  .deck-pages a[aria-current]::after {
+    width: clamp(1.5rem, 9vw, 8.5rem);
+    margin-inline: 0.6rem 0.3rem;
+  }
+  .deck-page-label {
+    position: absolute;
+    bottom: calc(100% + 0.4rem);
+    left: 0;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 0.7rem;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.2s, transform 0.3s var(--ease-stroke);
+  }
+  .deck-pages a:hover .deck-page-label,
+  .deck-pages a:focus-visible .deck-page-label {
+    opacity: 1;
+    transform: none;
+  }
+  .deck-arrow {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    transition: background-color 0.2s, color 0.2s, transform 0.3s var(--ease-stroke);
+  }
+  .deck-arrow.is-next {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .deck-arrow svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .deck-arrow:hover:not(:disabled) {
+    background: var(--marker);
+    border-color: var(--marker);
+    color: var(--ink);
+  }
+  .deck-arrow:active:not(:disabled) {
+    transform: scale(0.93);
+  }
+  .deck-arrow:disabled {
+    opacity: 0.3;
+  }
+  /* Over a dark scene the controls invert, like the header. */
+  .deck-bar.is-night .deck-pages ol { background: var(--night); }
+  .deck-bar.is-night .deck-pages a { color: var(--night-soft); }
+  .deck-bar.is-night .deck-pages a:hover,
+  .deck-bar.is-night .deck-pages a[aria-current] { color: var(--paper); }
+  .deck-bar.is-night .deck-arrow { border-color: var(--paper); background: var(--night); color: var(--paper); }
+  .deck-bar.is-night .deck-arrow.is-next { background: var(--paper); color: var(--ink); }
+  @media (max-width: 639px) {
+    .deck-arrow:not(.is-next) { display: none; }
+    .deck-pages a { padding-inline: 0.18rem; font-size: 0.7rem; }
+    .deck-page-label { display: none; }
+  }
+}
+
+@layer components {
+  /* Header: signature and menu at the left, the main sections centred, language and CV at the right. */
+  .header-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    height: 4.5rem;
+  }
+  @media (min-width: 768px) {
+    .header-row {
+      height: 6rem;
+    }
+  }
+  .header-nav ul {
+    display: flex;
+    gap: clamp(1.5rem, 3vw, 3rem);
+    font-family: var(--font-geo);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .header-nav a {
+    display: inline-block;
+    padding-block: 0.6rem;
+    background: linear-gradient(var(--marker), var(--marker)) no-repeat 0 85% / 0 2px;
+    transition: background-size 0.4s var(--ease-stroke);
+  }
+  .header-nav a:hover,
+  .header-nav a:focus-visible,
+  .header-nav a[aria-current] {
+    background-size: 100% 2px;
+  }
+  .header-nav a[aria-current] {
+    color: var(--ink);
+  }
+  .header-nav a:not([aria-current]) {
+    color: var(--ink-soft);
+  }
+  .site-header.is-night .header-nav a:not([aria-current]) {
+    color: var(--night-soft);
+  }
+  .site-header.is-night .header-nav a[aria-current] {
+    color: var(--paper);
+  }
+  /* The one action the header asks for. */
+  .header-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding-inline: 1.1rem;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-geo);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  .header-cta:hover,
+  .header-cta:focus-visible,
+  .header-cta[aria-current] {
+    background: var(--marker);
+    color: var(--ink);
+  }
+  .site-header.is-night .header-cta:not(:hover) {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  /* Wide screens show every section, so the menu button is for narrower ones only (NN/g: hidden
+     navigation is found less and used later on desktop). */
+  @media (min-width: 1024px) {
+    .header-icon.header-toggle { display: none; }
+  }
+  @media (max-width: 1023px) {
+    .header-row { grid-template-columns: minmax(0, 1fr) auto; }
+    .header-nav,
+    .header-cta { display: none; }
+  }
+  .header-lang {
+    min-height: 2.75rem;
+    padding-inline: 0.25rem;
+    font-family: var(--font-geo);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .header-icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    transition: color 0.2s;
+  }
+  .header-icon svg {
+    width: 1.35rem;
+    height: 1.35rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .header-icon:hover,
+  .header-lang:hover {
+    color: var(--marker-ink);
+  }
+}
+
+@layer components {
+  .site-header.is-night {
+    color: var(--paper);
+  }
+  .site-header.is-night.is-solid {
+    background: rgb(20 20 20 / 0.86);
+  }
+}
+
+/*
+ * Hero start state before GSAP takes over, so nothing finished flashes on load.
+ * Only with JS and motion; otherwise the hero renders complete.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html.deck-on #inicio :is([data-line], [data-hero-in], [data-piece], [data-hero-block]) {
+    visibility: hidden;
+  }
+}
+
+@layer components {
+  /* Project demos: a print-style panel framing a CRT-like screen, like the home's workstation. */
+  .demo-panel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 68rem;
+    height: min(44rem, 100%);
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    box-shadow: 0.5rem 0.5rem 0 var(--ink);
+    overflow: hidden;
+  }
+  .demo-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 3.25rem;
+    padding-inline: 1.25rem 0.5rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .demo-kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-geo);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .demo-dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    background: var(--marker);
+  }
+  .demo-btn {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    transition: background-color 0.2s;
+  }
+  .demo-btn:hover,
+  .demo-btn:focus-visible {
+    background: var(--marker);
+  }
+  .demo-body {
+    display: grid;
+    flex: 1;
+    min-height: 0;
+  }
+  @media (min-width: 900px) {
+    .demo-body {
+      grid-template-columns: minmax(0, 19rem) minmax(0, 1fr);
+    }
+  }
+  .demo-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+  @media (max-width: 899px) {
+    .demo-aside {
+      padding-bottom: 0.75rem;
+      gap: 0.6rem;
+    }
+    .demo-aside .demo-note,
+    .demo-aside .demo-text { display: none; }
+  }
+  .demo-title {
+    font-family: var(--font-geo);
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+  }
+  .demo-text {
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+  .demo-meta {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.6rem 1rem;
+    align-items: baseline;
+    padding-block: 0.9rem;
+    border-block: 1.5px solid var(--ink);
+    font-size: 0.85rem;
+  }
+  .demo-meta dt {
+    font-family: var(--font-geo);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .demo-chip {
+    padding: 0.1rem 0.45rem;
+    border: 1.5px solid var(--ink);
+    font-family: var(--font-mono-code), ui-monospace, monospace;
+    font-size: 0.75rem;
+  }
+  .demo-note {
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+  .demo-repo {
+    margin-top: auto;
+    align-self: flex-start;
+    font-family: var(--font-geo);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-decoration-color: var(--marker);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.45em;
+  }
+  /* The screen: the dark CRT of the home's illustration, inset in a light bezel. */
+  .demo-screen {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    margin: 0 0.75rem 0.75rem;
+    border: 2px solid var(--ink);
+    border-radius: 0.9rem;
+    background: var(--night);
+    box-shadow: inset 0 0 0 0.45rem #e6e6e6, inset 0 0 0 calc(0.45rem + 2px) var(--ink);
+    padding: 0.45rem;
+    cursor: text;
+  }
+  @media (min-width: 900px) {
+    .demo-screen {
+      margin: 0.75rem 0.75rem 0.75rem 0;
+    }
+  }
+  .demo-path {
+    padding: 0.85rem 1.1rem 0.4rem;
+    font-family: var(--font-mono-code), ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: #8f8f8f;
+  }
+  .demo-path span {
+    color: var(--marker);
+  }
+  .demo-lines {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0.25rem 1.1rem 0.75rem;
+    font-family: var(--font-mono-code), ui-monospace, monospace;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: #e3e3e3;
+    scrollbar-width: thin;
+    scrollbar-color: #3a3a3a transparent;
+  }
+  .demo-line { white-space: pre-wrap; }
+  .demo-line.is-sys,
+  .demo-line.is-table { color: #8f8f8f; }
+  .demo-line.is-table { white-space: pre; }
+  .demo-line.is-success,
+  .demo-line.is-input { color: var(--marker); }
+  .demo-line.is-input { font-weight: 700; }
+  .demo-line.is-error { color: #ff8a7a; }
+  .demo-line.is-warning { color: #ffc46b; }
+  .demo-line.is-user { color: #ffffff; font-weight: 700; }
+  .demo-prompt {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-top: 0.35rem;
+  }
+  .demo-caret-sign {
+    margin-right: 0.6rem;
+    color: var(--marker);
+    font-weight: 700;
+  }
+  .demo-cursor {
+    display: inline-block;
+    width: 0.55rem;
+    height: 1.05rem;
+    margin-left: 0.15rem;
+    background: var(--marker);
+  }
 }
